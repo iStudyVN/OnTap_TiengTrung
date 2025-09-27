@@ -2,114 +2,245 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Luyện nghe tiếng Trung</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Luyện Nghe - Hán 1: Bài 1-6</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
+    /* 1. Biến CSS và Thiết lập chung */
+    :root {
+      --primary-color: #3b82f6; /* Xanh dương */
+      --secondary-color: #10b981; /* Xanh lục */
+      --success-color: #28a745;
+      --background-color: #f8fafc;
+      --card-background: #ffffff;
+      --text-color: #1f2937;
+      --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --border-radius: 10px;
+      --spacing: 20px;
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', Arial, sans-serif;
       margin: 0;
-      padding: 10px;
-      text-align: center;
-      background: #f9f9f9;
+      padding: 0;
+      background: var(--background-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 700px;
+        padding: var(--spacing);
+        box-sizing: border-box;
+        text-align: center;
     }
 
-    h1 {
-      font-size: 6vw;
-      margin: 10px 0 5px;
+    /* 2. Tiêu đề */
+    h2 { 
+        font-size: 1.8rem; 
+        color: var(--primary-color); 
+        margin: 15px 0 5px; 
+        font-weight: 700;
+    }
+    
+    .subtitle { 
+        font-size: 1rem; 
+        color: #6b7280; 
+        margin-bottom: var(--spacing); 
     }
 
-    .range {
-      font-size: 4vw;
-      margin-bottom: 10px;
-    }
-
-    .current {
-      font-size: 4.5vw;
-      margin: 10px 0;
-    }
-
-    .controls, .info {
-      margin: 15px auto;
-      width: 95%;
-      max-width: 600px;
-    }
-
+    /* 3. Audio và Controls */
     audio {
       width: 100%;
-      margin: 10px 0;
+      margin: 15px 0;
+      /* Đảm bảo style player hiện đại hơn */
     }
-
-    button, select, input {
-      font-size: 4.5vw;
-      padding: 10px 15px;
-      border-radius: 8px;
-      border: none;
+    
+    .controls { 
+        margin: 15px 0; 
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
     }
-
-    button {
-      background: #4CAF50;
-      color: white;
-      margin: 5px;
+    
+    button { 
+        padding: 12px 20px; 
+        border-radius: 8px; 
+        border: none; 
+        background: var(--primary-color); 
+        color: white; 
+        font-size: 1rem; 
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.1s;
+        font-weight: 500;
+        flex-grow: 1; /* Cho phép nút rộng hơn trên di động */
+        max-width: 180px; /* Giới hạn độ rộng trên PC */
     }
-
+    
     button:hover {
-      background: #45a049;
+        background: #2563eb;
+    }
+    
+    .toggle-btn {
+        background: var(--success-color); /* Màu xanh lá cho nút Ẩn/Hiện */
+    }
+    .toggle-btn:hover {
+        background: #1e7e34;
+    }
+    
+    /* 4. Trạng thái và Jump Input */
+    .status-line { 
+        margin: 10px 0; 
+        font-weight: 500; 
+        font-size: 1.1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
     }
 
-    .hanzi {
-      font-family: SimSun, "Noto Serif SC", serif;
-      font-size: 6vw;
-      margin: 10px 0;
+    input[type="number"] { 
+        width: 70px; 
+        padding: 8px 10px; 
+        font-size: 1rem; 
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        text-align: center;
+    }
+    
+    .jump-button {
+        background: #6b7280; /* Màu xám cho nút Chọn */
+        flex-grow: 0;
+    }
+    .jump-button:hover {
+        background: #4b5563;
     }
 
-    .pinyin, .vietnamese {
-      font-size: 4.5vw;
-      margin: 5px 0;
+    /* 5. Card Nội dung */
+    .card { 
+        background: var(--card-background);
+        border-radius: var(--border-radius); 
+        padding: var(--spacing); 
+        margin: var(--spacing) auto; 
+        box-shadow: var(--shadow-light);
+        text-align: center;
+        border-top: 5px solid var(--primary-color); /* Đường viền nổi bật */
+    }
+    
+    .card hr {
+        border: none;
+        border-top: 1px solid #e5e7eb;
+        margin: 20px 0;
     }
 
-    .card {
-      background: white;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px auto;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      width: 95%;
-      max-width: 600px;
+    .section-title { 
+        font-weight: 700; 
+        margin-top: 25px; 
+        margin-bottom: 10px; 
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        text-transform: uppercase;
+    }
+    .section-title:first-of-type {
+        margin-top: 0;
+    }
+
+    .hanzi { 
+        font-family: 'Noto Serif SC', "SimSun", serif; 
+        font-size: 3rem; /* Lớn, dễ đọc */
+        margin: 10px 0; 
+        font-weight: 700;
+        color: #000;
+    }
+    
+    .pinyin { 
+        color: #6b7280; 
+        margin: 5px 0; 
+        font-size: 1.2rem; 
+        font-weight: 500;
+    }
+    
+    .meaning { 
+        color: var(--text-color); 
+        margin: 5px 0; 
+        font-size: 1.2rem; 
+        font-style: italic;
+    }
+    
+    /* Đáp án - Màu sắc khác biệt */
+    .answer-section {
+        border-top: 1px solid #e5e7eb;
+        padding-top: 15px;
+    }
+    .answer-hanzi { 
+        font-family: 'Noto Serif SC', "SimSun", serif; 
+        font-size: 2.5rem;
+        margin: 10px 0; 
+        font-weight: 700;
+        color: var(--secondary-color); /* Màu xanh lục */
+    }
+    .answer-pinyin { 
+        color: #6b7280; 
+        margin: 5px 0; 
+        font-size: 1.1rem; 
+        font-weight: 500;
+    }
+
+    .hidden { display: none !important; }
+    
+    /* 6. Responsive adjustment */
+    @media (max-width: 480px) {
+        .controls button {
+            max-width: none;
+        }
+        .hanzi, .answer-hanzi { 
+            font-size: 2.5rem; 
+        }
     }
   </style>
-</head><body>
-  <h2>Luyện nghe câu hỏi Ôn tập Hán 1: bài 1-6</h2>
-  <div class="subtitle">Từ 1 đến 72</div>
+</head>
+<body>
+  <div class="container">
+    <h2>Luyện nghe câu hỏi Ôn tập Hán 1: Bài 1-6</h2>
+    <div class="subtitle">Từ 1 đến 72</div>
 
-  <!-- Hiển thị câu hiện tại + chọn câu -->
-  <div class="status-line">
-    Đang phát câu số: 
-    <input type="number" id="jumpInput" min="1" max="72">
-    <button onclick="jumpTo()">Chọn</button>
-  </div>
+    <div class="status-line">
+      <span id="statusText">Đang phát câu số: </span>
+      <input type="number" id="jumpInput" min="1" max="72">
+      <button onclick="jumpTo()" class="jump-button">Chọn</button>
+    </div>
 
-  <!-- Audio -->
-  <audio id="player" controls></audio>
+    <audio id="player" controls></audio>
 
-  <!-- Nút điều khiển -->
-  <div class="controls">
-    <button onclick="prev()">⏮ Trước</button>
-    <button onclick="next()">⏭ Tiếp</button>
-    <button onclick="toggleContent()">👁 Ẩn/Hiện</button>
-  </div>
+    <div class="controls">
+      <button onclick="prev()">⏮ Câu trước</button>
+      <button onclick="player.play().catch(()=>{})">⟳ Nghe lại</button>
+      <button onclick="next()">Câu tiếp ⏭</button>
+      <button onclick="toggleContent()" class="toggle-btn">👁 Ẩn/Hiện đáp án</button>
+    </div>
 
-  <!-- Nội dung câu hỏi / trả lời -->
-  <div class="card">
-    <div class="section-title">Câu hỏi:</div>
-    <div class="hanzi" id="hanzi"></div>
-    <div class="pinyin" id="pinyin"></div>
-    <div class="meaning" id="meaning"></div>
+    <div class="card">
+      <div class="question-section">
+        <div class="section-title">Câu hỏi</div>
+        <div class="hanzi hidden" id="hanzi"></div>
+        <div class="pinyin hidden" id="pinyin"></div>
+        <div class="meaning hidden" id="meaning"></div>
+      </div>
 
-    <div class="section-title">Trả lời mẫu:</div>
-    <div class="answer-hanzi" id="answer_hanzi"></div>
-    <div class="answer-pinyin" id="answer_pinyin"></div>
-  </div>
+      <div class="answer-section">
+        <div class="section-title">Trả lời mẫu</div>
+        <div class="answer-hanzi hidden" id="answer_hanzi"></div>
+        <div class="answer-pinyin hidden" id="answer_pinyin"></div>
+      </div>
+    </div>
 
 <script>
   const lessons = [
@@ -701,7 +832,10 @@
   const ansHanziEl = document.getElementById("answer_hanzi");
   const ansPinyinEl = document.getElementById("answer_pinyin");
   const jumpInput = document.getElementById("jumpInput");
-  const statusLine = document.querySelector(".status-line");
+  const statusTextEl = document.getElementById("statusText");
+
+  // Các element cần ẩn/hiện
+  const answerElements = [hanziEl, pinyinEl, meaningEl, ansHanziEl, ansPinyinEl];
 
   function loadLesson(i) {
     const l = lessons[i];
@@ -711,10 +845,20 @@
     meaningEl.textContent = l.meaning;
     ansHanziEl.textContent = l.ans_hanzi;
     ansPinyinEl.textContent = l.ans_pinyin;
-    player.play().catch(()=>{});
+    
+    // Tự động phát nhạc (có thể bị chặn nếu không có tương tác người dùng)
+    player.play().catch(()=>{}); 
+    
     const lessonNumber = i + startNum;
-    statusLine.childNodes[0].textContent = `Đang phát câu số: `;
+    statusTextEl.textContent = `Đang phát câu số: ${lessonNumber}`;
     jumpInput.value = lessonNumber;
+    
+    // Luôn ẩn đáp án khi chuyển câu mới (tạo thử thách)
+    answerElements.forEach(el => {
+      if (!el.classList.contains("hidden")) {
+        el.classList.add("hidden");
+      }
+    });
   }
 
   function next() { 
@@ -728,7 +872,7 @@
   }
 
   function toggleContent() {
-    [hanziEl, pinyinEl, meaningEl, ansHanziEl, ansPinyinEl].forEach(el => {
+    answerElements.forEach(el => {
       el.classList.toggle("hidden");
     });
   }
@@ -739,7 +883,7 @@
       index = val - startNum;
       loadLesson(index);
     } else {
-      alert(`Nhập số từ ${startNum} đến ${endNum}`);
+      alert(`Vui lòng nhập số từ ${startNum} đến ${endNum}`);
     }
   }
 
