@@ -59,14 +59,14 @@
     audio {
       width: 100%;
       margin: 15px 0;
-      /* Đảm bảo style player hiện đại hơn */
     }
     
     .controls { 
         margin: 15px 0; 
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
+        /* Điều chỉnh căn giữa để các nút còn lại cân đối */
+        justify-content: center; 
         gap: 8px;
     }
     
@@ -80,19 +80,13 @@
         cursor: pointer;
         transition: background-color 0.2s, transform 0.1s;
         font-weight: 500;
-        flex-grow: 1; /* Cho phép nút rộng hơn trên di động */
-        max-width: 180px; /* Giới hạn độ rộng trên PC */
+        /* Cho phép nút co giãn */
+        flex-grow: 1; 
+        max-width: 180px; 
     }
     
     button:hover {
         background: #2563eb;
-    }
-    
-    .toggle-btn {
-        background: var(--success-color); /* Màu xanh lá cho nút Ẩn/Hiện */
-    }
-    .toggle-btn:hover {
-        background: #1e7e34;
     }
     
     /* 4. Trạng thái và Jump Input */
@@ -117,7 +111,7 @@
     }
     
     .jump-button {
-        background: #6b7280; /* Màu xám cho nút Chọn */
+        background: #6b7280; 
         flex-grow: 0;
     }
     .jump-button:hover {
@@ -132,7 +126,7 @@
         margin: var(--spacing) auto; 
         box-shadow: var(--shadow-light);
         text-align: center;
-        border-top: 5px solid var(--primary-color); /* Đường viền nổi bật */
+        border-top: 5px solid var(--primary-color); 
     }
     
     .card hr {
@@ -148,14 +142,41 @@
         font-size: 1.2rem;
         color: var(--primary-color);
         text-transform: uppercase;
+        
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
     }
     .section-title:first-of-type {
         margin-top: 0;
     }
 
+    /* Link Ẩn/Hiện */
+    #toggleLink {
+        font-size: 0.9rem; 
+        font-weight: 500;
+        text-decoration: none;
+        color: var(--secondary-color); 
+        cursor: pointer;
+        padding: 5px 10px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        transition: color 0.2s, border-color 0.2s;
+    }
+    #toggleLink:hover {
+        color: var(--secondary-color);
+        border-color: #a7f3d0;
+        text-decoration: underline;
+    }
+    
+    .section-title-text {
+        margin-right: auto;
+        /* Căn chỉnh text "Câu hỏi" khi link ở bên phải */
+    }
+
     .hanzi { 
         font-family: 'Noto Serif SC', "SimSun", serif; 
-        font-size: 3rem; /* Lớn, dễ đọc */
+        font-size: 3rem; 
         margin: 10px 0; 
         font-weight: 700;
         color: #000;
@@ -185,7 +206,7 @@
         font-size: 2.5rem;
         margin: 10px 0; 
         font-weight: 700;
-        color: var(--secondary-color); /* Màu xanh lục */
+        color: var(--secondary-color); 
     }
     .answer-pinyin { 
         color: #6b7280; 
@@ -203,6 +224,16 @@
         }
         .hanzi, .answer-hanzi { 
             font-size: 2.5rem; 
+        }
+        .section-title {
+            justify-content: space-between;
+        }
+        .section-title-text {
+             padding-left: 0;
+        }
+        #toggleLink {
+            font-size: 0.8rem;
+            padding: 5px;
         }
     }
   </style>
@@ -222,14 +253,15 @@
 
     <div class="controls">
       <button onclick="prev()">⏮ Câu trước</button>
-      <button onclick="player.play().catch(()=>{})">⟳ Nghe lại</button>
       <button onclick="next()">Câu tiếp ⏭</button>
-      <button onclick="toggleContent()" class="toggle-btn">👁 Ẩn/Hiện đáp án</button>
     </div>
-
+    
     <div class="card">
       <div class="question-section">
-        <div class="section-title">Câu hỏi</div>
+        <div class="section-title">
+            <span class="section-title-text">Câu hỏi</span>
+            <a href="#" id="toggleLink" onclick="toggleContent(event)" title="Hiện/Ẩn Đáp án">Hiện đáp án</a>
+        </div>
         <div class="hanzi hidden" id="hanzi"></div>
         <div class="pinyin hidden" id="pinyin"></div>
         <div class="meaning hidden" id="meaning"></div>
@@ -833,9 +865,18 @@
   const ansPinyinEl = document.getElementById("answer_pinyin");
   const jumpInput = document.getElementById("jumpInput");
   const statusTextEl = document.getElementById("statusText");
+  const toggleLinkEl = document.getElementById("toggleLink"); 
 
   // Các element cần ẩn/hiện
   const answerElements = [hanziEl, pinyinEl, meaningEl, ansHanziEl, ansPinyinEl];
+
+  function updateToggleLink(isHidden) {
+    if (isHidden) {
+      toggleLinkEl.textContent = 'Hiện đáp án';
+    } else {
+      toggleLinkEl.textContent = 'Ẩn đáp án';
+    }
+  }
 
   function loadLesson(i) {
     const l = lessons[i];
@@ -846,7 +887,7 @@
     ansHanziEl.textContent = l.ans_hanzi;
     ansPinyinEl.textContent = l.ans_pinyin;
     
-    // Tự động phát nhạc (có thể bị chặn nếu không có tương tác người dùng)
+    // Tự động phát nhạc 
     player.play().catch(()=>{}); 
     
     const lessonNumber = i + startNum;
@@ -859,6 +900,21 @@
         el.classList.add("hidden");
       }
     });
+    // Đảm bảo link luôn ở trạng thái "Hiện đáp án" khi tải câu mới
+    updateToggleLink(true);
+  }
+
+  function toggleContent(event) {
+    if(event) event.preventDefault(); 
+    
+    let isCurrentlyHidden = hanziEl.classList.contains("hidden");
+    
+    answerElements.forEach(el => {
+      el.classList.toggle("hidden");
+    });
+    
+    // Cập nhật link sau khi toggle
+    updateToggleLink(!isCurrentlyHidden);
   }
 
   function next() { 
@@ -869,12 +925,6 @@
   function prev() { 
     index = (index - 1 + lessons.length) % lessons.length;
     loadLesson(index);
-  }
-
-  function toggleContent() {
-    answerElements.forEach(el => {
-      el.classList.toggle("hidden");
-    });
   }
 
   function jumpTo() {
