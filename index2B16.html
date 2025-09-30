@@ -161,12 +161,14 @@
             background-color: #fff;
             font-size: 3em;
             color: #0044AA;
+            padding: 10px; /* Thêm padding cho hán tự */
         }
         .flashcard-back {
             background-color: #f8f9fa;
             transform: rotateY(180deg);
             padding: 15px;
             font-size: 1.2em;
+            text-align: center; /* Căn giữa nội dung mặt sau */
         }
         .flashcard-back .pinyin {
             color: #555;
@@ -175,6 +177,7 @@
         .flashcard-back .meaning {
             margin-top: 10px;
             font-weight: bold;
+            color: #8e44ad; /* Màu tím cho nghĩa tiếng Việt */
         }
         .flashcard-nav {
             margin-top: 20px;
@@ -230,6 +233,7 @@
                 subContent.style.maxHeight = subContent.scrollHeight + "px";
                 if(subIcon) subIcon.classList.add('open');
             }
+            // Điều chỉnh chiều cao của nội dung chính để không bị cắt
             setTimeout(() => {
                 if (mainContent && mainContent.style.maxHeight) {
                     mainContent.style.maxHeight = (mainContent.scrollHeight) + "px";
@@ -248,11 +252,24 @@
         
         <li>
             <div class="section-header" onclick="toggleMainContent('contentA')">
-                A. Nội dung chính
+                A. Bài tập chuẩn bị trước khóa học
                 <span id="iconA" class="toggle-icon">▶</span>
             </div>
             <div id="contentA" class="section-content">
-                <p>Phần này bao gồm các đoạn hội thoại, bài đọc chính và kiến thức nền tảng của Bài 16.</p>
+                <h3 style="font-size: 1.2em; color: #0044AA; margin-bottom: 10px;">BÀI TẬP BẮT BUỘC</h3>
+                <ul class="sub-content-list">
+                    <li>Quay video **giới thiệu bản thân bằng tiếng Trung** thật hay và lưu loát, cần nói được nhiều hơn lúc học Hán 1 (quay mặt).</li>
+                    <li>Quay video **nhìn chữ Hán đọc bài khóa bài 16 và dịch**.
+                        <p style="font-style: italic; margin-top: 5px;">*Lưu ý: Từ Hán 2 cần đọc được bài khóa bằng chữ Hán.</p>
+                    </li>
+                    <li>**Chuẩn bị trước bài 16:**
+                        <ul class="sub-content-list" style="list-style-type: circle;">
+                            <li>**(Yêu cầu nộp)** Quay video **duet nghe-nhắc lại 2 bài khóa** bài 16 <a href="https://www.tiktok.com/@duettiengtrungquoc/video/7124701623435136282" target="_blank">bài khoá 1</a> và <a href="https://www.tiktok.com/@duettiengtrungquoc/video/7124702442905668891" target="_blank">bài khoá 2</a></li>
+                            <li>**(Không yêu cầu nộp)** Phần ghi chép có thể **in slides hoặc tự chép bài 16 vào vở**.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p style="margin-top: 20px; font-weight: bold; color: #8e44ad;">Chú ý: Bài tập nộp lên nhóm Facebook của lớp.</p>
             </div>
         </li>
         
@@ -744,7 +761,7 @@
     </ul>
     
     <p style="margin-top: 40px; text-align: center;">
-        <a href="index.html#han2">← Quay lại Mục lục Chính</a> 
+        <a href="index.html#han2">← Quay lại Mục lục Chính (HSK2: Quyển 2)</a> 
     </p>
 </body>
 </html>
