@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Trang Chủ - Luyện Nghe Tiếng Trung</title>
+  <title>Hệ thống kiến thức HSK1-HSK4</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
       padding: 0;
       background: var(--background-color);
       color: var(--text-color);
-      min-height: 100vh;
+      min-height: 10vh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -40,11 +40,21 @@
 
     h1 {
       font-size: 2.5rem;
-      margin: 20px 0;
+      margin: 20px 0 5px 0; /* Giảm margin dưới h1 */
       color: var(--primary-color);
       font-weight: 700;
       text-align: center;
     }
+    
+    /* Cập nhật thêm CSS cho h2 để căn giữa */
+    h2.subtitle-center {
+        font-size: 1.2rem;
+        margin: 5px 0 20px 0; /* Đặt lại margin h2 */
+        color: var(--text-color);
+        font-weight: 400;
+        text-align: center; /* Căn giữa */
+    }
+
 
     /* 2. Bố cục chính (Sidebar + Content) */
     .main-layout {
@@ -245,20 +255,22 @@
 </head>
 <body>
   <div class="container">
-    <h1>Luyện Nghe Tiếng Trung (Tiếng Trung Thanh Hằng)</h1>
-    
+    <h1>Hệ thống kiến thức HSK1-HSK4</h1>
+    <h2 class="subtitle-center">Dựa trên giáo trình tại Trung tâm Tiếng Trung Thanh Hằng</h2>
     <div class="main-layout">
       <nav class="main-menu">
-        <a href="#han1" class="main-menu-item active" onclick="showContent('han1')">Hán ngữ 1 - Quyển 1</a>
-        <a href="#han2" class="main-menu-item" onclick="showContent('han2')">Hán ngữ 1 - Quyển 2</a>
-        <a href="#han3" class="main-menu-item" onclick="showContent('han3')">Quyển 3</a>
-        <a href="#han4" class="main-menu-item" onclick="showContent('han4')">Quyển 4</a>
+        <a href="#han1" class="main-menu-item active" onclick="showContent('han1')">HSK1 - Quyển 1</a>
+        <a href="#han2" class="main-menu-item" onclick="showContent('han2')">HSK2 - Quyển 2</a>
+        <a href="#han3" class="main-menu-item" onclick="showContent('han3')">HSK3 - Quyển 3</a>
+        <a href="#han4" class="main-menu-item" onclick="showContent('han4')">HSK3 - Quyển 4</a>
+        <a href="#han5" class="main-menu-item" onclick="showContent('han5')">HSK4 - Quyển 5</a>
+        <a href="#han6" class="main-menu-item" onclick="showContent('han6')">HSK4 - Quyển 6</a>
       </nav>
       
       <main class="content-area">
         
         <div id="han1-content" class="content-tab active-content">
-          <h2>Hán ngữ 1 Quyển 1- Danh mục Bài học</h2>
+          <h2>HSK1 - Quyển 1 - Danh mục Bài học</h2>
           <div class="submenu-grid">
             
             <a href="index1.html" class="submenu-item">
@@ -275,7 +287,7 @@
         </div>
 
         <div id="han2-content" class="content-tab">
-          <h2>Hán ngữ 1 Quyển 2 - Danh mục Bài học</h2>
+          <h2>HSK2 - Quyển 2 - Danh mục Bài học</h2>
           <div class="submenu-grid">
             
              <a href="#" class="review-item disabled">
@@ -294,64 +306,64 @@
               <h3 style="margin-top: 0; color: var(--primary-color); font-size: 1.2rem;">Danh mục chi tiết Bài 16 – 30</h3>
               <div class="submenu-grid">
                 
-                <a href="#" class="submenu-item disabled">
-                  Bài 16: Tôi muốn học Thái Cực Quyền
+                <a href="index2B16.html" class="submenu-item">
+                  Bài 16: 你常去图书馆吗? Bạn có thường xuyên đến thư viện không
+                  <span class="subtitle">Click để học</span>
+                </a>
+                <a href="index2B17.html" class="submenu-item disabled">
+                  Bài 17: 他做什么呢? Bạn ấy đang làm gì đấy
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 17: Bạn có thường xuyên đến thư viện không?
+                <a href="index2B18.html" class="submenu-item disabled">
+                  Bài 18: 我去邮局寄包裹 Tôi đi bưu điện gửi bưu phẩm
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 18: Hôm nay là ngày 10 tháng 10 năm 2020
+                <a href="index2B19.html" class="submenu-item disabled">
+                  Bài 19: 可以试试吗? Có thể thử được không
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 19: Sinh nhật của bạn là ngày mấy tháng mấy?
+                <a href="index2B20.html" class="submenu-item disabled">
+                  Bài 20: 祝你生日快乐 Chúc bạn sinh nhật vui vẻ
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 20: Quần áo của bạn đẹp quá!
+                <a href="index2B21.html" class="submenu-item disabled">
+                  Bài 21: 我们明天7点15一刻出发 Ngày mai chúng ta xuất phát lúc 7h15
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 21: Xin hỏi, bây giờ là mấy giờ?
+                <a href="index2B22.html" class="submenu-item disabled">
+                  Bài 22: 我打算请老师教我京剧 Tôi định mời giáo viên dạy tôi kinh kịch
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 22: Chúng ta đổi sang bàn khác đi
+                <a href="index2B23.html" class="submenu-item disabled">
+                  Bài 23: 学校里有邮局吗？Trong trường có bưu điện không
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 23: Bạn thích môn thể thao nào?
+                <a href="index2B24.html" class="submenu-item disabled">
+                  Bài 24: 我想学太极拳 Tôi muốn học thái cực quyền
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 24: Phòng của tôi hơi bừa bộn
+                <a href="index2B25.html" class="submenu-item disabled">
+                  Bài 25: 她学得很好 Cô ấy học rất giỏi
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 25: Ngoài trời lạnh không?
+                <a href="index2B26.html" class="submenu-item disabled">
+                  Bài 26: 田芳去哪儿了 Điền Phương đi đâu rồi·
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 26: Trường của bạn lớn không?
+                <a href="index2B27.html" class="submenu-item disabled">
+                  Bài 27: 玛丽哭了 Mari khóc rồi
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 27: Tôi muốn đi du lịch Trung Quốc
+                <a href="index2B28.html" class="submenu-item disabled">
+                  Bài 28: 我吃了早饭就来了 Tôi ăn sáng xong rồi đến ngay
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 28: Bạn có thú cưng không?
+                <a href="index2B29.html" class="submenu-item disabled">
+                  Bài 29: 我都做对了 Tôi làm đúng hết rồi
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 29: Tôi muốn mua một chiếc đồng hồ
-                  <span class="subtitle">Đang cập nhật...</span>
-                </a>
-                <a href="#" class="submenu-item disabled">
-                  Bài 30: Chúng ta cùng đi xem phim nhé
+                <a href="index2B30.html" class="submenu-item disabled">
+                  Bài 30: 我来了两个多月了 Tôi đã đến được hơn hai tháng rồi
                   <span class="subtitle">Đang cập nhật...</span>
                 </a>
               </div>
@@ -359,7 +371,7 @@
         </div>
 
         <div id="han3-content" class="content-tab">
-          <h2>Quyển 3 - Nội dung Ôn tập</h2>
+          <h2>HSK3 - Quyển 3 - Nội dung Ôn tập</h2>
           <div class="submenu-grid">
              <a href="#" class="submenu-item disabled">
               Đang cập nhật...
@@ -369,7 +381,27 @@
         </div>
 
         <div id="han4-content" class="content-tab">
-          <h2>Quyển 4 - Nội dung Ôn tập</h2>
+          <h2>HSK3 - Quyển 4 - Nội dung Ôn tập</h2>
+          <div class="submenu-grid">
+             <a href="#" class="submenu-item disabled">
+              Đang cập nhật...
+              <span class="subtitle">Sẽ sớm có trong thời gian tới!</span>
+            </a>
+          </div>
+        </div>
+        
+        <div id="han5-content" class="content-tab">
+          <h2>HSK4 - Quyển 5 - Nội dung Ôn tập</h2>
+          <div class="submenu-grid">
+             <a href="#" class="submenu-item disabled">
+              Đang cập nhật...
+              <span class="subtitle">Sẽ sớm có trong thời gian tới!</span>
+            </a>
+          </div>
+        </div>
+        
+        <div id="han6-content" class="content-tab">
+          <h2>HSK4 - Quyển 6 - Nội dung Ôn tập</h2>
           <div class="submenu-grid">
              <a href="#" class="submenu-item disabled">
               Đang cập nhật...
@@ -424,7 +456,7 @@
         }
     }
     
-    // Khởi tạo: Đảm bảo chỉ Hán 1 được hiển thị khi tải trang và thiết lập subtitle
+    // Khởi tạo: Đảm bảo chỉ HSK1 - Quyển 1 được hiển thị khi tải trang và thiết lập subtitle
     document.addEventListener('DOMContentLoaded', () => {
         // Ẩn tất cả các tab không phải là Hán 1
         document.querySelectorAll('.content-tab').forEach(tab => {
