@@ -3,765 +3,397 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bài 16: HSK2 Quyển 2</title>
+    <title>Flashcard Tiếng Trung</title>
     <style>
-        body { 
-            font-family: Cambria, Georgia, serif; 
-            line-height: 1.8;
-            padding: 20px; 
-            color: #333;
-        }
-        
-        h1 { 
-            color: #0044AA; 
-            text-align: center; 
-            border-bottom: 2px solid #ddd; 
-            padding-bottom: 10px; 
-            margin-bottom: 30px;
-            font-weight: bold; 
-            font-size: 1.6em;
-            line-height: 1.4;
-        }
-        
-        .pinyin-text {
-            font-weight: normal; 
-            color: #000; 
-            font-size: 0.7em;
-            display: block;
-            margin-top: 5px;
+        /* CSS để nhúng font Simsun */
+        @font-face {
+            font-family: 'Simsun';
+            src: url(https://fonts.gstatic.com/s/simsun/v18/K9-BZD0b9T8xcP0Q.woff2) format('woff2');
+            unicode-range: U+4E00-9FFF; /* Phạm vi cho ký tự Hán */
         }
 
-        .vietnamese-text {
-            font-weight: bold;
-            color: #000; 
-            font-size: 0.8em;
-            display: block;
-            margin-top: 5px;
-        }
-
-        ul.lesson-structure { list-style-type: none; padding-left: 0; }
-
-        .section-header { 
-            font-size: 1.4em; 
-            color: #333;
-            font-weight: normal; 
-            margin-top: 25px; 
-            border-left: 5px solid #8e44ad; 
-            padding-left: 10px;
-            margin-bottom: 10px;
-            cursor: pointer;
+        body {
+            font-family: Arial, sans-serif;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .subsection-header {
-            font-size: 1em;
-            cursor: pointer;
-            margin-bottom: 5px;
-            padding: 5px 0;
-            display: flex;
-            justify-content: space-between;
-            list-style-type: decimal;
-        }
-        .subsection-header::marker {
-            font-weight: bold;
-        }
-
-        .vocab-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            font-size: 0.95em;
-        }
-        .vocab-table th, .vocab-table td {
-            border: 1px solid #ddd;
-            padding: 8px 10px;
-            text-align: left;
-        }
-        .vocab-table th {
-            background-color: #f2f2f2;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .toggle-icon {
-            font-size: 0.8em;
-            margin-right: 10px;
-            transition: transform 0.3s ease;
-            user-select: none;
-        }
-        .toggle-icon.open {
-            transform: rotate(90deg);
-        }
-
-        .section-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-out; 
-            padding-left: 20px;
-        }
-
-        .sub-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out;
-            padding-left: 20px;
-            border-left: 1px dashed #ccc;
-            margin-left: 5px;
-            padding-bottom: 5px;
-        }
-
-        ul.sub-list { list-style-type: none; padding-left: 0; }
-        ul.sub-content-list { list-style-type: disc; padding-left: 15px; }
-        
-        a { color: #0044AA; text-decoration: none; font-weight: normal; }
-        a:hover { text-decoration: underline; }
-
-        /* === CSS CHO FLASHCARD === */
-        .flashcard-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
             padding: 20px;
+            text-align: center;
         }
-        .flashcard-scene {
-            width: 300px;
-            height: 200px;
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .scene {
+            width: 100%;
+            height: 300px;
             perspective: 600px;
-            cursor: pointer;
+            position: relative;
         }
-        .flashcard {
+
+        .card {
             width: 100%;
             height: 100%;
-            position: relative;
-            transition: transform 0.6s;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            transition: 
+                transform 0.6s, 
+                opacity 0.3s, 
+                left 0.4s;
             transform-style: preserve-3d;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
-        .flashcard.is-flipped {
+
+        .card.is-flipped {
             transform: rotateY(180deg);
         }
-        .flashcard-face {
+
+        /* --- HIỆU ỨNG TRƯỢT --- */
+        .card.slide-next-out {
+            transform: translateX(-100%) rotateY(0deg); 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card.slide-prev-out {
+            transform: translateX(100%) rotateY(0deg); 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card__face {
             position: absolute;
             width: 100%;
             height: 100%;
-            -webkit-backface-visibility: hidden;
+            -webkit-backface-visibility: hidden; 
             backface-visibility: hidden;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            border-radius: 10px;
-            border: 1px solid #ddd;
+            align-items: center;
+            border-radius: 12px;
+            background: #ffffff;
         }
-        .flashcard-front {
-            background-color: #fff;
-            font-size: 3em;
-            color: #0044AA;
-            padding: 10px; /* Thêm padding cho hán tự */
+
+        /* YÊU CẦU: Mặt trước chữ Hán, font Simsun, màu đen, ở giữa */
+        .card__face--front {
+            font-family: 'Simsun', sans-serif; 
+            font-size: 80px;
+            color: #000000; /* Chữ màu đen */
         }
-        .flashcard-back {
-            background-color: #f8f9fa;
+
+        .card__face--back {
             transform: rotateY(180deg);
-            padding: 15px;
-            font-size: 1.2em;
-            text-align: center; /* Căn giữa nội dung mặt sau */
+            padding: 20px;
+            box-sizing: border-box;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
+            text-align: center; 
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
         }
-        .flashcard-back .pinyin {
-            color: #555;
-            font-style: italic;
+        
+        .back-content p {
+            font-size: 1.3rem;
+            margin: 8px 0;
+            width: 100%;
+            text-align: center; 
+            font-weight: 500;
         }
-        .flashcard-back .meaning {
-            margin-top: 10px;
+        
+        .back-content .pinyin { color: #e67e22; font-weight: bold; font-size: 1.6rem; } /* Màu cam */
+        .back-content .hanviet { color: #8e44ad; } /* Màu tím */
+        .back-content .nghia { color: #1f506b; font-style: italic; } /* Màu xanh đậm (thay vì #27ae60) */
+        .back-content .vidu-han { color: #000000; font-family: 'Simsun', sans-serif; margin-top: 15px; font-size: 1.5rem; } /* Chữ Hán đen */
+        .back-content .dichnghia { color: #000000; font-style: italic; font-size: 1rem; } /* Chữ đen */
+
+
+        .navigation {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 5px;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+        
+        #counter {
+            font-size: 1.1rem;
             font-weight: bold;
-            color: #8e44ad; /* Màu tím cho nghĩa tiếng Việt */
+            color: #7f8c8d;
+            flex-grow: 1;
+            text-align: center;
         }
-        .flashcard-nav {
-            margin-top: 20px;
+        
+        .jump-control {
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
-        .flashcard-nav button {
-            background-color: #0044AA;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            margin: 0 10px;
-            border-radius: 5px;
-            font-size: 1.5em;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .flashcard-nav button:hover {
-            background-color: #003388;
-        }
-        #card-counter {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #555;
-        }
-    </style>
 
-    <script>
-        // Các hàm toggle giữ nguyên
-        function toggleMainContent(contentId) {
-            const content = document.getElementById(contentId);
-            document.querySelectorAll('.section-content').forEach(item => { if (item.id !== contentId) item.style.maxHeight = null; });
-            document.querySelectorAll('.section-header .toggle-icon').forEach(icon => { if (icon.id !== `icon${contentId.replace('content', '')}`) icon.classList.remove('open'); });
-            const icon = document.getElementById(`icon${contentId.replace('content', '')}`);
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-                if(icon) icon.classList.remove('open');
-            } else {
-                content.style.maxHeight = (content.scrollHeight + 50) + "px";
-                if(icon) icon.classList.add('open');
-            }
+        #jump-input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
         }
-        function toggleSubContent(event, subContentId) {
-            event.stopPropagation();
-            const subContent = document.getElementById(subContentId);
-            const subIcon = document.getElementById(subContentId.replace('subcontent', 'subicon'));
-            const mainContent = subContent.closest('.section-content');
-            if (subContent.style.maxHeight) {
-                subContent.style.maxHeight = null;
-                if(subIcon) subIcon.classList.remove('open');
-            } else {
-                subContent.style.maxHeight = subContent.scrollHeight + "px";
-                if(subIcon) subIcon.classList.add('open');
-            }
-            // Điều chỉnh chiều cao của nội dung chính để không bị cắt
-            setTimeout(() => {
-                if (mainContent && mainContent.style.maxHeight) {
-                    mainContent.style.maxHeight = (mainContent.scrollHeight) + "px";
-                }
-            }, 400);
+        
+        .jump-button {
+            background-color: #e74c3c; 
         }
-    </script>
+        
+        .jump-button:hover {
+            background-color: #c0392b;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>
-        第十六课：你常去图书馆吗?<br>
-        <span class="pinyin-text">Nǐ chángqù túshūguǎn ma</span><br>
-        <span class="vietnamese-text">Bài 16: Bạn có thường xuyên đến thư viện không</span>
-    </h1>
-    <ul class="lesson-structure">
+
+    <div class="container">
+        <h1>Flashcard Tiếng Trung</h1>
+        <div class="scene">
+            <div id="flashcard-container"></div>
+        </div>
+        <div class="navigation">
+            <button class="nav-button" id="prev-btn">Trước</button>
+            <span id="counter"></span>
+            <button class="nav-button" id="next-btn">Sau</button>
+        </div>
         
-        <li>
-            <div class="section-header" onclick="toggleMainContent('contentA')">
-                A. Bài tập chuẩn bị trước khóa học
-                <span id="iconA" class="toggle-icon">▶</span>
-            </div>
-            <div id="contentA" class="section-content">
-                <h3 style="font-size: 1.2em; color: #0044AA; margin-bottom: 10px;">BÀI TẬP BẮT BUỘC</h3>
-                <ul class="sub-content-list">
-                    <li>Quay video **giới thiệu bản thân bằng tiếng Trung** thật hay và lưu loát, cần nói được nhiều hơn lúc học Hán 1 (quay mặt).</li>
-                    <li>Quay video **nhìn chữ Hán đọc bài khóa bài 16 và dịch**.
-                        <p style="font-style: italic; margin-top: 5px;">*Lưu ý: Từ Hán 2 cần đọc được bài khóa bằng chữ Hán.</p>
-                    </li>
-                    <li>**Chuẩn bị trước bài 16:**
-                        <ul class="sub-content-list" style="list-style-type: circle;">
-                            <li>**(Yêu cầu nộp)** Quay video **duet nghe-nhắc lại 2 bài khóa** bài 16 <a href="https://www.tiktok.com/@duettiengtrungquoc/video/7124701623435136282" target="_blank">bài khoá 1</a> và <a href="https://www.tiktok.com/@duettiengtrungquoc/video/7124702442905668891" target="_blank">bài khoá 2</a></li>
-                            <li>**(Không yêu cầu nộp)** Phần ghi chép có thể **in slides hoặc tự chép bài 16 vào vở**.</li>
-                        </ul>
-                    </li>
-                </ul>
-                <p style="margin-top: 20px; font-weight: bold; color: #8e44ad;">Chú ý: Bài tập nộp lên nhóm Facebook của lớp.</p>
-            </div>
-        </li>
+        <div class="jump-control">
+            <input type="number" id="jump-input" min="1" max="30" placeholder="#">
+            <button class="nav-button jump-button" id="jump-btn">Nhảy đến thẻ số</button>
+        </div>
+    </div>
+
+    <script>
+        // 30 từ vựng Hán ngữ giản thể được lấy từ shengci.txt
+        const cardData = [
+            { hanzi: '现在', pinyin: 'xiànzài', hanviet: 'hiện tại', nghia: 'Bây giờ', vidu: '我现在在学校。', dichnghia: 'Bây giờ tôi ở trường.' },
+            { hanzi: '跟', pinyin: 'gēn', hanviet: 'căn', nghia: 'Với', vidu: '我跟朋友一起去超市。', dichnghia: 'Tôi đi siêu thị với bạn.' },
+            { hanzi: '一起', pinyin: 'yìqǐ', hanviet: 'nhất khởi', nghia: 'Cùng nhau', vidu: '我们一起吃饭吧。', dichnghia: 'Chúng ta cùng ăn cơm nhé.' },
+            { hanzi: '咱们', pinyin: 'zánmen', hanviet: 'ta môn', nghia: 'Chúng ta', vidu: '咱们去公园散步吧。', dichnghia: 'Chúng ta đi dạo công viên nhé.' },
+            { hanzi: '走', pinyin: 'zǒu', hanviet: 'tẩu', nghia: 'Đi, bước đi', vidu: '他走得很快。', dichnghia: 'Anh ấy đi rất nhanh.' },
+            { hanzi: '常常', pinyin: 'chángcháng', hanviet: 'thường thường', nghia: 'Thường xuyên', vidu: '我常常看书。', dichnghia: 'Tôi thường đọc sách.' },
+            { hanzi: '有时候', pinyin: 'yǒu shíhou', hanviet: 'hữu thì hậu', nghia: 'Có lúc, đôi khi', vidu: '我有时候在家做饭。', dichnghia: 'Tôi đôi khi nấu ăn ở nhà.' },
+            { hanzi: '借', pinyin: 'jiè', hanviet: 'tá', nghia: 'Mượn, cho mượn', vidu: '我借一本书。', dichnghia: 'Tôi mượn một cuốn sách.' },
+            { hanzi: '上网', pinyin: 'shàng wǎng', hanviet: 'thượng võng', nghia: 'Lên mạng', vidu: '他每天上网两个小时。', dichnghia: 'Mỗi ngày anh ấy lên mạng 2 tiếng.' },
+            { hanzi: '查', pinyin: 'chá', hanviet: 'tra', nghia: 'Tra, tìm kiếm', vidu: '我查一下词典。', dichnghia: 'Tôi tra từ điển một chút.' },
+            { hanzi: '资料', pinyin: 'zīliào', hanviet: 'tư liệu', nghia: 'Tài liệu', vidu: '老师给我们很多学习资料。', dichnghia: 'Thầy cho chúng tôi nhiều tài liệu học tập.' },
+            { hanzi: '总是', pinyin: 'zǒng shì', hanviet: 'tổng thị', nghia: 'Luôn luôn', vidu: '她总是很早起床。', dichnghia: 'Cô ấy luôn luôn dậy sớm.' },
+            { hanzi: '安静', pinyin: 'ān jìng', hanviet: 'an tĩnh', nghia: 'Yên tĩnh', vidu: '图书馆很安静。', dichnghia: 'Thư viện rất yên tĩnh.' },
+            { hanzi: '晚上', pinyin: 'wǎnshang', hanviet: 'vãn thượng', nghia: 'Buổi tối', vidu: '我晚上常常看电视。', dichnghia: 'Buổi tối tôi thường xem TV.' },
+            { hanzi: '复习', pinyin: 'fùxí', hanviet: 'phục tập', nghia: 'Ôn tập', vidu: '我每天复习生词。', dichnghia: 'Mỗi ngày tôi ôn tập từ mới.' },
+            { hanzi: '课文', pinyin: 'kèwén', hanviet: 'khóa văn', nghia: 'Bài khóa', vidu: '我们一起读课文。', dichnghia: 'Chúng ta cùng đọc bài khóa.' },
+            { hanzi: '预习', pinyin: 'yùxí', hanviet: 'dự tập', nghia: 'Chuẩn bị bài', vidu: '明天的课文你预习了吗？', dichnghia: 'Bạn đã chuẩn bị bài khóa ngày mai chưa?' },
+            { hanzi: '生词', pinyin: 'shēngcí', hanviet: 'sinh từ', nghia: 'Từ mới', vidu: '今天我们学十个生词。', dichnghia: 'Hôm nay chúng ta học 10 từ mới.' },
+            { hanzi: '或者', pinyin: 'huòzhě', hanviet: 'hoặc giả', nghia: 'Hoặc, hoặc là', vidu: '我们去超市或者去公园。', dichnghia: 'Chúng ta đi siêu thị hoặc công viên.' },
+            { hanzi: '练习', pinyin: 'liànxí', hanviet: 'luyện tập', nghia: 'Luyện tập', vidu: '他在练习说汉语。', dichnghia: 'Anh ấy đang luyện nói tiếng Trung.' },
+            { hanzi: '收发', pinyin: 'shōufā', hanviet: 'thu phát', nghia: 'Nhận gửi', vidu: '我每天收发很多电子邮件。', dichnghia: 'Mỗi ngày tôi nhận gửi nhiều email.' },
+            { hanzi: '聊天儿', pinyin: 'liáo tiānr', hanviet: 'liêu thiên nhi', nghia: 'Trò chuyện', vidu: '我喜欢跟朋友聊天儿。', dichnghia: 'Tôi thích trò chuyện với bạn bè.' },
+            { hanzi: '伊妹儿', pinyin: 'yīmèir', hanviet: 'y muội nhi', nghia: 'Email', vidu: '给我发一个伊妹儿吧。', dichnghia: 'Gửi cho tôi một email nhé.' },
+            { hanzi: '电影', pinyin: 'diànyǐng', hanviet: 'điện ảnh', nghia: 'Phim điện ảnh', vidu: '我周末看电影。', dichnghia: 'Cuối tuần tôi xem phim.' },
+            { hanzi: '电视剧', pinyin: 'diànshìjù', hanviet: 'điện thị kịch', nghia: 'Phim truyền hình', vidu: '妈妈喜欢看电视剧。', dichnghia: 'Mẹ thích xem phim truyền hình.' },
+            { hanzi: '休息', pinyin: 'xiūxi', hanviet: 'hưu tức', nghia: 'Nghỉ ngơi', vidu: '我想休息一下。', dichnghia: 'Tôi muốn nghỉ một chút.' },
+            { hanzi: '宿舍', pinyin: 'sùshè', hanviet: 'túc xá', nghia: 'Kí túc xá', vidu: '我们住在学校宿舍。', dichnghia: 'Chúng tôi ở ký túc xá trường.' },
+            { hanzi: '公园', pinyin: 'gōngyuán', hanviet: 'công viên', nghia: 'Công viên', vidu: '公园里有很多人。', dichnghia: 'Trong công viên có nhiều người.' },
+            { hanzi: '超市', pinyin: 'chāoshì', hanviet: 'siêu thị', nghia: 'Siêu thị', vidu: '我去超市买东西。', dichnghia: 'Tôi đi siêu thị mua đồ.' },
+            { hanzi: '东西', pinyin: 'dōngxī', hanviet: 'đông tây', nghia: 'Đồ đạc, thứ', vidu: '我买了很多东西。', dichnghia: 'Tôi đã mua nhiều đồ.' }
+        ];
+
+        const flashcardContainer = document.getElementById('flashcard-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const jumpBtn = document.getElementById('jump-btn');
+        const jumpInput = document.getElementById('jump-input');
+        const counter = document.getElementById('counter');
+
+        let currentIndex = 0;
+        let isTransitioning = false; 
+        const totalCards = cardData.length;
         
-        <li>
-            <div class="section-header" onclick="toggleMainContent('contentB')">
-                B. Từ mới
-                <span id="iconB" class="toggle-icon">▶</span>
-            </div>
-            <div id="contentB" class="section-content">
-                <ul class="sub-list">
-                    <li>
-                        <div class="subsection-header" onclick="toggleSubContent(event, 'subcontentB1')">
-                            1. Học từ mới
-                            <span id="subiconB1" class="toggle-icon">▶</span>
-                        </div>
-                        <div id="subcontentB1" class="sub-content">
-                            
-                            <h3 style="font-size: 1.2em; color: #0044AA; margin-bottom: 10px;">Từ mới cơ bản (30 từ)</h3>
-                            <table class="vocab-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 10%;">STT</th>
-                                        <th style="width: 20%;">Hán tự</th>
-                                        <th style="width: 30%;">Pinyin</th>
-                                        <th style="width: 40%;">Nghĩa tiếng Việt</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>1</td><td>现在</td><td>xiànzài</td><td>Bây giờ</td></tr>
-                                    <tr><td>2</td><td>跟</td><td>gēn</td><td>Với</td></tr>
-                                    <tr><td>3</td><td>一起</td><td>yìqǐ</td><td>Cùng nhau</td></tr>
-                                    <tr><td>4</td><td>咱们</td><td>zánmen</td><td>Chúng ta</td></tr>
-                                    <tr><td>5</td><td>走</td><td>zǒu</td><td>Đi, bước đi</td></tr>
-                                    <tr><td>6</td><td>常常</td><td>chángcháng</td><td>Thường xuyên</td></tr>
-                                    <tr><td>7</td><td>有时候</td><td>yǒu shíhou</td><td>Có lúc, đôi khi</td></tr>
-                                    <tr><td>8</td><td>借</td><td>jiè</td><td>Mượn, cho mượn</td></tr>
-                                    <tr><td>9</td><td>上网</td><td>shàng wǎng</td><td>Lên mạng</td></tr>
-                                    <tr><td>10</td><td>查</td><td>chá</td><td>Tra, tìm kiếm</td></tr>
-                                    <tr><td>11</td><td>资料</td><td>zīliào</td><td>Tài liệu</td></tr>
-                                    <tr><td>12</td><td>总是</td><td>zǒng shì</td><td>Luôn luôn</td></tr>
-                                    <tr><td>13</td><td>安静</td><td>ān jìng</td><td>Yên tĩnh, yên lặng</td></tr>
-                                    <tr><td>14</td><td>晚上</td><td>wǎnshang</td><td>Buổi tối</td></tr>
-                                    <tr><td>15</td><td>复习</td><td>fùxí</td><td>Ôn tập</td></tr>
-                                    <tr><td>16</td><td>课文</td><td>kèwén</td><td>Bài khóa, đoạn văn bài học</td></tr>
-                                    <tr><td>17</td><td>预习</td><td>yùxí</td><td>Chuẩn bị bài, học trước</td></tr>
-                                    <tr><td>18</td><td>生词</td><td>shēngcí</td><td>Từ mới</td></tr>
-                                    <tr><td>19</td><td>或者</td><td>huòzhě</td><td>Hoặc, hoặc là</td></tr>
-                                    <tr><td>20</td><td>练习</td><td>liànxí</td><td>Bài tập, luyện tập</td></tr>
-                                    <tr><td>21</td><td>收发</td><td>shōufā</td><td>Nhận gửi</td></tr>
-                                    <tr><td>22</td><td>聊天儿</td><td>liáo tiānr</td><td>Trò chuyện, tán gẫu</td></tr>
-                                    <tr><td>23</td><td>伊妹儿</td><td>yīmèir</td><td>Email (Phiên âm của 'email')</td></tr>
-                                    <tr><td>24</td><td>电影</td><td>diànyǐng</td><td>Phim điện ảnh</td></tr>
-                                    <tr><td>25</td><td>电视剧</td><td>diànshìjù</td><td>Phim truyền hình</td></tr>
-                                    <tr><td>26</td><td>休息</td><td>xiūxi</td><td>Nghỉ ngơi</td></tr>
-                                    <tr><td>27</td><td>宿舍</td><td>sùshè</td><td>Kí túc xá</td></tr>
-                                    <tr><td>28</td><td>公园</td><td>gōngyuán</td><td>Công viên</td></tr>
-                                    <tr><td>29</td><td>超市</td><td>chāoshì</td><td>Siêu thị</td></tr>
-                                    <tr><td>30</td><td>东西</td><td>dōngxī</td><td>Đồ đạc, thứ</td></tr>
-                                </tbody>
-                            </table>
-
-                            <h3 style="font-size: 1.2em; color: #0044AA; margin-top: 30px; margin-bottom: 10px;">Từ mới mở rộng (51 từ)</h3>
-                            <table class="vocab-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 10%;">STT</th>
-                                        <th style="width: 20%;">Hán tự</th>
-                                        <th style="width: 30%;">Pinyin</th>
-                                        <th style="width: 40%;">Nghĩa tiếng Việt</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>1</td><td>图书馆</td><td>túshū guǎn</td><td>Thư viện</td></tr>
-                                    <tr><td>2</td><td>第十六课</td><td>Dì shíliù kè</td><td>Bài 16</td></tr>
-                                    <tr><td>3</td><td>邮局</td><td>yóujú</td><td>bưu điện</td></tr>
-                                    <tr><td>4</td><td>银行</td><td>yínháng</td><td>ngân hàng</td></tr>
-                                    <tr><td>5</td><td>学校</td><td>xuéxiào</td><td>trường học</td></tr>
-                                    <tr><td>6</td><td>医院</td><td>yīyuàn</td><td>bệnh viện</td></tr>
-                                    <tr><td>7</td><td>机场</td><td>jīchǎng</td><td>sân bay</td></tr>
-                                    <tr><td>8</td><td>车站</td><td>chēzhàn</td><td>bến xe</td></tr>
-                                    <tr><td>9</td><td>火车站</td><td>huǒchē zhàn</td><td>ga tàu hoả</td></tr>
-                                    <tr><td>10</td><td>公共汽车站</td><td>gōnggòng qìchē zhàn</td><td>bến xe bus</td></tr>
-                                    <tr><td>11</td><td>外语中心</td><td>wàiyǔ zhōngxīn</td><td>trung tâm ngoại ngữ</td></tr>
-                                    <tr><td>12</td><td>热闹</td><td>rènào</td><td>Náo nhiệt</td></tr>
-                                    <tr><td>13</td><td>地方</td><td>dìfang</td><td>Nơi</td></tr>
-                                    <tr><td>14</td><td>我们</td><td>wǒmen</td><td>Chúng tôi/ chúng ta</td></tr>
-                                    <tr><td>15</td><td>网</td><td>wǎng</td><td>mạng, lưới</td></tr>
-                                    <tr><td>16</td><td>网吧</td><td>wǎngba</td><td>quán nét</td></tr>
-                                    <tr><td>17</td><td>脸书</td><td>liǎnshū</td><td>Facebook</td></tr>
-                                    <tr><td>18</td><td>微信</td><td>wēixìn</td><td>wechat</td></tr>
-                                    <tr><td>19</td><td>还是</td><td>háishi</td><td>Hay là</td></tr>
-                                    <tr><td>20</td><td>看电影</td><td>kàn diànyǐng</td><td>Xem phim điện ảnh</td></tr>
-                                    <tr><td>21</td><td>看电视剧</td><td>kàn diànshìjù</td><td>Xem phim truyền hình</td></tr>
-                                    <tr><td>22</td><td>看电视</td><td>kàn diànshì</td><td>Xem tivi</td></tr>
-                                    <tr><td>23</td><td>看视频</td><td>kàn shìpín</td><td>Xem video</td></tr>
-                                    <tr><td>24</td><td>看短视频</td><td>kàn duǎn shìpín</td><td>Xem video ngắn</td></tr>
-                                    <tr><td>25</td><td>查资料</td><td>chá zīliào</td><td>Tra tài liệu</td></tr>
-                                    <tr><td>26</td><td>跟朋友聊天儿</td><td>gēn péngyǒu liáotiānr</td><td>Nói chuyện với bạn bè</td></tr>
-                                    <tr><td>27</td><td>收发伊妹儿</td><td>shōufā yīmèir</td><td>Nhận/gửi email</td></tr>
-                                    <tr><td>28</td><td>邮件</td><td>yóujiàn</td><td>email</td></tr>
-                                    <tr><td>29</td><td>买东西</td><td>mǎi dōngxi</td><td>Mua đồ</td></tr>
-                                    <tr><td>30</td><td>网购</td><td>Wǎnggòu</td><td>Mua đồ trên mạng</td></tr>
-                                    <tr><td>31</td><td>在网上购物</td><td>zài wǎngshàng gòuwù</td><td>Mua đồ trên mạng (cụm chi tiết)</td></tr>
-                                    <tr><td>32</td><td>听音乐</td><td>tīng yīnyuè</td><td>Nghe nhạc</td></tr>
-                                    <tr><td>33</td><td>看书</td><td>kànshū</td><td>Đọc sách</td></tr>
-                                    <tr><td>34</td><td>借钱</td><td>jiè qián</td><td>Vay tiền</td></tr>
-                                    <tr><td>35</td><td>没钱</td><td>méi qián</td><td>Hết tiền, không có tiền</td></tr>
-                                    <tr><td>36</td><td>姐姐</td><td>jiějiě</td><td>Chị gái</td></tr>
-                                    <tr><td>37</td><td>哥哥</td><td>gēgē</td><td>Anh trai</td></tr>
-                                    <tr><td>38</td><td>星期六</td><td>xīngqīliù</td><td>Thứ Bảy</td></tr>
-                                    <tr><td>39</td><td>星期日</td><td>xīngqīrì</td><td>Chủ Nhật</td></tr>
-                                    <tr><td>40</td><td>中文杂志</td><td>zhōngwén zázhì</td><td>Tạp chí tiếng Trung</td></tr>
-                                    <tr><td>41</td><td>杂志</td><td>zázhì</td><td>Tạp chí</td></tr>
-                                    <tr><td>42</td><td>英文</td><td>yīngwén</td><td>Tiếng Anh</td></tr>
-                                    <tr><td>43</td><td>写汉字</td><td>xiě hànzì</td><td>Viết chữ Hán</td></tr>
-                                    <tr><td>44</td><td>太</td><td>tài</td><td>Quá, lắm (thường dùng trong câu phủ định 不太... - không quá...)</td></tr>
-                                    <tr><td>45</td><td>所以</td><td>suǒyǐ</td><td>Cho nên</td></tr>
-                                    <tr><td>46</td><td>你</td><td>nǐ</td><td>Bạn</td></tr>
-                                    <tr><td>47</td><td>做</td><td>zuò</td><td>Làm</td></tr>
-                                    <tr><td>48</td><td>什么</td><td>shénme</td><td>Gì, cái gì</td></tr>
-                                    <tr><td>49</td><td>玛丽</td><td>Mǎlì</td><td>Mary (Tên riêng)</td></tr>
-                                    <tr><td>50</td><td>麦克</td><td>Màikè</td><td>Mike (Tên riêng)</td></tr>
-                                    <tr><td>51</td><td>加</td><td>jiā</td><td>Thêm, kết bạn</td></tr>
-                                </tbody>
-                            </table>
-
-                            <p style="margin-top: 20px; font-style: italic; color: #777;">Tổng cộng: 30 từ mới cơ bản và 51 từ mới mở rộng.</p>
-                            
-                        </div>
-                    </li>
-                    <li>
-                        <div class="subsection-header" onclick="toggleSubContent(event, 'subcontentB2')">
-                            2. Ôn tập từ mới
-                            <span id="subiconB2" class="toggle-icon">▶</span>
-                        </div>
-                        <div id="subcontentB2" class="sub-content">
-                            <!-- NỘI DUNG FLASHCARD MỚI -->
-                            <div class="flashcard-container">
-                                <div class="flashcard-scene">
-                                    <div class="flashcard" id="flashcard">
-                                        <div class="flashcard-face flashcard-front" id="flashcard-front"></div>
-                                        <div class="flashcard-face flashcard-back" id="flashcard-back"></div>
-                                    </div>
-                                </div>
-                                <div class="flashcard-nav">
-                                    <button id="prev-card">←</button>
-                                    <span id="card-counter"></span>
-                                    <button id="next-card">→</button>
-                                </div>
-                            </div>
-
-                            <script>
-                                const flashcards = [
-                                    // 30 Từ mới cơ bản
-                                    { hanzi: "现在", pinyin: "xiànzài", meaning: "Bây giờ" },
-                                    { hanzi: "跟", pinyin: "gēn", meaning: "Với" },
-                                    { hanzi: "一起", pinyin: "yìqǐ", meaning: "Cùng nhau" },
-                                    { hanzi: "咱们", pinyin: "zánmen", meaning: "Chúng ta" },
-                                    { hanzi: "走", pinyin: "zǒu", meaning: "Đi, bước đi" },
-                                    { hanzi: "常常", pinyin: "chángcháng", meaning: "Thường xuyên" },
-                                    { hanzi: "有时候", pinyin: "yǒu shíhou", meaning: "Có lúc, đôi khi" },
-                                    { hanzi: "借", pinyin: "jiè", meaning: "Mượn, cho mượn" },
-                                    { hanzi: "上网", pinyin: "shàng wǎng", meaning: "Lên mạng" },
-                                    { hanzi: "查", pinyin: "chá", meaning: "Tra, tìm kiếm" },
-                                    { hanzi: "资料", pinyin: "zīliào", meaning: "Tài liệu" },
-                                    { hanzi: "总是", pinyin: "zǒng shì", meaning: "Luôn luôn" },
-                                    { hanzi: "安静", pinyin: "ān jìng", meaning: "Yên tĩnh, yên lặng" },
-                                    { hanzi: "晚上", pinyin: "wǎnshang", meaning: "Buổi tối" },
-                                    { hanzi: "复习", pinyin: "fùxí", meaning: "Ôn tập" },
-                                    { hanzi: "课文", pinyin: "kèwén", meaning: "Bài khóa" },
-                                    { hanzi: "预习", pinyin: "yùxí", meaning: "Chuẩn bị bài" },
-                                    { hanzi: "生词", pinyin: "shēngcí", meaning: "Từ mới" },
-                                    { hanzi: "或者", pinyin: "huòzhě", meaning: "Hoặc, hoặc là" },
-                                    { hanzi: "练习", pinyin: "liànxí", meaning: "Luyện tập" },
-                                    { hanzi: "收发", pinyin: "shōufā", meaning: "Nhận gửi" },
-                                    { hanzi: "聊天儿", pinyin: "liáo tiānr", meaning: "Trò chuyện" },
-                                    { hanzi: "伊妹儿", pinyin: "yīmèir", meaning: "Email" },
-                                    { hanzi: "电影", pinyin: "diànyǐng", meaning: "Phim điện ảnh" },
-                                    { hanzi: "电视剧", pinyin: "diànshìjù", meaning: "Phim truyền hình" },
-                                    { hanzi: "休息", pinyin: "xiūxi", meaning: "Nghỉ ngơi" },
-                                    { hanzi: "宿舍", pinyin: "sùshè", meaning: "Kí túc xá" },
-                                    { hanzi: "公园", pinyin: "gōngyuán", meaning: "Công viên" },
-                                    { hanzi: "超市", pinyin: "chāoshì", meaning: "Siêu thị" },
-                                    { hanzi: "东西", pinyin: "dōngxī", meaning: "Đồ đạc" },
-                                    // 51 Từ mới mở rộng
-                                    { hanzi: "图书馆", pinyin: "túshū guǎn", meaning: "Thư viện" },
-                                    { hanzi: "第十六课", pinyin: "Dì shíliù kè", meaning: "Bài 16" },
-                                    { hanzi: "邮局", pinyin: "yóujú", meaning: "Bưu điện" },
-                                    { hanzi: "银行", pinyin: "yínháng", meaning: "Ngân hàng" },
-                                    { hanzi: "学校", pinyin: "xuéxiào", meaning: "Trường học" },
-                                    { hanzi: "医院", pinyin: "yīyuàn", meaning: "Bệnh viện" },
-                                    { hanzi: "机场", pinyin: "jīchǎng", meaning: "Sân bay" },
-                                    { hanzi: "车站", pinyin: "chēzhàn", meaning: "Bến xe" },
-                                    { hanzi: "火车站", pinyin: "huǒchē zhàn", meaning: "Ga tàu hoả" },
-                                    { hanzi: "公共汽车站", pinyin: "gōnggòng qìchē zhàn", meaning: "Bến xe bus" },
-                                    { hanzi: "外语中心", pinyin: "wàiyǔ zhōngxīn", meaning: "Trung tâm ngoại ngữ" },
-                                    { hanzi: "热闹", pinyin: "rènào", meaning: "Náo nhiệt" },
-                                    { hanzi: "地方", pinyin: "dìfang", meaning: "Nơi" },
-                                    { hanzi: "我们", pinyin: "wǒmen", meaning: "Chúng tôi/ chúng ta" },
-                                    { hanzi: "网", pinyin: "wǎng", meaning: "Mạng, lưới" },
-                                    { hanzi: "网吧", pinyin: "wǎngba", meaning: "Quán nét" },
-                                    { hanzi: "脸书", pinyin: "liǎnshū", meaning: "Facebook" },
-                                    { hanzi: "微信", pinyin: "wēixìn", meaning: "Wechat" },
-                                    { hanzi: "还是", pinyin: "háishi", meaning: "Hay là" },
-                                    { hanzi: "看电影", pinyin: "kàn diànyǐng", meaning: "Xem phim điện ảnh" },
-                                    { hanzi: "看电视剧", pinyin: "kàn diànshìjù", meaning: "Xem phim truyền hình" },
-                                    { hanzi: "看电视", pinyin: "kàn diànshì", meaning: "Xem tivi" },
-                                    { hanzi: "看视频", pinyin: "kàn shìpín", meaning: "Xem video" },
-                                    { hanzi: "看短视频", pinyin: "kàn duǎn shìpín", meaning: "Xem video ngắn" },
-                                    { hanzi: "查资料", pinyin: "chá zīliào", meaning: "Tra tài liệu" },
-                                    { hanzi: "跟朋友聊天儿", pinyin: "gēn péngyǒu liáotiānr", meaning: "Nói chuyện với bạn bè" },
-                                    { hanzi: "收发伊妹儿", pinyin: "shōufā yīmèir", meaning: "Nhận/gửi email" },
-                                    { hanzi: "邮件", pinyin: "yóujiàn", meaning: "Email" },
-                                    { hanzi: "买东西", pinyin: "mǎi dōngxi", meaning: "Mua đồ" },
-                                    { hanzi: "网购", pinyin: "Wǎnggòu", meaning: "Mua đồ trên mạng" },
-                                    { hanzi: "在网上购物", pinyin: "zài wǎngshàng gòuwù", meaning: "Mua đồ trên mạng" },
-                                    { hanzi: "听音乐", pinyin: "tīng yīnyuè", meaning: "Nghe nhạc" },
-                                    { hanzi: "看书", pinyin: "kànshū", meaning: "Đọc sách" },
-                                    { hanzi: "借钱", pinyin: "jiè qián", meaning: "Vay tiền" },
-                                    { hanzi: "没钱", pinyin: "méi qián", meaning: "Hết tiền" },
-                                    { hanzi: "姐姐", pinyin: "jiějiě", meaning: "Chị gái" },
-                                    { hanzi: "哥哥", pinyin: "gēgē", meaning: "Anh trai" },
-                                    { hanzi: "星期六", pinyin: "xīngqīliù", meaning: "Thứ Bảy" },
-                                    { hanzi: "星期日", pinyin: "xīngqīrì", meaning: "Chủ Nhật" },
-                                    { hanzi: "中文杂志", pinyin: "zhōngwén zázhì", meaning: "Tạp chí tiếng Trung" },
-                                    { hanzi: "杂志", pinyin: "zázhì", meaning: "Tạp chí" },
-                                    { hanzi: "英文", pinyin: "yīngwén", meaning: "Tiếng Anh" },
-                                    { hanzi: "写汉字", pinyin: "xiě hànzì", meaning: "Viết chữ Hán" },
-                                    { hanzi: "太", pinyin: "tài", meaning: "Quá, lắm" },
-                                    { hanzi: "所以", pinyin: "suǒyǐ", meaning: "Cho nên" },
-                                    { hanzi: "你", pinyin: "nǐ", meaning: "Bạn" },
-                                    { hanzi: "做", pinyin: "zuò", meaning: "Làm" },
-                                    { hanzi: "什么", pinyin: "shénme", meaning: "Gì, cái gì" },
-                                    { hanzi: "玛丽", pinyin: "Mǎlì", meaning: "Mary (Tên riêng)" },
-                                    { hanzi: "麦克", pinyin: "Màikè", meaning: "Mike (Tên riêng)" },
-                                    { hanzi: "加", pinyin: "jiā", meaning: "Thêm, kết bạn" },
-                                ];
-
-                                let currentCardIndex = 0;
-                                const card = document.getElementById('flashcard');
-                                const cardFront = document.getElementById('flashcard-front');
-                                const cardBack = document.getElementById('flashcard-back');
-                                const prevBtn = document.getElementById('prev-card');
-                                const nextBtn = document.getElementById('next-card');
-                                const counter = document.getElementById('card-counter');
-
-                                function showCard(index) {
-                                    const cardData = flashcards[index];
-                                    cardFront.textContent = cardData.hanzi;
-                                    cardBack.innerHTML = `<span class="pinyin">${cardData.pinyin}</span><span class="meaning">${cardData.meaning}</span>`;
-                                    counter.textContent = `${index + 1} / ${flashcards.length}`;
-                                    card.classList.remove('is-flipped');
-                                }
-
-                                card.addEventListener('click', () => {
-                                    card.classList.toggle('is-flipped');
-                                });
-
-                                prevBtn.addEventListener('click', () => {
-                                    currentCardIndex = (currentCardIndex - 1 + flashcards.length) % flashcards.length;
-                                    showCard(currentCardIndex);
-                                });
-
-                                nextBtn.addEventListener('click', () => {
-                                    currentCardIndex = (currentCardIndex + 1) % flashcards.length;
-                                    showCard(currentCardIndex);
-                                });
-
-                                // Hiển thị thẻ đầu tiên khi tải
-                                showCard(currentCardIndex);
-                            </script>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        // Biến xử lý Vuốt (Swipe)
+        let touchstartX = 0;
+        let touchendX = 0;
+        const SWIPE_THRESHOLD = 50; 
         
-        <li>
-            <div class="section-header" onclick="toggleMainContent('contentC')">
-                C. Ngữ pháp
-                <span id="iconC" class="toggle-icon">▶</span>
-            </div>
-            <div id="contentC" class="section-content">
-                 <ul class="sub-list">
-                    <li>
-                        <div class="subsection-header" onclick="toggleSubContent(event, 'subcontentC1')">
-                            1. Ngữ pháp Trọng điểm (Cấu trúc câu)
-                            <span id="subiconC1" class="toggle-icon">▶</span>
-                        </div>
-                        <div id="subcontentC1" class="sub-content">
-                            <h3 style="margin-top: 5px; font-size: 1em; font-weight: bold; color: #333;">I. CÁC ĐIỂM NGỮ PHÁP TRỌNG ĐIỂM (Cấu Trúc Câu)</h3>
-                            
-                            <h4 style="margin-top: 15px; font-size: 1em;">1. Cấu Trúc Đề Nghị và Hỏi ý kiến (跟... 一起, 吧, 好吗)</h4>
-                            <p>Đây là các cấu trúc được sử dụng để rủ rê hoặc đề xuất hành động chung.</p>
-                            <table class="vocab-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 30%;">Cấu trúc</th>
-                                        <th style="width: 30%;">Giải thích</th>
-                                        <th style="width: 40%;">Ví dụ minh họa (Hán tự / Pinyin)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>跟 [A] 一起 + [Động từ]</td><td>Cùng [A] làm gì đó.</td><td>你跟我一起去, 好吗？ (Nǐ gēn wǒ yìqǐ qù, hǎo ma?) (Bạn đi cùng tôi, được không?)</td></tr>
-                                    <tr><td>[Câu đề nghị] + 吧</td><td>Đề nghị hành động (thường mang tính mời gọi thân mật).</td><td>好, 咱們走吧。 (Hǎo, zánmen zǒu ba.) (Tốt, chúng ta đi thôi.)</td></tr>
-                                    <tr><td>我们/咱们 + 加... 吧</td><td>Đề nghị kết bạn/thêm vào.</td><td>我们加微信吧。 (Wǒmen jiā wēixìn ba.) (Chúng ta kết bạn wechat nhé.)</td></tr>
-                                </tbody>
-                            </table>
-                            
-                            <h4 style="margin-top: 20px; font-size: 1em;">2. Phó Từ Chỉ Tần Suất và Mức Độ</h4>
-                            <p>Các phó từ này đứng **trước động từ** hoặc **trước cụm động từ** để chỉ mức độ thường xuyên của hành động. Các từ chính bao gồm: **常/常常** (thường xuyên), **总是** (luôn luôn), **有时候** (có lúc/đôi khi), **很少** (rất ít khi).</p>
-                            <table class="vocab-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 30%;">Cấu trúc</th>
-                                        <th style="width: 30%;">Ý nghĩa</th>
-                                        <th style="width: 40%;">Ví dụ minh họa (Hán tự / Pinyin)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>[Chủ ngữ] + 常 + [Động từ]...</td><td>Thường làm gì.</td><td>我常去图书馆。 (Wǒ cháng qù túshū guǎn.) (Tôi thường đi thư viện.)</td></tr>
-                                    <tr><td>[Chủ ngữ] + 总是 + [Động từ]...</td><td>Luôn luôn làm gì (thể hiện thói quen cố định).</td><td>我总在宿舍看书。 (Wǒ zǒng zài sùshè kànshū.) (Tôi toàn đọc sách ở kí túc xá.)</td></tr>
-                                    <tr><td>[Chủ ngữ] + 很少 + [Động từ]...</td><td>Rất ít khi làm gì.</td><td>他很少去银行借钱。 (Tā hěn shǎo qù yínháng jiè qián.) (Anh ấy rất ít khi đi ngân hàng vay tiền.)</td></tr>
-                                    <tr><td>有时候... 或者... 有时候...</td><td>Đôi khi làm A, đôi khi làm B.</td><td>有時候借書, 有時候上網查資料。 (Yǒu shíhou jiè shū, yǒu shíhou shàng wǎng chá zīliào.)</td></tr>
-                                </tbody>
-                            </table>
-                            
-                            <h4 style="margin-top: 20px; font-size: 1em;">3. Phân biệt 或者 (huòzhě) và 还是 (háishi)</h4>
-                            <p>Cả hai từ này đều mang nghĩa "hoặc/hay là," nhưng chúng được dùng trong ngữ cảnh khác nhau:</p>
-                            <table class="vocab-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 20%;">Từ</th>
-                                        <th style="width: 40%;">Cách dùng</th>
-                                        <th style="width: 40%;">Ví dụ minh họa</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>或者 (huòzhě)</td><td>Dùng trong **câu trần thuật** hoặc câu trả lời (liệt kê các lựa chọn).</td><td>晚上我常常听音乐或者看电视剧。 (Buổi tối tôi thường nghe nhạc hoặc xem phim truyền hình.)</td></tr>
-                                    <tr><td>还是 (háishi)</td><td>Dùng trong **câu hỏi lựa chọn**.</td><td>你喜欢热闹的地方还是安静的地方？ (Bạn thích nơi náo nhiệt hay nơi yên tĩnh?)</td></tr>
-                                </tbody>
-                            </table>
-
-                            <h4 style="margin-top: 20px; font-size: 1em;">4. Cấu trúc chỉ Địa điểm và Hành động</h4>
-                            <p>[Chủ ngữ] + [Phó từ tần suất] + **在** [Địa điểm] + [Động từ] (Làm gì đó ở đâu đó).</p>
-                            <ul class="sub-content-list" style="margin-top: 5px;">
-                                <li>Anh ấy thường đọc sách ở nơi yên tĩnh: **他常在安静的地方看书。** (Tā cháng zài ānjìng de dìfang kànshū.)</li>
-                                <li>Tôi toàn đọc sách ở kí túc xá: **我总在宿舍看书。** (Wǒ zǒng zài sùshè kànshū.)</li>
-                            </ul>
-
-                            <h4 style="margin-top: 20px; font-size: 1em;">5. Cấu trúc phụ thuộc (Vì vậy/Cho nên)</h4>
-                            <p>Sử dụng **所以** (suǒyǐ) để chỉ kết quả hoặc lý do.</p>
-                            <ul class="sub-content-list" style="margin-top: 5px;">
-                                <li>Kí túc xá của tôi không yên tĩnh lắm. Cho nên buổi chiều tôi thường đến thư viện học: **我的宿舍不太安静。所以下午我常去图书馆学习。**</li>
-                                <li>Nên tôi không thường nghỉ ngơi ở kí túc xá: **所以我 不常 在宿舍休息。** (Suǒyǐ wǒ bù cháng zài sùshè xiūxi.)</li>
-                            </ul>
-
-                            <h4 style="margin-top: 20px; font-size: 1em;">6. Ngữ Pháp Trạng ngữ Thời gian</h4>
-                            <p>Từ ngữ chỉ thời gian (như **晚上**, **星期六 và星期日**) trong tiếng Hán thường đứng **trước động từ** hoặc đứng **trước chủ ngữ** để biểu thị thời gian của hành vi động tác.</p>
-                            <ul class="sub-content-list" style="margin-top: 5px;">
-                                <li>Bạn buổi tối làm gì? **你晚上做什么？**</li>
-                                <li>Buổi tối bạn làm gì? **晚上你做什么？**</li>
-                            </ul>
-
-                            <h4 style="margin-top: 20px; font-size: 1em;">7. Phân biệt 咱们 (zánmen) và 我们 (wǒmen)</h4>
-                            <p>Đây là điểm ngữ pháp quan trọng liên quan đến đại từ nhân xưng số nhiều:</p>
-                            <ul class="sub-content-list" style="margin-top: 5px;">
-                                <li>**咱们** (zánmen): Luôn bao gồm cả người nói và người nghe (Nghĩa: **Chúng ta**).</li>
-                                <li>**Chúng tôi** (wǒmen): Có hai cách dùng:
-                                    <ul class="sub-content-list" style="list-style-type: circle;">
-                                        <li>Bao gồm người nói và người nghe (**Chúng ta**).</li>
-                                        <li>Không bao gồm người nghe (chỉ bao gồm phía người nói) (**Chúng tôi**).</li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="subsection-header" onclick="toggleSubContent(event, 'subcontentC2')">
-                            2. Các câu mẫu điển hình
-                            <span id="subiconC2" class="toggle-icon">▶</span>
-                        </div>
-                        <div id="subcontentC2" class="sub-content">
-                            <h3 style="margin-top: 5px; font-size: 1em; font-weight: bold; color: #333;">II. CÁC CÂU MẪU ĐIỂN HÌNH (Trong Bài Khóa và Bài Tập Dịch)</h3>
-                            <p>Dưới đây là các câu mẫu đầy đủ xuất hiện trong các đoạn hội thoại, bài khóa và bài tập dịch.</p>
-
-                            <h4 style="margin-top: 15px; font-size: 1em;">2.1. Câu Hỏi</h4>
-                            <table class="vocab-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50%;">Hán tự / Pinyin</th>
-                                        <th style="width: 40%;">Nghĩa tiếng Việt</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>你常去图书馆吗？ (Nǐ cháng qù túshū guǎn ma?)</td><td>Bạn có thường xuyên đến thư viện không? (Tiêu đề Bài 16)</td></tr>
-                                    <tr><td>你的宿舍安静吗？ (Nǐ de sùshè ānjìng ma?)</td><td>Kí túc xá của bạn yên tĩnh không?</td></tr>
-                                    <tr><td>晚上你常做什么？ (Wǎnshang nǐ cháng zuò shénme?)</td><td>Buổi tối bạn thường làm gì?</td></tr>
-                                    <tr><td>你常看吗？ (Nǐ cháng kàn ma?)</td><td>Bạn thường xem không?</td></tr>
-                                    <tr><td>星期六和星期日你做什么？ (Xīngqīliù hé xīngqīrì nǐ zuò shénme?)</td><td>Thứ Bảy và Chủ Nhật bạn làm gì?</td></tr>
-                                    <tr><td>你喝茶还是喝咖啡？ (Nǐ hē chá háishi hē kāfēi?)</td><td>Bạn uống trà hay là uống cà phê? (Câu hỏi lựa chọn)</td></tr>
-                                    <tr><td>你去过网吧没有？ (Nǐ qù guò wǎngba méiyǒu?)</td><td>Bạn đã từng đến quán net chưa?</td></tr>
-                                </tbody>
-                            </table>
-
-                            <h4 style="margin-top: 20px; font-size: 1em;">2.2. Câu Trần Thuật và Phức Hợp</h4>
-                            <table class="vocab-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50%;">Hán tự / Pinyin</th>
-                                        <th style="width: 40%;">Nghĩa tiếng Việt</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>我現在去圖書館, 你跟我一起去, 好嗎？ (Wǒ xiànzài qù túshū guǎn, nǐ gēn wǒ yìqǐ qù, hǎo ma?)</td><td>Bây giờ tôi đi thư viện, bạn đi cùng tôi nhé, được không?</td></tr>
-                                    <tr><td>我常借书, 也常在那儿看书。 (Wǒ cháng jiè shū, yě cháng zài nàr kànshū.)</td><td>Tôi thường mượn sách, cũng thường đọc sách ở đó.</td></tr>
-                                    <tr><td>我总在宿舍看书。 (Wǒ zǒng zài sùshè kànshū.)</td><td>Tôi luôn luôn/toàn đọc sách ở kí túc xá.</td></tr>
-                                    <tr><td>宿舍不太安静。 (Sùshè bú tài ānjìng.)</td><td>Kí túc xá không yên tĩnh lắm.</td></tr>
-                                    <tr><td>所以我不常在宿舍休息。 (Suǒyǐ wǒ bù cháng zài sùshè xiūxi.)</td><td>Nên tôi không thường nghỉ ngơi ở kí túc xá.</td></tr>
-                                    <tr><td>他常在安静的地方看书。 (Tā cháng zài ānjìng de dìfang kànshū.)</td><td>Anh ấy thường đọc sách ở nơi yên tĩnh.</td></tr>
-                                    <tr><td>他很少去银行借钱, 没钱的时候, 他总借姐姐或者哥哥。 (Tā hěn shǎo qù yínháng jiè qián, méi qián de shíhou, tā zǒng jiè jiějie huòzhě gēge.)</td><td>Anh ấy rất ít khi đi ngân hàng vay tiền, khi hết tiền anh ấy luôn vay chị gái hoặc anh trai.</td></tr>
-                                    <tr><td>现在我很 少 看英文的东西。 (Xiànzài wǒ hěn shǎo kàn Yīngwén de dōngxi.)</td><td>Bây giờ tôi rất ít xem đồ dùng/thứ bằng tiếng Anh.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        jumpInput.max = totalCards;
         
-        <li>
-            <div class="section-header" onclick="toggleMainContent('contentD')">
-                D. Bài tập
-                <span id="iconD" class="toggle-icon">▶</span>
-            </div>
-            <div id="contentD" class="section-content">
-                <ul class="sub-list">
-                    <li>
-                        <div class="subsection-header" onclick="toggleSubContent(event, 'subcontentD1')">
-                            1. Bài tập bắt buộc (Yêu cầu nộp)
-                            <span id="subiconD1" class="toggle-icon">▶</span>
-                        </div>
-                        <div id="subcontentD1" class="sub-content">
-                            <ul class="sub-content-list">
-                                <li>**1. Quay video duet trả lời các câu hỏi** <a href="https://www.tiktok.com/@tiengtrungthanhhang/video/7535779574819425554" target="_blank">TikTok bài 16</a>.</li>
-                                <li>**2. Quay video nhìn chữ Hán đọc và dịch** bài tập 8 trong sách:
-                                    <p style="margin-top: 5px; margin-bottom: 5px; padding: 10px; border: 1px solid #ccc; background-color: #f9f9f9; font-style: italic;">
-                                        我的宿舍不太安静。所以下午我常去图书馆学习。我在那儿看书，看中文杂志，有时候还在那儿看中国电影和电视剧的DVD。现在我很少看英文的东西。有时候上网跟朋友聊天，收发伊妹儿。
-                                        <br>      晚上我常复习课文，预习生词，或者做练习，写汉字。
-                                        <br>      星期六和星期日，我在宿舍休息，有时候跟朋友去    公园玩儿，或者去超市买东西.
-                                    </p>
-                                </li>
-                                <li>**3. Nhìn tiếng Việt dịch nói + đánh máy dịch câu** phần luyện dịch từ vựng:
-                                    <ul class="sub-content-list" style="list-style-type: circle;">
-                                        <li>Anh ấy rất ít khi xem phim truyền hình vào buổi tối.</li>
-                                        <li>Trong thư viện của trường học luôn luôn rất yên tĩnh.</li>
-                                        <li>Chủ nhật anh ấy thường đi siêu thị Hà Nội mua đồ với vợ.</li>
-                                        <li>Buổi sáng tôi thường ăn bánh mì, rất ít khi ăn phở bò.</li>
-                                        <li>Cô ấy rất ít khi cho bạn bè mượn tiền.</li>
-                                        <li>Cuối tuần cô ấy thường lên mạng, có lúc xem video ngắn, có lúc nhận gửi email.</li>
-                                        <li>Anh ấy không có máy tính, nên thường đi quán nét tra tài liệu.</li>
-                                    </ul>
-                                </li>
-                                <li>**4. Đánh máy kể lại buổi tối/hoặc cuối tuần bạn thường làm gì** (áp dụng các từ chỉ tần suất để viết), sau đó **học thuộc và quay video nói**.</li>
-                                <li>**5. Chuẩn bị trước bài 17**: 
-                                    <ul class="sub-content-list" style="list-style-type: square;">
-                                        <li>**(Yêu cầu nộp)** Quay video duet nghe-nhắc lại <a href="https://www.tiktok.com/@duettiengtrungquoc/video/7124976529045458202" target="_blank">bài khoá 1</a> và <a href="https://www.tiktok.com/@duettiengtrungquoc/video/7124977246665837851" target="_blank">bài khoá 2</a> bài 17.</li>
-                                        <li>**(Không yêu cầu nộp)** Tự dịch trước bài khóa bài 17, phần ghi chép có thể in slides hoặc tự chép bài 17 vào vở.</li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="subsection-header" onclick="toggleSubContent(event, 'subcontentD2')">
-                            2. Bài tập thêm (Không bắt buộc nộp)
-                            <span id="subiconD2" class="toggle-icon">▶</span>
-                        </div>
-                        <div id="subcontentD2" class="sub-content">
-                            <ul class="sub-content-list">
-                                <li>Làm tất cả bài tập trong sách giáo trình.</li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        function renderCard(index) {
+            const currentCard = cardData[index];
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            cardElement.id = 'flashcard-' + index;
+
+            // Mặt trước: Chữ Hán, Simsun, Đen
+            cardElement.innerHTML = `
+                <div class="card__face card__face--front">${currentCard.hanzi}</div>
+                <div class="card__face card__face--back">
+                    <div class="back-content">
+                        <p class="pinyin">${currentCard.pinyin}</p>
+                        <p class="hanviet">${currentCard.hanviet}</p>
+                        <p class="nghia">${currentCard.nghia}</p>
+                        <p class="vidu-han">${currentCard.vidu}</p>
+                        <p class="dichnghia">${currentCard.dichnghia}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Xử lý sự kiện lật thẻ
+            cardElement.addEventListener('click', () => {
+                if (!isTransitioning) {
+                    cardElement.classList.toggle('is-flipped');
+                }
+            });
+
+            // --- Logic Swipe ---
+            cardElement.addEventListener('touchstart', e => {
+                touchstartX = e.changedTouches[0].screenX;
+            }, false);
+
+            cardElement.addEventListener('touchend', e => {
+                touchendX = e.changedTouches[0].screenX;
+                handleGesture();
+            }, false);
+            
+            return cardElement;
+        }
         
-    </ul>
-    
-    <p style="margin-top: 40px; text-align: center;">
-        <a href="index.html#han2">← Quay lại Mục lục Chính (HSK2: Quyển 2)</a> 
-    </p>
+        function updateDisplay() {
+            counter.textContent = `${currentIndex + 1} / ${totalCards}`;
+        }
+
+        function changeCard(newIndex, direction) {
+            if (isTransitioning || newIndex === currentIndex) {
+                return;
+            }
+
+            if (newIndex < 0) {
+                newIndex = totalCards - 1;
+            } else if (newIndex >= totalCards) {
+                newIndex = 0;
+            }
+
+            isTransitioning = true;
+            const oldCard = document.getElementById('flashcard-' + currentIndex);
+            const newCard = renderCard(newIndex);
+            
+            let slideDirection = direction;
+            if (!slideDirection) {
+                slideDirection = (newIndex > currentIndex || (currentIndex === totalCards - 1 && newIndex === 0)) ? 'next' : 'prev';
+            }
+            
+            newCard.style.left = slideDirection === 'next' ? '100%' : '-100%';
+            flashcardContainer.appendChild(newCard);
+            
+            if (oldCard) {
+                oldCard.classList.add(slideDirection === 'next' ? 'slide-next-out' : 'slide-prev-out');
+            }
+
+            setTimeout(() => {
+                newCard.style.left = '0';
+            }, 50); 
+
+            setTimeout(() => {
+                if (oldCard) {
+                    oldCard.remove();
+                }
+                currentIndex = newIndex;
+                updateDisplay();
+                isTransitioning = false;
+            }, 400); 
+        }
+        
+        function goToNextCard() {
+            const newIndex = (currentIndex + 1) % totalCards;
+            changeCard(newIndex, 'next');
+        }
+
+        function goToPrevCard() {
+            const newIndex = (currentIndex - 1 + totalCards) % totalCards;
+            changeCard(newIndex, 'prev');
+        }
+        
+        function jumpToCard() {
+            const inputValue = parseInt(jumpInput.value);
+            
+            if (isNaN(inputValue) || inputValue < 1 || inputValue > totalCards) {
+                alert(`Lỗi: Vui lòng nhập số thẻ hợp lệ từ 1 đến ${totalCards}.`);
+                jumpInput.value = "";
+                return;
+            }
+            
+            const newIndex = inputValue - 1;
+
+            const direction = (newIndex > currentIndex) ? 'next' : 'prev';
+            
+            changeCard(newIndex, direction);
+
+            jumpInput.value = "";
+        }
+
+        function handleGesture() {
+            if (isTransitioning) return;
+            const deltaX = touchendX - touchstartX;
+            
+            if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+                if (deltaX < 0) {
+                    goToNextCard();
+                } else {
+                    goToPrevCard();
+                }
+            }
+        }
+
+        prevBtn.addEventListener('click', goToPrevCard);
+        nextBtn.addEventListener('click', goToNextCard);
+        jumpBtn.addEventListener('click', jumpToCard);
+        
+        jumpInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                jumpToCard();
+            }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            flashcardContainer.appendChild(renderCard(currentIndex));
+            updateDisplay();
+        });
+
+    </script>
 </body>
 </html>
