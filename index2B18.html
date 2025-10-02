@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Tiếng Trung</title>
+    <style>
+        /* CSS để nhúng font Simsun */
+        @font-face {
+            font-family: 'Simsun';
+            src: url(https://fonts.gstatic.com/s/simsun/v18/K9-BZD0b9T8xcP0Q.woff2) format('woff2');
+            unicode-range: U+4E00-9FFF; /* Phạm vi cho ký tự Hán */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .scene {
+            width: 100%;
+            height: 300px;
+            perspective: 600px;
+            position: relative;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            transition: 
+                transform 0.6s, 
+                opacity 0.3s, 
+                left 0.4s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* --- HIỆU ỨNG TRƯỢT --- */
+        .card.slide-next-out {
+            transform: translateX(-100%) rotateY(0deg); 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card.slide-prev-out {
+            transform: translateX(100%) rotateY(0deg); 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card__face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; 
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        /* YÊU CẦU: Mặt trước chữ Hán, font Simsun, màu đen, ở giữa */
+        .card__face--front {
+            font-family: 'Simsun', sans-serif; 
+            font-size: 80px;
+            color: #000000; /* Chữ màu đen */
+        }
+
+        .card__face--back {
+            transform: rotateY(180deg);
+            padding: 20px;
+            box-sizing: border-box;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
+            text-align: center; 
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+        }
+        
+        .back-content p {
+            font-size: 1.3rem;
+            margin: 8px 0;
+            width: 100%;
+            text-align: center; 
+            font-weight: 500;
+        }
+        
+        .back-content .pinyin { color: #e67e22; font-weight: bold; font-size: 1.6rem; } /* Màu cam */
+        .back-content .hanviet { color: #8e44ad; } /* Màu tím */
+        .back-content .nghia { color: #1f506b; font-style: italic; } /* Màu xanh đậm (thay vì #27ae60) */
+        .back-content .vidu-han { color: #000000; font-family: 'Simsun', sans-serif; margin-top: 15px; font-size: 1.5rem; } /* Chữ Hán đen */
+        .back-content .dichnghia { color: #000000; font-style: italic; font-size: 1rem; } /* Chữ đen */
+
+
+        .navigation {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 5px;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+        
+        #counter {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #7f8c8d;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .jump-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #jump-input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        
+        .jump-button {
+            background-color: #e74c3c; 
+        }
+        
+        .jump-button:hover {
+            background-color: #c0392b;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Flashcard Tiếng Trung</h1>
+        <div class="scene">
+            <div id="flashcard-container"></div>
+        </div>
+        <div class="navigation">
+            <button class="nav-button" id="prev-btn">Trước</button>
+            <span id="counter"></span>
+            <button class="nav-button" id="next-btn">Sau</button>
+        </div>
+        
+        <div class="jump-control">
+            <input type="number" id="jump-input" min="1" max="30" placeholder="#">
+            <button class="nav-button jump-button" id="jump-btn">Nhảy đến thẻ số</button>
+        </div>
+    </div>
+
+    <script>
+        // 30 từ vựng Hán ngữ giản thể được lấy từ shengci.txt
+        const cardData = [
+    { hanzi: '包裹', pinyin: 'bāoguǒ', hanviet: 'bao quả', nghia: 'Bưu phẩm, bưu kiện', vidu: '我去邮局寄包裹。', dichnghia: 'Tôi đi bưu điện gửi bưu phẩm.' },
+    { hanzi: '顺便', pinyin: 'shùnbiàn', hanviet: 'thuận tiện', nghia: 'Nhân tiện, tiện thể', vidu: '你顺便买一本书吧。', dichnghia: 'Bạn nhân tiện mua một cuốn sách nhé.' },
+    { hanzi: '替', pinyin: 'tì', hanviet: 'thế', nghia: 'Thay, thay thế (làm hộ)', vidu: '请你替我办一件事。', dichnghia: 'Bạn làm hộ tôi một việc được không.' },
+    { hanzi: '不用', pinyin: 'búyòng', hanviet: 'bất dụng', nghia: 'Không cần, không dùng', vidu: '不用谢，这是我应该做的。', dichnghia: 'Không cần cảm ơn, đây là việc tôi nên làm.' },
+    { hanzi: '用', pinyin: 'yòng', hanviet: 'dụng', nghia: 'Dùng, sử dụng', vidu: '我用汉语跟你聊天。', dichnghia: 'Tôi dùng tiếng Trung nói chuyện với bạn.' },
+    { hanzi: '飞', pinyin: 'fēi', hanviet: 'phi', nghia: 'Bay', vidu: '小鸟在天上飞。', dichnghia: 'Chim nhỏ đang bay trên trời.' },
+    { hanzi: '火车', pinyin: 'huǒchē', hanviet: 'hỏa xa', nghia: 'Tàu hỏa', vidu: '我们坐火车去北京。', dichnghia: 'Chúng tôi đi Bắc Kinh bằng tàu hỏa.' },
+    { hanzi: '回来', pinyin: 'huílai', hanviet: 'hồi lai', nghia: 'Về, trở về (hướng về người nói)', vidu: '你什么时候回来？', dichnghia: 'Bạn khi nào thì về?' },
+    { hanzi: '办', pinyin: 'bàn', hanviet: 'biện', nghia: 'Làm, giải quyết, xử lý', vidu: '他去办签证了。', dichnghia: 'Anh ấy đi làm visa rồi.' },
+    { hanzi: '旅行', pinyin: 'lǚxíng', hanviet: 'lữ hành', nghia: 'Du lịch', vidu: '你喜欢去哪里旅行？', dichnghia: 'Bạn thích đi du lịch ở đâu?' },
+    { hanzi: '代表', pinyin: 'dàibiǎo', hanviet: 'đại biểu', nghia: 'Đại biểu, đại diện (V/N)', vidu: '我代表公司欢迎您。', dichnghia: 'Tôi đại diện công ty chào mừng ngài.' },
+    { hanzi: '团', pinyin: 'tuán', hanviet: 'đoàn', nghia: 'Đoàn, nhóm (N/LT)', vidu: '这是一个外贸代表团。', dichnghia: 'Đây là một đoàn đại biểu thương mại nước ngoài.' },
+    { hanzi: '邮票', pinyin: 'yóupiào', hanviet: 'bưu phiếu', nghia: 'Tem thư, tem', vidu: '请给我两张邮票。', dichnghia: 'Xin cho tôi hai cái tem.' },
+    { hanzi: '份', pinyin: 'fèn', hanviet: 'phần', nghia: 'Phần, số, bản (LT của báo, tạp chí)', vidu: '我买了一份报纸。', dichnghia: 'Tôi đã mua một tờ báo.' },
+    { hanzi: '参观', pinyin: 'cānguān', hanviet: 'tham quan', nghia: 'Tham quan', vidu: '他们要去上海参观。', dichnghia: 'Bọn họ sắp đi Thượng Hải tham quan.' },
+    { hanzi: '当', pinyin: 'dāng', hanviet: 'đương', nghia: 'Làm (một nghề nghiệp, chức vụ)', vidu: '我想当一名老师。', dichnghia: 'Tôi muốn làm một giáo viên.' },
+    { hanzi: '帮', pinyin: 'bāng', hanviet: 'bang', nghia: 'Giúp, giúp đỡ', vidu: '你能帮我浇花吗？', dichnghia: 'Bạn có thể giúp tôi tưới hoa không?' },
+    { hanzi: '青年', pinyin: 'qīngnián', hanviet: 'thanh niên', nghia: 'Thanh niên', vidu: '他是一个有为的青年。', dichnghia: 'Anh ấy là một thanh niên có triển vọng.' },
+    { hanzi: '报', pinyin: 'bào', hanviet: 'báo', nghia: 'Báo (viết tắt của 报纸)', vidu: '我每天早上看报。', dichnghia: 'Tôi xem báo mỗi sáng.' },
+    { hanzi: '浇', pinyin: 'jiāo', hanviet: 'kiêu', nghia: 'Tưới, dội, đổ', vidu: '请帮我浇一下儿花。', dichnghia: 'Xin hãy giúp tôi tưới hoa một chút.' },
+    { hanzi: '花', pinyin: 'huā', hanviet: 'hoa', nghia: 'Hoa (N); Tiêu (tiền, thời gian) (V)', vidu: '她喜欢买花。/ 我花了很多钱。', dichnghia: 'Cô ấy thích mua hoa. / Tôi đã tiêu rất nhiều tiền.' },
+    { hanzi: '报纸', pinyin: 'bàozhǐ', hanviet: 'báo chỉ', nghia: 'Báo chí, tờ báo', vidu: '请给我一份报纸。', dichnghia: 'Xin cho tôi một tờ báo.' },
+    { hanzi: '翻译', pinyin: 'fānyì', hanviet: 'phiên dịch', nghia: 'Phiên dịch, người phiên dịch (V/N)', vidu: '她给代表团当翻译。', dichnghia: 'Cô ấy làm phiên dịch cho đoàn đại biểu.' },
+    { hanzi: '没问题', pinyin: 'méi wèntí', hanviet: 'một vấn đề', nghia: 'Không vấn đề gì, OK', vidu: '你做饭，没问题。', dichnghia: 'Bạn nấu cơm, không vấn đề gì.' },
+    { hanzi: '问题', pinyin: 'wèntí', hanviet: 'vấn đề', nghia: 'Vấn đề, câu hỏi', vidu: '他有很多问题想问老师。', dichnghia: 'Anh ấy có rất nhiều câu hỏi muốn hỏi thầy giáo.' },
+    { hanzi: '拿', pinyin: 'ná', hanviet: 'ná', nghia: 'Cầm, lấy, đem', vidu: '我给你拿钱。', dichnghia: 'Tôi lấy tiền đưa cho bạn.' },
+    { hanzi: '飞机', pinyin: 'fēijī', hanviet: 'phi cơ', nghia: 'Máy bay', vidu: '我们坐飞机去上海。', dichnghia: 'Chúng tôi đi Thượng Hải bằng máy bay.' },
+    { hanzi: '旅游', pinyin: 'lǚyóu', hanviet: 'lữ du', nghia: 'Du lịch (đồng nghĩa với 旅行)', vidu: '假期我想去海边旅游。', dichnghia: 'Kỳ nghỉ tôi muốn đi du lịch biển.' },
+    { hanzi: '票', pinyin: 'piào', hanviet: 'phiếu', nghia: 'Vé', vidu: '我买了一张电影票。', dichnghia: 'Tôi đã mua một vé xem phim.' },
+    { hanzi: '张', pinyin: 'zhāng', hanviet: 'trương', nghia: 'Tấm, chiếc (LT cho vật phẳng, VD: vé, giấy)', vidu: '请给我一张纸。', dichnghia: 'Xin cho tôi một tờ giấy.' },
+    { hanzi: '回去', pinyin: 'huíqù', hanviet: 'hồi khứ', nghia: 'Về, trở về (hướng ra xa người nói)', vidu: '你快点儿回去吧。', dichnghia: 'Bạn mau về đi.' },
+    { hanzi: '楼门口', pinyin: 'lóu ménkǒu', hanviet: 'lâu môn khẩu', nghia: 'Cửa ra vào của tòa nhà', vidu: '我们在楼门口等你。', dichnghia: 'Chúng tôi đợi bạn ở cửa tòa nhà.' },
+    { hanzi: '遇见', pinyin: 'yùjiàn', hanviet: 'ngộ kiến', nghia: 'Gặp gỡ, gặp', vidu: '我在路上遇见了他。', dichnghia: 'Tôi gặp anh ấy trên đường.' },
+    { hanzi: '外贸', pinyin: 'wàimào', hanviet: 'ngoại mậu', nghia: 'Ngoại thương, thương mại nước ngoài', vidu: '他是一家外贸公司职员。', dichnghia: 'Anh ấy là nhân viên của một công ty ngoại thương.' },
+    { hanzi: '邮局', pinyin: 'yóujú', hanviet: 'bưu cục', nghia: 'Bưu điện', vidu: '我去邮局寄信。', dichnghia: 'Tôi đi bưu điện gửi thư.' },
+    { hanzi: '寄', pinyin: 'jì', hanviet: 'ký', nghia: 'Gửi (thư, bưu phẩm)', vidu: '我要寄一个包裹。', dichnghia: 'Tôi muốn gửi một bưu phẩm.' },
+    { hanzi: '书店', pinyin: 'shūdiàn', hanviet: 'thư điếm', nghia: 'Hiệu sách', vidu: '我在书店买书。', dichnghia: 'Tôi mua sách ở hiệu sách.' },
+    { hanzi: '玛丽', pinyin: 'Mǎlì', hanviet: 'Mã Lệ', nghia: 'Mary (tên người)', vidu: '玛丽是我的朋友。', dichnghia: 'Mary là bạn của tôi.' },
+    { hanzi: '珍妮', pinyin: 'Zhēnnī', hanviet: 'Trân Ni', nghia: 'Jenny/Janet (tên người)', vidu: '珍妮明天去上海。', dichnghia: 'Jenny/Janet ngày mai đi Thượng Hải.' },
+    { hanzi: '上海', pinyin: 'Shànghǎi', hanviet: 'Thượng Hải', nghia: 'Thượng Hải (tên địa danh)', vidu: '上海是一个大城市。', dichnghia: 'Thượng Hải là một thành phố lớn.' }
+];
+
+        const flashcardContainer = document.getElementById('flashcard-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const jumpBtn = document.getElementById('jump-btn');
+        const jumpInput = document.getElementById('jump-input');
+        const counter = document.getElementById('counter');
+
+        let currentIndex = 0;
+        let isTransitioning = false; 
+        const totalCards = cardData.length;
+        
+        // Biến xử lý Vuốt (Swipe)
+        let touchstartX = 0;
+        let touchendX = 0;
+        const SWIPE_THRESHOLD = 50; 
+        
+        jumpInput.max = totalCards;
+        
+        function renderCard(index) {
+            const currentCard = cardData[index];
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            cardElement.id = 'flashcard-' + index;
+
+            // Mặt trước: Chữ Hán, Simsun, Đen
+            cardElement.innerHTML = `
+                <div class="card__face card__face--front">${currentCard.hanzi}</div>
+                <div class="card__face card__face--back">
+                    <div class="back-content">
+                        <p class="pinyin">${currentCard.pinyin}</p>
+                        <p class="hanviet">${currentCard.hanviet}</p>
+                        <p class="nghia">${currentCard.nghia}</p>
+                        <p class="vidu-han">${currentCard.vidu}</p>
+                        <p class="dichnghia">${currentCard.dichnghia}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Xử lý sự kiện lật thẻ
+            cardElement.addEventListener('click', () => {
+                if (!isTransitioning) {
+                    cardElement.classList.toggle('is-flipped');
+                }
+            });
+
+            // --- Logic Swipe ---
+            cardElement.addEventListener('touchstart', e => {
+                touchstartX = e.changedTouches[0].screenX;
+            }, false);
+
+            cardElement.addEventListener('touchend', e => {
+                touchendX = e.changedTouches[0].screenX;
+                handleGesture();
+            }, false);
+            
+            return cardElement;
+        }
+        
+        function updateDisplay() {
+            counter.textContent = `${currentIndex + 1} / ${totalCards}`;
+        }
+
+        function changeCard(newIndex, direction) {
+            if (isTransitioning || newIndex === currentIndex) {
+                return;
+            }
+
+            if (newIndex < 0) {
+                newIndex = totalCards - 1;
+            } else if (newIndex >= totalCards) {
+                newIndex = 0;
+            }
+
+            isTransitioning = true;
+            const oldCard = document.getElementById('flashcard-' + currentIndex);
+            const newCard = renderCard(newIndex);
+            
+            let slideDirection = direction;
+            if (!slideDirection) {
+                slideDirection = (newIndex > currentIndex || (currentIndex === totalCards - 1 && newIndex === 0)) ? 'next' : 'prev';
+            }
+            
+            newCard.style.left = slideDirection === 'next' ? '100%' : '-100%';
+            flashcardContainer.appendChild(newCard);
+            
+            if (oldCard) {
+                oldCard.classList.add(slideDirection === 'next' ? 'slide-next-out' : 'slide-prev-out');
+            }
+
+            setTimeout(() => {
+                newCard.style.left = '0';
+            }, 50); 
+
+            setTimeout(() => {
+                if (oldCard) {
+                    oldCard.remove();
+                }
+                currentIndex = newIndex;
+                updateDisplay();
+                isTransitioning = false;
+            }, 400); 
+        }
+        
+        function goToNextCard() {
+            const newIndex = (currentIndex + 1) % totalCards;
+            changeCard(newIndex, 'next');
+        }
+
+        function goToPrevCard() {
+            const newIndex = (currentIndex - 1 + totalCards) % totalCards;
+            changeCard(newIndex, 'prev');
+        }
+        
+        function jumpToCard() {
+            const inputValue = parseInt(jumpInput.value);
+            
+            if (isNaN(inputValue) || inputValue < 1 || inputValue > totalCards) {
+                alert(`Lỗi: Vui lòng nhập số thẻ hợp lệ từ 1 đến ${totalCards}.`);
+                jumpInput.value = "";
+                return;
+            }
+            
+            const newIndex = inputValue - 1;
+
+            const direction = (newIndex > currentIndex) ? 'next' : 'prev';
+            
+            changeCard(newIndex, direction);
+
+            jumpInput.value = "";
+        }
+
+        function handleGesture() {
+            if (isTransitioning) return;
+            const deltaX = touchendX - touchstartX;
+            
+            if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+                if (deltaX < 0) {
+                    goToNextCard();
+                } else {
+                    goToPrevCard();
+                }
+            }
+        }
+
+        prevBtn.addEventListener('click', goToPrevCard);
+        nextBtn.addEventListener('click', goToNextCard);
+        jumpBtn.addEventListener('click', jumpToCard);
+        
+        jumpInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                jumpToCard();
+            }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            flashcardContainer.appendChild(renderCard(currentIndex));
+            updateDisplay();
+        });
+
+    </script>
+</body>
+</html>
