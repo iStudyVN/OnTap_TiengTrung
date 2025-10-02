@@ -202,46 +202,1486 @@
     <script>
         // 30 từ vựng Hán ngữ giản thể được lấy từ shengci.txt
         const cardData = [
-    { hanzi: '包裹', pinyin: 'bāoguǒ', hanviet: 'bao quả', nghia: 'Bưu phẩm, bưu kiện', vidu: '我去邮局寄包裹。', dichnghia: 'Tôi đi bưu điện gửi bưu phẩm.' },
-    { hanzi: '顺便', pinyin: 'shùnbiàn', hanviet: 'thuận tiện', nghia: 'Nhân tiện, tiện thể', vidu: '你顺便买一本书吧。', dichnghia: 'Bạn nhân tiện mua một cuốn sách nhé.' },
-    { hanzi: '替', pinyin: 'tì', hanviet: 'thế', nghia: 'Thay, thay thế (làm hộ)', vidu: '请你替我办一件事。', dichnghia: 'Bạn làm hộ tôi một việc được không.' },
-    { hanzi: '不用', pinyin: 'búyòng', hanviet: 'bất dụng', nghia: 'Không cần, không dùng', vidu: '不用谢，这是我应该做的。', dichnghia: 'Không cần cảm ơn, đây là việc tôi nên làm.' },
-    { hanzi: '用', pinyin: 'yòng', hanviet: 'dụng', nghia: 'Dùng, sử dụng', vidu: '我用汉语跟你聊天。', dichnghia: 'Tôi dùng tiếng Trung nói chuyện với bạn.' },
-    { hanzi: '飞', pinyin: 'fēi', hanviet: 'phi', nghia: 'Bay', vidu: '小鸟在天上飞。', dichnghia: 'Chim nhỏ đang bay trên trời.' },
-    { hanzi: '火车', pinyin: 'huǒchē', hanviet: 'hỏa xa', nghia: 'Tàu hỏa', vidu: '我们坐火车去北京。', dichnghia: 'Chúng tôi đi Bắc Kinh bằng tàu hỏa.' },
-    { hanzi: '回来', pinyin: 'huílai', hanviet: 'hồi lai', nghia: 'Về, trở về (hướng về người nói)', vidu: '你什么时候回来？', dichnghia: 'Bạn khi nào thì về?' },
-    { hanzi: '办', pinyin: 'bàn', hanviet: 'biện', nghia: 'Làm, giải quyết, xử lý', vidu: '他去办签证了。', dichnghia: 'Anh ấy đi làm visa rồi.' },
-    { hanzi: '旅行', pinyin: 'lǚxíng', hanviet: 'lữ hành', nghia: 'Du lịch', vidu: '你喜欢去哪里旅行？', dichnghia: 'Bạn thích đi du lịch ở đâu?' },
-    { hanzi: '代表', pinyin: 'dàibiǎo', hanviet: 'đại biểu', nghia: 'Đại biểu, đại diện (V/N)', vidu: '我代表公司欢迎您。', dichnghia: 'Tôi đại diện công ty chào mừng ngài.' },
-    { hanzi: '团', pinyin: 'tuán', hanviet: 'đoàn', nghia: 'Đoàn, nhóm (N/LT)', vidu: '这是一个外贸代表团。', dichnghia: 'Đây là một đoàn đại biểu thương mại nước ngoài.' },
-    { hanzi: '邮票', pinyin: 'yóupiào', hanviet: 'bưu phiếu', nghia: 'Tem thư, tem', vidu: '请给我两张邮票。', dichnghia: 'Xin cho tôi hai cái tem.' },
-    { hanzi: '份', pinyin: 'fèn', hanviet: 'phần', nghia: 'Phần, số, bản (LT của báo, tạp chí)', vidu: '我买了一份报纸。', dichnghia: 'Tôi đã mua một tờ báo.' },
-    { hanzi: '参观', pinyin: 'cānguān', hanviet: 'tham quan', nghia: 'Tham quan', vidu: '他们要去上海参观。', dichnghia: 'Bọn họ sắp đi Thượng Hải tham quan.' },
-    { hanzi: '当', pinyin: 'dāng', hanviet: 'đương', nghia: 'Làm (một nghề nghiệp, chức vụ)', vidu: '我想当一名老师。', dichnghia: 'Tôi muốn làm một giáo viên.' },
-    { hanzi: '帮', pinyin: 'bāng', hanviet: 'bang', nghia: 'Giúp, giúp đỡ', vidu: '你能帮我浇花吗？', dichnghia: 'Bạn có thể giúp tôi tưới hoa không?' },
-    { hanzi: '青年', pinyin: 'qīngnián', hanviet: 'thanh niên', nghia: 'Thanh niên', vidu: '他是一个有为的青年。', dichnghia: 'Anh ấy là một thanh niên có triển vọng.' },
-    { hanzi: '报', pinyin: 'bào', hanviet: 'báo', nghia: 'Báo (viết tắt của 报纸)', vidu: '我每天早上看报。', dichnghia: 'Tôi xem báo mỗi sáng.' },
-    { hanzi: '浇', pinyin: 'jiāo', hanviet: 'kiêu', nghia: 'Tưới, dội, đổ', vidu: '请帮我浇一下儿花。', dichnghia: 'Xin hãy giúp tôi tưới hoa một chút.' },
-    { hanzi: '花', pinyin: 'huā', hanviet: 'hoa', nghia: 'Hoa (N); Tiêu (tiền, thời gian) (V)', vidu: '她喜欢买花。/ 我花了很多钱。', dichnghia: 'Cô ấy thích mua hoa. / Tôi đã tiêu rất nhiều tiền.' },
-    { hanzi: '报纸', pinyin: 'bàozhǐ', hanviet: 'báo chỉ', nghia: 'Báo chí, tờ báo', vidu: '请给我一份报纸。', dichnghia: 'Xin cho tôi một tờ báo.' },
-    { hanzi: '翻译', pinyin: 'fānyì', hanviet: 'phiên dịch', nghia: 'Phiên dịch, người phiên dịch (V/N)', vidu: '她给代表团当翻译。', dichnghia: 'Cô ấy làm phiên dịch cho đoàn đại biểu.' },
-    { hanzi: '没问题', pinyin: 'méi wèntí', hanviet: 'một vấn đề', nghia: 'Không vấn đề gì, OK', vidu: '你做饭，没问题。', dichnghia: 'Bạn nấu cơm, không vấn đề gì.' },
-    { hanzi: '问题', pinyin: 'wèntí', hanviet: 'vấn đề', nghia: 'Vấn đề, câu hỏi', vidu: '他有很多问题想问老师。', dichnghia: 'Anh ấy có rất nhiều câu hỏi muốn hỏi thầy giáo.' },
-    { hanzi: '拿', pinyin: 'ná', hanviet: 'ná', nghia: 'Cầm, lấy, đem', vidu: '我给你拿钱。', dichnghia: 'Tôi lấy tiền đưa cho bạn.' },
-    { hanzi: '飞机', pinyin: 'fēijī', hanviet: 'phi cơ', nghia: 'Máy bay', vidu: '我们坐飞机去上海。', dichnghia: 'Chúng tôi đi Thượng Hải bằng máy bay.' },
-    { hanzi: '旅游', pinyin: 'lǚyóu', hanviet: 'lữ du', nghia: 'Du lịch (đồng nghĩa với 旅行)', vidu: '假期我想去海边旅游。', dichnghia: 'Kỳ nghỉ tôi muốn đi du lịch biển.' },
-    { hanzi: '票', pinyin: 'piào', hanviet: 'phiếu', nghia: 'Vé', vidu: '我买了一张电影票。', dichnghia: 'Tôi đã mua một vé xem phim.' },
-    { hanzi: '张', pinyin: 'zhāng', hanviet: 'trương', nghia: 'Tấm, chiếc (LT cho vật phẳng, VD: vé, giấy)', vidu: '请给我一张纸。', dichnghia: 'Xin cho tôi một tờ giấy.' },
-    { hanzi: '回去', pinyin: 'huíqù', hanviet: 'hồi khứ', nghia: 'Về, trở về (hướng ra xa người nói)', vidu: '你快点儿回去吧。', dichnghia: 'Bạn mau về đi.' },
-    { hanzi: '楼门口', pinyin: 'lóu ménkǒu', hanviet: 'lâu môn khẩu', nghia: 'Cửa ra vào của tòa nhà', vidu: '我们在楼门口等你。', dichnghia: 'Chúng tôi đợi bạn ở cửa tòa nhà.' },
-    { hanzi: '遇见', pinyin: 'yùjiàn', hanviet: 'ngộ kiến', nghia: 'Gặp gỡ, gặp', vidu: '我在路上遇见了他。', dichnghia: 'Tôi gặp anh ấy trên đường.' },
-    { hanzi: '外贸', pinyin: 'wàimào', hanviet: 'ngoại mậu', nghia: 'Ngoại thương, thương mại nước ngoài', vidu: '他是一家外贸公司职员。', dichnghia: 'Anh ấy là nhân viên của một công ty ngoại thương.' },
-    { hanzi: '邮局', pinyin: 'yóujú', hanviet: 'bưu cục', nghia: 'Bưu điện', vidu: '我去邮局寄信。', dichnghia: 'Tôi đi bưu điện gửi thư.' },
-    { hanzi: '寄', pinyin: 'jì', hanviet: 'ký', nghia: 'Gửi (thư, bưu phẩm)', vidu: '我要寄一个包裹。', dichnghia: 'Tôi muốn gửi một bưu phẩm.' },
-    { hanzi: '书店', pinyin: 'shūdiàn', hanviet: 'thư điếm', nghia: 'Hiệu sách', vidu: '我在书店买书。', dichnghia: 'Tôi mua sách ở hiệu sách.' },
-    { hanzi: '玛丽', pinyin: 'Mǎlì', hanviet: 'Mã Lệ', nghia: 'Mary (tên người)', vidu: '玛丽是我的朋友。', dichnghia: 'Mary là bạn của tôi.' },
-    { hanzi: '珍妮', pinyin: 'Zhēnnī', hanviet: 'Trân Ni', nghia: 'Jenny/Janet (tên người)', vidu: '珍妮明天去上海。', dichnghia: 'Jenny/Janet ngày mai đi Thượng Hải.' },
-    { hanzi: '上海', pinyin: 'Shànghǎi', hanviet: 'Thượng Hải', nghia: 'Thượng Hải (tên địa danh)', vidu: '上海是一个大城市。', dichnghia: 'Thượng Hải là một thành phố lớn.' }
+  {
+    "hanTu": "第十八课",
+    "pinyin": "Dì shí bā kè",
+    "nghiaHanViet": "Đệ thập bát khóa",
+    "nghiaTiengViet": "Bài 18",
+    "viDu": "今天我们学习第十八课。",
+    "dichNghia": "Hôm nay chúng ta học bài 18."
+  },
+  {
+    "hanTu": "我",
+    "pinyin": "wǒ",
+    "nghiaHanViet": "ngã",
+    "nghiaTiengViet": "tôi, tao, mình",
+    "viDu": "我是学生。",
+    "dichNghia": "Tôi là học sinh."
+  },
+  {
+    "hanTu": "去",
+    "pinyin": "qù",
+    "nghiaHanViet": "khứ",
+    "nghiaTiengViet": "đi, đến",
+    "viDu": "我去学校。",
+    "dichNghia": "Tôi đi đến trường."
+  },
+  {
+    "hanTu": "邮局",
+    "pinyin": "yóujú",
+    "nghiaHanViet": "bưu cục",
+    "nghiaTiengViet": "bưu điện",
+    "viDu": "邮局在哪儿？",
+    "dichNghia": "Bưu điện ở đâu?"
+  },
+  {
+    "hanTu": "寄",
+    "pinyin": "jì",
+    "nghiaHanViet": "ký",
+    "nghiaTiengViet": "gửi",
+    "viDu": "我寄信。",
+    "dichNghia": "Tôi gửi thư."
+  },
+  {
+    "hanTu": "包裹",
+    "pinyin": "bāoguǒ",
+    "nghiaHanViet": "bao quả",
+    "nghiaTiengViet": "bưu phẩm, bưu kiện",
+    "viDu": "这是我的包裹。",
+    "dichNghia": "Đây là bưu phẩm của tôi."
+  },
+  {
+    "hanTu": "第一部分",
+    "pinyin": "Dì yī bùfèn",
+    "nghiaHanViet": "Đệ nhất bộ phận",
+    "nghiaTiengViet": "Phần một",
+    "viDu": "请看第一部分。",
+    "dichNghia": "Mời xem phần một."
+  },
+  {
+    "hanTu": "生词",
+    "pinyin": "shēngcí",
+    "nghiaHanViet": "sinh từ",
+    "nghiaTiengViet": "từ mới",
+    "viDu": "请读生词。",
+    "dichNghia": "Mời đọc từ mới."
+  },
+  {
+    "hanTu": "顺便",
+    "pinyin": "shùnbiàn",
+    "nghiaHanViet": "thuận tiện",
+    "nghiaTiengViet": "nhân tiện, tiện thể",
+    "viDu": "我顺便买水。",
+    "dichNghia": "Tôi nhân tiện mua nước."
+  },
+  {
+    "hanTu": "替",
+    "pinyin": "tì",
+    "nghiaHanViet": "thế",
+    "nghiaTiengViet": "thay, thay thế, vì",
+    "viDu": "他替我值班。",
+    "dichNghia": "Anh ấy thay tôi trực ca."
+  },
+  {
+    "hanTu": "不用",
+    "pinyin": "búyòng",
+    "nghiaHanViet": "bất dụng",
+    "nghiaTiengViet": "không cần, không dùng",
+    "viDu": "不用担心。",
+    "dichNghia": "Không cần lo lắng."
+  },
+  {
+    "hanTu": "用",
+    "pinyin": "yòng",
+    "nghiaHanViet": "dụng",
+    "nghiaTiengViet": "dùng, sử dụng",
+    "viDu": "我用手机。",
+    "dichNghia": "Tôi dùng điện thoại di động."
+  },
+  {
+    "hanTu": "飞",
+    "pinyin": "fēi",
+    "nghiaHanViet": "phi",
+    "nghiaTiengViet": "bay",
+    "viDu": "鸟在天上飞。",
+    "dichNghia": "Chim bay trên trời."
+  },
+  {
+    "hanTu": "火车",
+    "pinyin": "huǒchē",
+    "nghiaHanViet": "hỏa xa",
+    "nghiaTiengViet": "tàu hỏa",
+    "viDu": "我坐火车去。",
+    "dichNghia": "Tôi đi bằng tàu hỏa."
+  },
+  {
+    "hanTu": "回来",
+    "pinyin": "huílai",
+    "nghiaHanViet": "hồi lai",
+    "nghiaTiengViet": "về, trở về (về phía người nói)",
+    "viDu": "你什么时候回来？",
+    "dichNghia": "Khi nào bạn trở về?"
+  },
+  {
+    "hanTu": "办",
+    "pinyin": "bàn",
+    "nghiaHanViet": "biện",
+    "nghiaTiengViet": "làm, giải quyết",
+    "viDu": "我要去办签证。",
+    "dichNghia": "Tôi phải đi làm visa."
+  },
+  {
+    "hanTu": "旅行",
+    "pinyin": "lǚxíng",
+    "nghiaHanViet": "lữ hành",
+    "nghiaTiengViet": "du lịch",
+    "viDu": "我们一起旅行吧。",
+    "dichNghia": "Chúng ta cùng nhau đi du lịch đi."
+  },
+  {
+    "hanTu": "代表",
+    "pinyin": "dàibiǎo",
+    "nghiaHanViet": "đại biểu",
+    "nghiaTiengViet": "đại biểu, đại diện",
+    "viDu": "我代表大家感谢你。",
+    "dichNghia": "Tôi đại diện mọi người cảm ơn bạn."
+  },
+  {
+    "hanTu": "团",
+    "pinyin": "tuán",
+    "nghiaHanViet": "đoàn",
+    "nghiaTiengViet": "đoàn, nhóm (lượng từ)",
+    "viDu": "一个代表团。",
+    "dichNghia": "Một đoàn đại biểu."
+  },
+  {
+    "hanTu": "邮票",
+    "pinyin": "yóupiào",
+    "nghiaHanViet": "bưu phiếu",
+    "nghiaTiengViet": "tem thư",
+    "viDu": "我买一张邮票。",
+    "dichNghia": "Tôi mua một cái tem thư."
+  },
+  {
+    "hanTu": "份",
+    "pinyin": "fèn",
+    "nghiaHanViet": "phần",
+    "nghiaTiengViet": "phần, số, bản (lượng từ cho báo, tạp chí, tài liệu...)",
+    "viDu": "一份报纸。",
+    "dichNghia": "Một tờ báo."
+  },
+  {
+    "hanTu": "参观",
+    "pinyin": "cānguān",
+    "nghiaHanViet": "tham quan",
+    "nghiaTiengViet": "tham quan",
+    "viDu": "我们去参观博物馆。",
+    "dichNghia": "Chúng tôi đi tham quan bảo tàng."
+  },
+  {
+    "hanTu": "当",
+    "pinyin": "dāng",
+    "nghiaHanViet": "đương",
+    "nghiaTiengViet": "làm (làm một nghề, chức vụ)",
+    "viDu": "我想当老师。",
+    "dichNghia": "Tôi muốn làm giáo viên."
+  },
+  {
+    "hanTu": "帮",
+    "pinyin": "bāng",
+    "nghiaHanViet": "bang",
+    "nghiaTiengViet": "giúp, giúp đỡ",
+    "viDu": "请帮我一下。",
+    "dichNghia": "Xin hãy giúp tôi một chút."
+  },
+  {
+    "hanTu": "青年",
+    "pinyin": "qīngnián",
+    "nghiaHanViet": "thanh niên",
+    "nghiaTiengViet": "thanh niên",
+    "viDu": "青年人很有活力。",
+    "dichNghia": "Người thanh niên rất có sức sống."
+  },
+  {
+    "hanTu": "报",
+    "pinyin": "bào",
+    "nghiaHanViet": "báo",
+    "nghiaTiengViet": "báo chí, tờ báo",
+    "viDu": "他在看报。",
+    "dichNghia": "Anh ấy đang xem báo."
+  },
+  {
+    "hanTu": "浇",
+    "pinyin": "jiāo",
+    "nghiaHanViet": "kiêu",
+    "nghiaTiengViet": "tưới, dội, đổ",
+    "viDu": "浇花。",
+    "dichNghia": "Tưới hoa."
+  },
+  {
+    "hanTu": "花",
+    "pinyin": "huā",
+    "nghiaHanViet": "hoa",
+    "nghiaTiengViet": "hoa (danh từ), tiêu/dành (động từ)",
+    "viDu": "我花钱买书。",
+    "dichNghia": "Tôi tiêu tiền mua sách."
+  },
+  {
+    "hanTu": "报纸",
+    "pinyin": "bàozhǐ",
+    "nghiaHanViet": "báo chỉ",
+    "nghiaTiengViet": "báo chí, tờ báo",
+    "viDu": "我每天看报纸。",
+    "dichNghia": "Tôi xem báo mỗi ngày."
+  },
+  {
+    "hanTu": "拿",
+    "pinyin": "ná",
+    "nghiaHanViet": "nã",
+    "nghiaTiengViet": "cầm, lấy, đem",
+    "viDu": "请你拿这本书。",
+    "dichNghia": "Xin bạn cầm quyển sách này."
+  },
+  {
+    "hanTu": "翻译",
+    "pinyin": "fānyì",
+    "nghiaHanViet": "phiên dịch",
+    "nghiaTiengViet": "phiên dịch (danh từ/động từ)",
+    "viDu": "她想当翻译。",
+    "dichNghia": "Cô ấy muốn làm phiên dịch."
+  },
+  {
+    "hanTu": "飞机",
+    "pinyin": "fēijī",
+    "nghiaHanViet": "phi cơ",
+    "nghiaTiengViet": "máy bay",
+    "viDu": "我们坐飞机去。",
+    "dichNghia": "Chúng ta đi bằng máy bay."
+  },
+  {
+    "hanTu": "没问题",
+    "pinyin": "méi wèntí",
+    "nghiaHanViet": "một vấn đề",
+    "nghiaTiengViet": "không vấn đề gì, OK",
+    "viDu": "没问题，我可以帮你。",
+    "dichNghia": "Không vấn đề gì, tôi có thể giúp bạn."
+  },
+  {
+    "hanTu": "问题",
+    "pinyin": "wèntí",
+    "nghiaHanViet": "vấn đề",
+    "nghiaTiengViet": "vấn đề, câu hỏi",
+    "viDu": "我有一个问题。",
+    "dichNghia": "Tôi có một câu hỏi."
+  },
+  {
+    "hanTu": "邮局寄包裹",
+    "pinyin": "yóujú jì bāoguǒ",
+    "nghiaHanViet": "bưu cục ký bao quả",
+    "nghiaTiengViet": "gửi bưu phẩm ở bưu điện",
+    "viDu": "我要去邮局寄包裹。",
+    "dichNghia": "Tôi phải đi bưu điện gửi bưu phẩm."
+  },
+  {
+    "hanTu": "今早",
+    "pinyin": "jīnzǎo",
+    "nghiaHanViet": "kim tảo",
+    "nghiaTiengViet": "sáng nay",
+    "viDu": "今早我没吃早饭。",
+    "dichNghia": "Sáng nay tôi chưa ăn sáng."
+  },
+  {
+    "hanTu": "刚",
+    "pinyin": "gāng",
+    "nghiaHanViet": "cương",
+    "nghiaTiengViet": "vừa mới",
+    "viDu": "我刚到家。",
+    "dichNghia": "Tôi vừa mới về đến nhà."
+  },
+  {
+    "hanTu": "收到",
+    "pinyin": "shōudào",
+    "nghiaHanViet": "thâu đáo",
+    "nghiaTiengViet": "nhận được",
+    "viDu": "我收到了你的信。",
+    "dichNghia": "Tôi đã nhận được thư của bạn."
+  },
+  {
+    "hanTu": "一个",
+    "pinyin": "yī gè",
+    "nghiaHanViet": "nhất cá",
+    "nghiaTiengViet": "một cái",
+    "viDu": "给我一个苹果。",
+    "dichNghia": "Đưa cho tôi một quả táo."
+  },
+  {
+    "hanTu": "书店",
+    "pinyin": "shūdiàn",
+    "nghiaHanViet": "thư điếm",
+    "nghiaTiengViet": "hiệu sách",
+    "viDu": "书店里有很多书。",
+    "dichNghia": "Trong hiệu sách có rất nhiều sách."
+  },
+  {
+    "hanTu": "买",
+    "pinyin": "mǎi",
+    "nghiaHanViet": "mãi",
+    "nghiaTiengViet": "mua",
+    "viDu": "我想买衣服。",
+    "dichNghia": "Tôi muốn mua quần áo."
+  },
+  {
+    "hanTu": "一本书",
+    "pinyin": "yī běn shū",
+    "nghiaHanViet": "nhất bản thư",
+    "nghiaTiengViet": "một quyển sách",
+    "viDu": "这本书很有意思。",
+    "dichNghia": "Quyển sách này rất thú vị."
+  },
+  {
+    "hanTu": "超市",
+    "pinyin": "chāoshì",
+    "nghiaHanViet": "siêu thị",
+    "nghiaTiengViet": "siêu thị",
+    "viDu": "超市离我家很近。",
+    "dichNghia": "Siêu thị rất gần nhà tôi."
+  },
+  {
+    "hanTu": "菜",
+    "pinyin": "cài",
+    "nghiaHanViet": "thái",
+    "nghiaTiengViet": "rau, món ăn",
+    "viDu": "我喜欢吃蔬菜。",
+    "dichNghia": "Tôi thích ăn rau củ."
+  },
+  {
+    "hanTu": "零食",
+    "pinyin": "língshí",
+    "nghiaHanViet": "linh thực",
+    "nghiaTiengViet": "đồ ăn vặt",
+    "viDu": "我买了点儿零食。",
+    "dichNghia": "Tôi đã mua một ít đồ ăn vặt."
+  },
+  {
+    "hanTu": "看电影",
+    "pinyin": "kàn diànyǐng",
+    "nghiaHanViet": "khán điện ảnh",
+    "nghiaTiengViet": "xem phim",
+    "viDu": "我们去看电影吧。",
+    "dichNghia": "Chúng ta đi xem phim đi."
+  },
+  {
+    "hanTu": "电影院",
+    "pinyin": "diànyǐngyuàn",
+    "nghiaHanViet": "điện ảnh viện",
+    "nghiaTiengViet": "rạp chiếu phim",
+    "viDu": "电影院在旁边。",
+    "dichNghia": "Rạp chiếu phim ở bên cạnh."
+  },
+  {
+    "hanTu": "旁边",
+    "pinyin": "pángbiān",
+    "nghiaHanViet": "bàng biên",
+    "nghiaTiengViet": "bên cạnh",
+    "viDu": "我的旁边是她。",
+    "dichNghia": "Bên cạnh tôi là cô ấy."
+  },
+  {
+    "hanTu": "饭馆",
+    "pinyin": "fànguǎn",
+    "nghiaHanViet": "phạn quán",
+    "nghiaTiengViet": "quán ăn, nhà hàng",
+    "viDu": "我们去那个饭馆。",
+    "dichNghia": "Chúng ta đi quán ăn kia."
+  },
+  {
+    "hanTu": "吃晚饭",
+    "pinyin": "chī wǎnfàn",
+    "nghiaHanViet": "ngật vãn phạn",
+    "nghiaTiengViet": "ăn tối",
+    "viDu": "你吃晚饭了吗？",
+    "dichNghia": "Bạn ăn tối chưa?"
+  },
+  {
+    "hanTu": "一件事",
+    "pinyin": "yī jiàn shì",
+    "nghiaHanViet": "nhất kiện sự",
+    "nghiaTiengViet": "một việc",
+    "viDu": "帮我做一件事。",
+    "dichNghia": "Giúp tôi làm một việc."
+  },
+  {
+    "hanTu": "出去",
+    "pinyin": "chūqù",
+    "nghiaHanViet": "xuất khứ",
+    "nghiaTiengViet": "đi ra ngoài",
+    "viDu": "我出去一下。",
+    "dichNghia": "Tôi ra ngoài một chút."
+  },
+  {
+    "hanTu": "点事",
+    "pinyin": "diǎn shì",
+    "nghiaHanViet": "điểm sự",
+    "nghiaTiengViet": "chút việc, ít việc",
+    "viDu": "我有点事要办。",
+    "dichNghia": "Tôi có chút việc cần giải quyết."
+  },
+  {
+    "hanTu": "身份证",
+    "pinyin": "shēnfèn zhèng",
+    "nghiaHanViet": "thân phận chứng",
+    "nghiaTiengViet": "căn cước công dân",
+    "viDu": "办身份证。",
+    "dichNghia": "Làm căn cước công dân."
+  },
+  {
+    "hanTu": "护照",
+    "pinyin": "hùzhào",
+    "nghiaHanViet": "hộ chiếu",
+    "nghiaTiengViet": "hộ chiếu",
+    "viDu": "办护照。",
+    "dichNghia": "Làm hộ chiếu."
+  },
+  {
+    "hanTu": "签证",
+    "pinyin": "qiānzhèng",
+    "nghiaHanViet": "thiên chứng",
+    "nghiaTiengViet": "visa, thị thực",
+    "viDu": "办签证。",
+    "dichNghia": "Làm visa."
+  },
+  {
+    "hanTu": "行吗",
+    "pinyin": "xíng ma",
+    "nghiaHanViet": "hành ma",
+    "nghiaTiengViet": "được không",
+    "viDu": "你明天来，行吗？",
+    "dichNghia": "Ngày mai bạn đến, được không?"
+  },
+  {
+    "hanTu": "什么事",
+    "pinyin": "shénme shì",
+    "nghiaHanViet": "thập ma sự",
+    "nghiaTiengViet": "việc gì, chuyện gì",
+    "viDu": "出了什么事？",
+    "dichNghia": "Xảy ra chuyện gì rồi?"
+  },
+  {
+    "hanTu": "你说吧",
+    "pinyin": "nǐ shuō ba",
+    "nghiaHanViet": "nhĩ thuyết ba",
+    "nghiaTiengViet": "bạn nói đi",
+    "viDu": "有什么想法，你说吧。",
+    "dichNghia": "Có ý kiến gì, bạn nói đi."
+  },
+  {
+    "hanTu": "报告",
+    "pinyin": "bàogào",
+    "nghiaHanViet": "báo cáo",
+    "nghiaTiengViet": "báo cáo",
+    "viDu": "写一个报告。",
+    "dichNghia": "Viết một bản báo cáo."
+  },
+  {
+    "hanTu": "家务",
+    "pinyin": "jiāwù",
+    "nghiaHanViet": "gia vụ",
+    "nghiaTiengViet": "việc nhà",
+    "viDu": "我帮你做家务。",
+    "dichNghia": "Tôi giúp bạn làm việc nhà."
+  },
+  {
+    "hanTu": "票",
+    "pinyin": "piào",
+    "nghiaHanViet": "phiếu",
+    "nghiaTiengViet": "vé",
+    "viDu": "我买了两张票。",
+    "dichNghia": "Tôi đã mua hai cái vé."
+  },
+  {
+    "hanTu": "张",
+    "pinyin": "zhāng",
+    "nghiaHanViet": "trương",
+    "nghiaTiengViet": "tấm, chiếc (lượng từ)",
+    "viDu": "一张纸。",
+    "dichNghia": "Một tờ giấy."
+  },
+  {
+    "hanTu": "机票",
+    "pinyin": "jīpiào",
+    "nghiaHanViet": "cơ phiếu",
+    "nghiaTiengViet": "vé máy bay",
+    "viDu": "买机票。",
+    "dichNghia": "Mua vé máy bay."
+  },
+  {
+    "hanTu": "车票",
+    "pinyin": "chēpiào",
+    "nghiaHanViet": "xa phiếu",
+    "nghiaTiengViet": "vé xe",
+    "viDu": "车票多少钱？",
+    "dichNghia": "Vé xe bao nhiêu tiền?"
+  },
+  {
+    "hanTu": "停车票",
+    "pinyin": "tíngchē piào",
+    "nghiaHanViet": "đình xa phiếu",
+    "nghiaTiengViet": "vé đỗ xe",
+    "viDu": "我需要停车票。",
+    "dichNghia": "Tôi cần vé đỗ xe."
+  },
+  {
+    "hanTu": "火车票",
+    "pinyin": "huǒchē piào",
+    "nghiaHanViet": "hỏa xa phiếu",
+    "nghiaTiengViet": "vé tàu hỏa",
+    "viDu": "火车票很难买。",
+    "dichNghia": "Vé tàu hỏa rất khó mua."
+  },
+  {
+    "hanTu": "电影票",
+    "pinyin": "diànyǐng piào",
+    "nghiaHanViet": "điện ảnh phiếu",
+    "nghiaTiengViet": "vé xem phim",
+    "viDu": "电影票已经买了。",
+    "dichNghia": "Vé xem phim đã mua rồi."
+  },
+  {
+    "hanTu": "门票",
+    "pinyin": "ménpiào",
+    "nghiaHanViet": "môn phiếu",
+    "nghiaTiengViet": "vé vào cửa",
+    "viDu": "门票价格。",
+    "dichNghia": "Giá vé vào cửa."
+  },
+  {
+    "hanTu": "几张",
+    "pinyin": "jǐ zhāng",
+    "nghiaHanViet": "kỷ trương",
+    "nghiaTiengViet": "mấy cái, vài cái",
+    "viDu": "给我几张纸。",
+    "dichNghia": "Đưa cho tôi mấy tờ giấy."
+  },
+  {
+    "hanTu": "一份青年报",
+    "pinyin": "yī fèn qīngnián bào",
+    "nghiaHanViet": "nhất phần thanh niên báo",
+    "nghiaTiengViet": "một bản báo thanh niên",
+    "viDu": "他买了一份青年报。",
+    "dichNghia": "Anh ấy đã mua một bản báo thanh niên."
+  },
+  {
+    "hanTu": "回家",
+    "pinyin": "huíjiā",
+    "nghiaHanViet": "hồi gia",
+    "nghiaTiengViet": "về nhà",
+    "viDu": "我回家了。",
+    "dichNghia": "Tôi về nhà rồi."
+  },
+  {
+    "hanTu": "东西",
+    "pinyin": "dōngxi",
+    "nghiaHanViet": "đông tây",
+    "nghiaTiengViet": "đồ, đồ vật",
+    "viDu": "这是什么东西？",
+    "dichNghia": "Đây là đồ vật gì?"
+  },
+  {
+    "hanTu": "拿钱",
+    "pinyin": "ná qián",
+    "nghiaHanViet": "nã tiền",
+    "nghiaTiengViet": "lấy tiền",
+    "viDu": "你去拿钱吧。",
+    "dichNghia": "Bạn đi lấy tiền đi."
+  },
+  {
+    "hanTu": "别",
+    "pinyin": "bié",
+    "nghiaHanViet": "biệt",
+    "nghiaTiengViet": "đừng",
+    "viDu": "别说话！",
+    "dichNghia": "Đừng nói chuyện!"
+  },
+  {
+    "hanTu": "开玩笑",
+    "pinyin": "kāi wánxiào",
+    "nghiaHanViet": "khai ngoạn tiếu",
+    "nghiaTiengViet": "đùa, nói đùa",
+    "viDu": "他总爱开玩笑。",
+    "dichNghia": "Anh ấy luôn thích nói đùa."
+  },
+  {
+    "hanTu": "使用",
+    "pinyin": "shǐyòng",
+    "nghiaHanViet": "sử dụng",
+    "nghiaTiengViet": "dùng, sử dụng",
+    "viDu": "请正确使用。",
+    "dichNghia": "Xin hãy sử dụng đúng cách."
+  },
+  {
+    "hanTu": "先",
+    "pinyin": "xiān",
+    "nghiaHanViet": "tiên",
+    "nghiaTiengViet": "trước",
+    "viDu": "你先走吧。",
+    "dichNghia": "Bạn đi trước đi."
+  },
+  {
+    "hanTu": "我的钱",
+    "pinyin": "wǒ de qián",
+    "nghiaHanViet": "ngã đích tiền",
+    "nghiaTiengViet": "tiền của tôi",
+    "viDu": "这是我的钱。",
+    "dichNghia": "Đây là tiền của tôi."
+  },
+  {
+    "hanTu": "汉语",
+    "pinyin": "Hànyǔ",
+    "nghiaHanViet": "Hán ngữ",
+    "nghiaTiengViet": "tiếng Hán, tiếng Trung",
+    "viDu": "用汉语交流。",
+    "dichNghia": "Dùng tiếng Hán để giao tiếp."
+  },
+  {
+    "hanTu": "聊天",
+    "pinyin": "liáotiān",
+    "nghiaHanViet": "liêu thiên",
+    "nghiaTiengViet": "trò chuyện, tán gẫu",
+    "viDu": "我们聊得很开心。",
+    "dichNghia": "Chúng tôi trò chuyện rất vui vẻ."
+  },
+  {
+    "hanTu": "手机",
+    "pinyin": "shǒujī",
+    "nghiaHanViet": "thủ cơ",
+    "nghiaTiengViet": "điện thoại di động",
+    "viDu": "我的手机坏了。",
+    "dichNghia": "Điện thoại của tôi bị hỏng rồi."
+  },
+  {
+    "hanTu": "不用谢",
+    "pinyin": "búyòng xiè",
+    "nghiaHanViet": "bất dụng tạ",
+    "nghiaTiengViet": "không cần cảm ơn",
+    "viDu": "谢谢你！ - 不用谢！",
+    "dichNghia": "Cảm ơn bạn! - Không cần cảm ơn!"
+  },
+  {
+    "hanTu": "旅游",
+    "pinyin": "lǚyóu",
+    "nghiaHanViet": "lữ du",
+    "nghiaTiengViet": "du lịch",
+    "viDu": "去旅游。",
+    "dichNghia": "Đi du lịch."
+  },
+  {
+    "hanTu": "回答",
+    "pinyin": "huídá",
+    "nghiaHanViet": "hồi đáp",
+    "nghiaTiengViet": "trả lời",
+    "viDu": "请你回答。",
+    "dichNghia": "Mời bạn trả lời."
+  },
+  {
+    "hanTu": "哪些",
+    "pinyin": "nǎ xiē",
+    "nghiaHanViet": "na ta",
+    "nghiaTiengViet": "những (cái) nào",
+    "viDu": "哪些是你的？",
+    "dichNghia": "Những cái nào là của bạn?"
+  },
+  {
+    "hanTu": "地方",
+    "pinyin": "dìfāng",
+    "nghiaHanViet": "địa phương",
+    "nghiaTiengViet": "nơi, địa điểm",
+    "viDu": "这个地方很安静。",
+    "dichNghia": "Nơi này rất yên tĩnh."
+  },
+  {
+    "hanTu": "沙巴",
+    "pinyin": "Shābā",
+    "nghiaHanViet": "Sa Ba",
+    "nghiaTiengViet": "Sapa",
+    "viDu": "沙巴很美。",
+    "dichNghia": "Sapa rất đẹp."
+  },
+  {
+    "hanTu": "芽庄",
+    "pinyin": "Yázhuāng",
+    "nghiaHanViet": "Nha Trang",
+    "nghiaTiengViet": "Nha Trang",
+    "viDu": "芽庄的海。",
+    "dichNghia": "Biển Nha Trang."
+  },
+  {
+    "hanTu": "岘港",
+    "pinyin": "Xiàngǎng",
+    "nghiaHanViet": "Hiện Cảng",
+    "nghiaTiengViet": "Đà Nẵng",
+    "viDu": "岘港城市。",
+    "dichNghia": "Thành phố Đà Nẵng."
+  },
+  {
+    "hanTu": "下龙湾",
+    "pinyin": "Xiàlóng wān",
+    "nghiaHanViet": "Hạ Long loan",
+    "nghiaTiengViet": "Vịnh Hạ Long",
+    "viDu": "下龙湾很漂亮。",
+    "dichNghia": "Vịnh Hạ Long rất đẹp."
+  },
+  {
+    "hanTu": "富国",
+    "pinyin": "Fùguó",
+    "nghiaHanViet": "Phú Quốc",
+    "nghiaTiengViet": "Phú Quốc",
+    "viDu": "去富国岛。",
+    "dichNghia": "Đi đảo Phú Quốc."
+  },
+  {
+    "hanTu": "顺化",
+    "pinyin": "Shùnhuà",
+    "nghiaHanViet": "Thuận Hóa",
+    "nghiaTiengViet": "Huế",
+    "viDu": "顺化古城。",
+    "dichNghia": "Cố đô Huế."
+  },
+  {
+    "hanTu": "大叻",
+    "pinyin": "Dàlè",
+    "nghiaHanViet": "Đà Lạt",
+    "nghiaTiengViet": "Đà Lạt",
+    "viDu": "大叻天气。",
+    "dichNghia": "Thời tiết Đà Lạt."
+  },
+  {
+    "hanTu": "代表团",
+    "pinyin": "dàibiǎo tuán",
+    "nghiaHanViet": "đại biểu đoàn",
+    "nghiaTiengViet": "đoàn đại biểu",
+    "viDu": "欢迎代表团。",
+    "dichNghia": "Chào mừng đoàn đại biểu."
+  },
+  {
+    "hanTu": "公司",
+    "pinyin": "gōngsī",
+    "nghiaHanViet": "công ty",
+    "nghiaTiengViet": "công ty",
+    "viDu": "我的公司。",
+    "dichNghia": "Công ty của tôi."
+  },
+  {
+    "hanTu": "欢迎",
+    "pinyin": "huānyíng",
+    "nghiaHanViet": "hoan nghênh",
+    "nghiaTiengViet": "chào mừng, hoan nghênh",
+    "viDu": "欢迎您。",
+    "dichNghia": "Chào mừng ngài/bạn."
+  },
+  {
+    "hanTu": "您",
+    "pinyin": "nín",
+    "nghiaHanViet": "nâm",
+    "nghiaTiengViet": "ngài, ông/bà (kính ngữ)",
+    "viDu": "您是老师吗？",
+    "dichNghia": "Ngài là giáo viên phải không?"
+  },
+  {
+    "hanTu": "一团人",
+    "pinyin": "yī tuán rén",
+    "nghiaHanViet": "nhất đoàn nhân",
+    "nghiaTiengViet": "một đoàn người",
+    "viDu": "前面有一团人。",
+    "dichNghia": "Phía trước có một đoàn người."
+  },
+  {
+    "hanTu": "明天",
+    "pinyin": "míngtiān",
+    "nghiaHanViet": "minh thiên",
+    "nghiaTiengViet": "ngày mai",
+    "viDu": "明天是星期五。",
+    "dichNghia": "Ngày mai là thứ Sáu."
+  },
+  {
+    "hanTu": "一个外贸代表团",
+    "pinyin": "yí gè wàimào dàibiǎo tuán",
+    "nghiaHanViet": "nhất cá ngoại mậu đại biểu đoàn",
+    "nghiaTiengViet": "một đoàn đại biểu ngoại thương",
+    "viDu": "一个外贸代表团来了。",
+    "dichNghia": "Một đoàn đại biểu ngoại thương đã đến rồi."
+  },
+  {
+    "hanTu": "上海",
+    "pinyin": "Shànghǎi",
+    "nghiaHanViet": "Thượng Hải",
+    "nghiaTiengViet": "Thượng Hải",
+    "viDu": "上海是一个大城市。",
+    "dichNghia": "Thượng Hải là một thành phố lớn."
+  },
+  {
+    "hanTu": "当翻译",
+    "pinyin": "dāng fānyì",
+    "nghiaHanViet": "đương phiên dịch",
+    "nghiaTiengViet": "làm phiên dịch",
+    "viDu": "我去给他们当翻译。",
+    "dichNghia": "Tôi đi làm phiên dịch cho họ."
+  },
+  {
+    "hanTu": "梦想",
+    "pinyin": "mèngxiǎng",
+    "nghiaHanViet": "mộng tưởng",
+    "nghiaTiengViet": "ước mơ",
+    "viDu": "我的梦想。",
+    "dichNghia": "Ước mơ của tôi."
+  },
+  {
+    "hanTu": "医生",
+    "pinyin": "yīshēng",
+    "nghiaHanViet": "y sinh",
+    "nghiaTiengViet": "bác sĩ",
+    "viDu": "当医生。",
+    "dichNghia": "Làm bác sĩ."
+  },
+  {
+    "hanTu": "坐飞机去",
+    "pinyin": "zuò fēijī qù",
+    "nghiaHanViet": "tọa phi cơ khứ",
+    "nghiaTiengViet": "đi bằng máy bay",
+    "viDu": "我们坐飞机去旅行。",
+    "dichNghia": "Chúng ta đi du lịch bằng máy bay."
+  },
+  {
+    "hanTu": "还是",
+    "pinyin": "háishi",
+    "nghiaHanViet": "hoàn thị",
+    "nghiaTiengViet": "hay là",
+    "viDu": "你喜欢茶还是咖啡？",
+    "dichNghia": "Bạn thích trà hay cà phê?"
+  },
+  {
+    "hanTu": "坐火车去",
+    "pinyin": "zuò huǒchē qù",
+    "nghiaHanViet": "tọa hỏa xa khứ",
+    "nghiaTiengViet": "đi bằng tàu hỏa",
+    "viDu": "坐火车去要很久。",
+    "dichNghia": "Đi bằng tàu hỏa phải mất rất lâu."
+  },
+  {
+    "hanTu": "回去",
+    "pinyin": "huíqù",
+    "nghiaHanViet": "hồi khứ",
+    "nghiaTiengViet": "về, trở về (xa khỏi người nói)",
+    "viDu": "你快点回去吧。",
+    "dichNghia": "Bạn mau về đi."
+  },
+  {
+    "hanTu": "妈妈",
+    "pinyin": "māma",
+    "nghiaHanViet": "ma ma",
+    "nghiaTiengViet": "mẹ",
+    "viDu": "妈妈给我打电话。",
+    "dichNghia": "Mẹ gọi điện cho tôi."
+  },
+  {
+    "hanTu": "打电话",
+    "pinyin": "dǎ diànhuà",
+    "nghiaHanViet": "đả điện thoại",
+    "nghiaTiengViet": "gọi điện thoại",
+    "viDu": "他给我打电话。",
+    "dichNghia": "Anh ấy gọi điện cho tôi."
+  },
+  {
+    "hanTu": "什么时候",
+    "pinyin": "shénme shíhou",
+    "nghiaHanViet": "thập ma thời hậu",
+    "nghiaTiengViet": "lúc nào, khi nào",
+    "viDu": "你什么时候回家？",
+    "dichNghia": "Khi nào bạn về nhà?"
+  },
+  {
+    "hanTu": "9 点",
+    "pinyin": "jiǔ diǎn",
+    "nghiaHanViet": "cửu điểm",
+    "nghiaTiengViet": "9 giờ",
+    "viDu": "现在是 9 点。",
+    "dichNghia": "Bây giờ là 9 giờ."
+  },
+  {
+    "hanTu": "怎么",
+    "pinyin": "zěnme",
+    "nghiaHanViet": "chẩm ma",
+    "nghiaTiengViet": "sao, như thế nào",
+    "viDu": "你怎么了？",
+    "dichNghia": "Bạn bị sao vậy?"
+  },
+  {
+    "hanTu": "还在",
+    "pinyin": "hái zài",
+    "nghiaHanViet": "hài tại",
+    "nghiaTiengViet": "vẫn còn ở",
+    "viDu": "他还在学校。",
+    "dichNghia": "Anh ấy vẫn còn ở trường."
+  },
+  {
+    "hanTu": "公司",
+    "pinyin": "gōngsī",
+    "nghiaHanViet": "công ty",
+    "nghiaTiengViet": "công ty",
+    "viDu": "他在公司工作。",
+    "dichNghia": "Anh ấy làm việc ở công ty."
+  },
+  {
+    "hanTu": "快点",
+    "pinyin": "kuàidiǎn",
+    "nghiaHanViet": "khoái điểm",
+    "nghiaTiengViet": "nhanh lên",
+    "viDu": "快点走吧！",
+    "dichNghia": "Đi nhanh lên!"
+  },
+  {
+    "hanTu": "一下儿花",
+    "pinyin": "yīxiàr huā",
+    "nghiaHanViet": "nhất hạ nhi hoa",
+    "nghiaTiengViet": "tưới hoa một chút",
+    "viDu": "请帮我浇一下儿花。",
+    "dichNghia": "Xin hãy giúp tôi tưới hoa một chút."
+  },
+  {
+    "hanTu": "每月",
+    "pinyin": "měi yuè",
+    "nghiaHanViet": "mỗi nguyệt",
+    "nghiaTiengViet": "mỗi tháng",
+    "viDu": "每月去一次。",
+    "dichNghia": "Mỗi tháng đi một lần."
+  },
+  {
+    "hanTu": "多少钱",
+    "pinyin": "duōshǎo qián",
+    "nghiaHanViet": "đa thiểu tiền",
+    "nghiaTiengViet": "bao nhiêu tiền",
+    "viDu": "花多少钱？",
+    "dichNghia": "Tiêu bao nhiêu tiền?"
+  },
+  {
+    "hanTu": "每天",
+    "pinyin": "měitiān",
+    "nghiaHanViet": "mỗi thiên",
+    "nghiaTiengViet": "mỗi ngày",
+    "viDu": "每天学习汉语。",
+    "dichNghia": "Mỗi ngày học tiếng Hán."
+  },
+  {
+    "hanTu": "多长时间",
+    "pinyin": "duō cháng shíjiān",
+    "nghiaHanViet": "đa trường thời gian",
+    "nghiaTiengViet": "bao lâu (thời gian)",
+    "viDu": "用了多长时间？",
+    "dichNghia": "Dùng hết bao lâu?"
+  },
+  {
+    "hanTu": "两个小时",
+    "pinyin": "liǎng ge xiǎoshí",
+    "nghiaHanViet": "lưỡng cá tiểu thời",
+    "nghiaTiengViet": "hai tiếng đồng hồ",
+    "viDu": "等了两个小时。",
+    "dichNghia": "Đã đợi hai tiếng đồng hồ."
+  },
+  {
+    "hanTu": "今天",
+    "pinyin": "jīntiān",
+    "nghiaHanViet": "kim thiên",
+    "nghiaTiengViet": "hôm nay",
+    "viDu": "今天天气好。",
+    "dichNghia": "Thời tiết hôm nay tốt."
+  },
+  {
+    "hanTu": "做饭",
+    "pinyin": "zuò fàn",
+    "nghiaHanViet": "tố phạn",
+    "nghiaTiengViet": "nấu cơm",
+    "viDu": "你会做饭吗？",
+    "dichNghia": "Bạn biết nấu cơm không?"
+  },
+  {
+    "hanTu": "上课",
+    "pinyin": "shàngkè",
+    "nghiaHanViet": "thượng khóa",
+    "nghiaTiengViet": "lên lớp",
+    "viDu": "我们上课了。",
+    "dichNghia": "Chúng ta lên lớp rồi."
+  },
+  {
+    "hanTu": "的时候",
+    "pinyin": "de shíhou",
+    "nghiaHanViet": "đích thời hậu",
+    "nghiaTiengViet": "lúc, khi",
+    "viDu": "回家的时候。",
+    "dichNghia": "Lúc về nhà."
+  },
+  {
+    "hanTu": "老师",
+    "pinyin": "lǎoshī",
+    "nghiaHanViet": "lão sư",
+    "nghiaTiengViet": "giáo viên, thầy cô",
+    "viDu": "问老师问题。",
+    "dichNghia": "Hỏi thầy giáo câu hỏi."
+  },
+  {
+    "hanTu": "问你问题",
+    "pinyin": "wèn nǐ wèntí",
+    "nghiaHanViet": "vấn nhĩ vấn đề",
+    "nghiaTiengViet": "hỏi bạn câu hỏi",
+    "viDu": "老师常问你问题吗？",
+    "dichNghia": "Thầy giáo có thường hỏi bạn câu hỏi không?"
+  },
+  {
+    "hanTu": "专名",
+    "pinyin": "zhuānmíng",
+    "nghiaHanViet": "chuyên danh",
+    "nghiaTiengViet": "tên riêng",
+    "viDu": "这是一个专名。",
+    "dichNghia": "Đây là một tên riêng."
+  },
+  {
+    "hanTu": "珍妮",
+    "pinyin": "Zhēnní",
+    "nghiaHanViet": "Trân Ni",
+    "nghiaTiengViet": "Janet (tên người)",
+    "viDu": "珍妮去上海了。",
+    "dichNghia": "Janet đi Thượng Hải rồi."
+  },
+  {
+    "hanTu": "第二部分",
+    "pinyin": "Dì èr bùfèn",
+    "nghiaHanViet": "Đệ nhị bộ phận",
+    "nghiaTiengViet": "Phần hai",
+    "viDu": "请看第二部分。",
+    "dichNghia": "Mời xem phần hai."
+  },
+  {
+    "hanTu": "语法",
+    "pinyin": "yǔfǎ",
+    "nghiaHanViet": "ngữ pháp",
+    "nghiaTiengViet": "ngữ pháp",
+    "viDu": "我学习汉语语法。",
+    "dichNghia": "Tôi học ngữ pháp tiếng Hán."
+  },
+  {
+    "hanTu": "连动句",
+    "pinyin": "liándòng jù",
+    "nghiaHanViet": "liên động cú",
+    "nghiaTiengViet": "câu liên động",
+    "viDu": "什么是连动句？",
+    "dichNghia": "Câu liên động là gì?"
+  },
+  {
+    "hanTu": "中国",
+    "pinyin": "Zhōngguó",
+    "nghiaHanViet": "Trung Quốc",
+    "nghiaTiengViet": "Trung Quốc",
+    "viDu": "我来中国。",
+    "dichNghia": "Tôi đến Trung Quốc."
+  },
+  {
+    "hanTu": "学汉语",
+    "pinyin": "xué Hànyǔ",
+    "nghiaHanViet": "học Hán ngữ",
+    "nghiaTiengViet": "học tiếng Hán",
+    "viDu": "她来中国学汉语。",
+    "dichNghia": "Cô ấy đến Trung Quốc học tiếng Hán."
+  },
+  {
+    "hanTu": "坐飞机",
+    "pinyin": "zuò fēijī",
+    "nghiaHanViet": "tọa phi cơ",
+    "nghiaTiengViet": "đi máy bay",
+    "viDu": "我们坐飞机。",
+    "dichNghia": "Chúng tôi đi máy bay."
+  },
+  {
+    "hanTu": "骑车",
+    "pinyin": "qí chē",
+    "nghiaHanViet": "kỵ xa",
+    "nghiaTiengViet": "đi xe đạp/xe máy",
+    "viDu": "他骑车上班。",
+    "dichNghia": "Anh ấy đi xe đến công ty."
+  },
+  {
+    "hanTu": "聊天",
+    "pinyin": "liáotiān",
+    "nghiaHanViet": "liêu thiên",
+    "nghiaTiengViet": "trò chuyện, tán gẫu",
+    "viDu": "我们用汉语聊天。",
+    "dichNghia": "Chúng tôi dùng tiếng Hán trò chuyện."
+  },
+  {
+    "hanTu": "每天",
+    "pinyin": "měitiān",
+    "nghiaHanViet": "mỗi thiên",
+    "nghiaTiengViet": "mỗi ngày",
+    "viDu": "我每天都跑步。",
+    "dichNghia": "Tôi mỗi ngày đều chạy bộ."
+  },
+  {
+    "hanTu": "都",
+    "pinyin": "dōu",
+    "nghiaHanViet": "đô",
+    "nghiaTiengViet": "đều",
+    "viDu": "他们都是学生。",
+    "dichNghia": "Họ đều là học sinh."
+  },
+  {
+    "hanTu": "上网",
+    "pinyin": "shàngwǎng",
+    "nghiaHanViet": "thượng võng",
+    "nghiaTiengViet": "lên mạng",
+    "viDu": "我在家上网。",
+    "dichNghia": "Tôi ở nhà lên mạng."
+  },
+  {
+    "hanTu": "查资料",
+    "pinyin": "chá zīliào",
+    "nghiaHanViet": "tra tư liệu",
+    "nghiaTiengViet": "tra cứu tài liệu",
+    "viDu": "上网查资料。",
+    "dichNghia": "Lên mạng tra cứu tài liệu."
+  },
+  {
+    "hanTu": "弟弟",
+    "pinyin": "dìdi",
+    "nghiaHanViet": "đệ đệ",
+    "nghiaTiengViet": "em trai",
+    "viDu": "我爱我的弟弟。",
+    "dichNghia": "Tôi yêu em trai tôi."
+  },
+  {
+    "hanTu": "铅笔",
+    "pinyin": "qiānbǐ",
+    "nghiaHanViet": "duyên bút",
+    "nghiaTiengViet": "bút chì",
+    "viDu": "用铅笔写字。",
+    "dichNghia": "Dùng bút chì viết chữ."
+  },
+  {
+    "hanTu": "做作业",
+    "pinyin": "zuò zuòyè",
+    "nghiaHanViet": "tố tác nghiệp",
+    "nghiaTiengViet": "làm bài tập",
+    "viDu": "他做作业。",
+    "dichNghia": "Anh ấy làm bài tập."
+  },
+  {
+    "hanTu": "他",
+    "pinyin": "tā",
+    "nghiaHanViet": "tha",
+    "nghiaTiengViet": "anh ấy, ông ấy, nó (giống đực)",
+    "viDu": "他是我的朋友。",
+    "dichNghia": "Anh ấy là bạn của tôi."
+  },
+  {
+    "hanTu": "银行",
+    "pinyin": "yínháng",
+    "nghiaHanViet": "ngân hàng",
+    "nghiaTiengViet": "ngân hàng",
+    "viDu": "我去银行。",
+    "dichNghia": "Tôi đi ngân hàng."
+  },
+  {
+    "hanTu": "借",
+    "pinyin": "jiè",
+    "nghiaHanViet": "tá",
+    "nghiaTiengViet": "mượn, vay",
+    "viDu": "我向他借钱。",
+    "dichNghia": "Tôi mượn tiền anh ấy."
+  },
+  {
+    "hanTu": "一千万",
+    "pinyin": "yī qiānwàn",
+    "nghiaHanViet": "nhất thiên vạn",
+    "nghiaTiengViet": "mười triệu",
+    "viDu": "一千万块。",
+    "dichNghia": "Mười triệu đồng."
+  },
+  {
+    "hanTu": "越南盾",
+    "pinyin": "Yuènán dùn",
+    "nghiaHanViet": "Việt Nam thuẫn",
+    "nghiaTiengViet": "đồng Việt Nam",
+    "viDu": "这是越南盾。",
+    "dichNghia": "Đây là đồng Việt Nam."
+  },
+  {
+    "hanTu": "妈妈",
+    "pinyin": "māma",
+    "nghiaHanViet": "ma ma",
+    "nghiaTiengViet": "mẹ",
+    "viDu": "我妈妈。",
+    "dichNghia": "Mẹ tôi."
+  },
+  {
+    "hanTu": "市场",
+    "pinyin": "shìchǎng",
+    "nghiaHanViet": "thị trường",
+    "nghiaTiengViet": "chợ, thị trường",
+    "viDu": "去市场买东西。",
+    "dichNghia": "Đi chợ mua đồ."
+  },
+  {
+    "hanTu": "日用品",
+    "pinyin": "rìyòngpǐn",
+    "nghiaHanViet": "nhật dụng phẩm",
+    "nghiaTiengViet": "đồ dùng hàng ngày",
+    "viDu": "买日用品。",
+    "dichNghia": "Mua đồ dùng hàng ngày."
+  },
+  {
+    "hanTu": "爷爷",
+    "pinyin": "yéye",
+    "nghiaHanViet": "gia gia",
+    "nghiaTiengViet": "ông nội",
+    "viDu": "我爷爷。",
+    "dichNghia": "Ông nội tôi."
+  },
+  {
+    "hanTu": "早起",
+    "pinyin": "zǎoqǐ",
+    "nghiaHanViet": "tảo khởi",
+    "nghiaTiengViet": "dậy sớm",
+    "viDu": "他常早起。",
+    "dichNghia": "Ông ấy thường dậy sớm."
+  },
+  {
+    "hanTu": "跑步",
+    "pinyin": "pǎobù",
+    "nghiaHanViet": "bào bộ",
+    "nghiaTiengViet": "chạy bộ",
+    "viDu": "去跑步。",
+    "dichNghia": "Đi chạy bộ."
+  },
+  {
+    "hanTu": "第三部分",
+    "pinyin": "Dì sān bùfèn",
+    "nghiaHanViet": "Đệ tam bộ phận",
+    "nghiaTiengViet": "Phần ba",
+    "viDu": "我们看第三部分。",
+    "dichNghia": "Chúng ta xem phần ba."
+  },
+  {
+    "hanTu": "课文",
+    "pinyin": "kèwén",
+    "nghiaHanViet": "khóa văn",
+    "nghiaTiengViet": "bài khóa",
+    "viDu": "读课文。",
+    "dichNghia": "Đọc bài khóa."
+  },
+  {
+    "hanTu": "田芳",
+    "pinyin": "Tián Fāng",
+    "nghiaHanViet": "Điền Phương",
+    "nghiaTiengViet": "Điền Phương (tên người)",
+    "viDu": "这是田芳。",
+    "dichNghia": "Đây là Điền Phương."
+  },
+  {
+    "hanTu": "楼门口",
+    "pinyin": "lóu ménkǒu",
+    "nghiaHanViet": "lâu môn khẩu",
+    "nghiaTiengViet": "cửa tòa nhà",
+    "viDu": "在楼门口。",
+    "dichNghia": "Ở cửa tòa nhà."
+  },
+  {
+    "hanTu": "遇见",
+    "pinyin": "yùjiàn",
+    "nghiaHanViet": "ngộ kiến",
+    "nghiaTiengViet": "gặp, gặp gỡ",
+    "viDu": "遇见张东。",
+    "dichNghia": "Gặp Trương Đông."
+  },
+  {
+    "hanTu": "张东",
+    "pinyin": "Zhāng Dōng",
+    "nghiaHanViet": "Trương Đông",
+    "nghiaTiengViet": "Trương Đông (tên người)",
+    "viDu": "张东你好。",
+    "dichNghia": "Trương Đông xin chào."
+  },
+  {
+    "hanTu": "要去哪儿",
+    "pinyin": "yào qù nǎr",
+    "nghiaHanViet": "yếu khứ nã nhi",
+    "nghiaTiengViet": "muốn đi đâu",
+    "viDu": "你要去哪儿？",
+    "dichNghia": "Bạn muốn đi đâu?"
+  },
+  {
+    "hanTu": "书店",
+    "pinyin": "shūdiàn",
+    "nghiaHanViet": "thư điếm",
+    "nghiaTiengViet": "hiệu sách",
+    "viDu": "去书店。",
+    "dichNghia": "Đi hiệu sách."
+  },
+  {
+    "hanTu": "买一本书",
+    "pinyin": "mǎi yī běn shū",
+    "nghiaHanViet": "mãi nhất bản thư",
+    "nghiaTiengViet": "mua một quyển sách",
+    "viDu": "我去买一本书。",
+    "dichNghia": "Tôi đi mua một quyển sách."
+  },
+  {
+    "hanTu": "一会儿",
+    "pinyin": "yīhuìr",
+    "nghiaHanViet": "nhất hội nhi",
+    "nghiaTiengViet": "một lát, một lúc",
+    "viDu": "等我一会儿。",
+    "dichNghia": "Đợi tôi một lát."
+  },
+  {
+    "hanTu": "玛丽",
+    "pinyin": "Mǎlì",
+    "nghiaHanViet": "Mã Lệ",
+    "nghiaTiengViet": "Mary (tên người)",
+    "viDu": "玛丽来了。",
+    "dichNghia": "Mary đến rồi."
+  },
+  {
+    "hanTu": "来找我",
+    "pinyin": "lái zhǎo wǒ",
+    "nghiaHanViet": "lai trảo ngã",
+    "nghiaTiengViet": "đến tìm tôi",
+    "viDu": "朋友来找我。",
+    "dichNghia": "Bạn bè đến tìm tôi."
+  },
+  {
+    "hanTu": "好的",
+    "pinyin": "hǎo de",
+    "nghiaHanViet": "hảo đích",
+    "nghiaTiengViet": "được, OK",
+    "viDu": "好的，没问题。",
+    "dichNghia": "Được, không vấn đề gì."
+  },
+  {
+    "hanTu": "给你拿钱",
+    "pinyin": "gěi nǐ ná qián",
+    "nghiaHanViet": "cấp nhĩ nã tiền",
+    "nghiaTiengViet": "lấy tiền đưa cho bạn",
+    "viDu": "我给你拿钱。",
+    "dichNghia": "Tôi lấy tiền đưa cho bạn."
+  },
+  {
+    "hanTu": "为什么",
+    "pinyin": "wèishénme",
+    "nghiaHanViet": "vị thập ma",
+    "nghiaTiengViet": "tại sao, vì sao",
+    "viDu": "你为什么不来？",
+    "dichNghia": "Tại sao bạn không đến?"
+  },
+  {
+    "hanTu": "外贸代表团",
+    "pinyin": "wàimào dàibiǎo tuán",
+    "nghiaHanViet": "ngoại mậu đại biểu đoàn",
+    "nghiaTiengViet": "đoàn đại biểu ngoại thương",
+    "viDu": "外贸代表团去参观。",
+    "dichNghia": "Đoàn đại biểu ngoại thương đi tham quan."
+  },
+  {
+    "hanTu": "宿舍",
+    "pinyin": "sùshè",
+    "nghiaHanViet": "túc xá",
+    "nghiaTiengViet": "ký túc xá",
+    "viDu": "她在宿舍。",
+    "dichNghia": "Cô ấy ở ký túc xá."
+  },
+  {
+    "hanTu": "找玛丽",
+    "pinyin": "zhǎo Mǎlì",
+    "nghiaHanViet": "trảo Mã Lệ",
+    "nghiaTiengViet": "tìm Mary",
+    "viDu": "珍妮找玛丽。",
+    "dichNghia": "Janet tìm Mary."
+  },
+  {
+    "hanTu": "不",
+    "pinyin": "bù",
+    "nghiaHanViet": "bất",
+    "nghiaTiengViet": "không",
+    "viDu": "我不去。",
+    "dichNghia": "Tôi không đi."
+  },
+  {
+    "hanTu": "八号",
+    "pinyin": "bā hào",
+    "nghiaHanViet": "bát hiệu",
+    "nghiaTiengViet": "ngày mùng 8",
+    "viDu": "八号回来。",
+    "dichNghia": "Mùng 8 trở về."
+  },
+  {
+    "hanTu": "坐飞机去",
+    "pinyin": "zuò fēijī qù",
+    "nghiaHanViet": "tọa phi cơ khứ",
+    "nghiaTiengViet": "đi bằng máy bay",
+    "viDu": "她坐飞机去。",
+    "dichNghia": "Cô ấy đi bằng máy bay."
+  },
+  {
+    "hanTu": "坐火车去",
+    "pinyin": "zuò huǒchē qù",
+    "nghiaHanViet": "tọa hỏa xa khứ",
+    "nghiaTiengViet": "đi bằng tàu hỏa",
+    "viDu": "你坐火车去吗？",
+    "dichNghia": "Bạn đi bằng tàu hỏa không?"
+  },
+  {
+    "hanTu": "BTVN",
+    "pinyin": "Bàitiàowén (phiên âm Việt hóa tự đặt cho BT Về Nhà)",
+    "nghiaHanViet": "bài tập văn (không có Hán tự gốc)",
+    "nghiaTiengViet": "Bài tập về nhà",
+    "viDu": "我有很多 BTVN。",
+    "dichNghia": "Tôi có rất nhiều bài tập về nhà."
+  },
+  {
+    "hanTu": "段文",
+    "pinyin": "duàn wén",
+    "nghiaHanViet": "đoạn văn",
+    "nghiaTiengViet": "đoạn văn",
+    "viDu": "读这段文。",
+    "dichNghia": "Đọc đoạn văn này."
+  },
+  {
+    "hanTu": "来中国",
+    "pinyin": "lái Zhōngguó",
+    "nghiaHanViet": "lai Trung Quốc",
+    "nghiaTiengViet": "đến Trung Quốc",
+    "viDu": "他来中国了。",
+    "dichNghia": "Anh ấy đến Trung Quốc rồi."
+  },
+  {
+    "hanTu": "跟他们",
+    "pinyin": "gēn tāmen",
+    "nghiaHanViet": "căn tha môn",
+    "nghiaTiengViet": "với họ, cùng họ",
+    "viDu": "我跟他们一起。",
+    "dichNghia": "Tôi cùng với họ."
+  },
+  {
+    "hanTu": "说",
+    "pinyin": "shuō",
+    "nghiaHanViet": "thuyết",
+    "nghiaTiengViet": "nói",
+    "viDu": "她说汉语。",
+    "dichNghia": "Cô ấy nói tiếng Hán."
+  },
+  {
+    "hanTu": "果汁",
+    "pinyin": "guǒzhī",
+    "nghiaHanViet": "quả trấp",
+    "nghiaTiengViet": "nước ép hoa quả",
+    "viDu": "我喝果汁。",
+    "dichNghia": "Tôi uống nước ép hoa quả."
+  }
 ];
 
         const flashcardContainer = document.getElementById('flashcard-container');
@@ -406,4 +1846,5 @@
 
     </script>
 </body>
+
 </html>
