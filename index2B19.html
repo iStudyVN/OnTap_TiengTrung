@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Tiếng Trung</title>
+    <style>
+        /* CSS để nhúng font Simsun */
+        @font-face {
+            font-family: 'Simsun';
+            src: url(https://fonts.gstatic.com/s/simsun/v18/K9-BZD0b9T8xcP0Q.woff2) format('woff2');
+            unicode-range: U+4E00-9FFF; /* Phạm vi cho ký tự Hán */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .scene {
+            width: 100%;
+            height: 300px;
+            perspective: 600px;
+            position: relative;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            transition: 
+                transform 0.6s, 
+                opacity 0.3s, 
+                left 0.4s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* --- HIỆU ỨNG TRƯỢT --- */
+        .card.slide-next-out {
+            transform: translateX(-100%) rotateY(0deg); 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card.slide-prev-out {
+            transform: translateX(100%) rotateY(0deg); 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card__face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; 
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        /* YÊU CẦU: Mặt trước chữ Hán, font Simsun, màu đen, ở giữa */
+        .card__face--front {
+            font-family: 'Simsun', sans-serif; 
+            font-size: 80px;
+            color: #000000; /* Chữ màu đen */
+        }
+
+        .card__face--back {
+            transform: rotateY(180deg);
+            padding: 20px;
+            box-sizing: border-box;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
+            text-align: center; 
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+        }
+        
+        .back-content p {
+            font-size: 1.3rem;
+            margin: 8px 0;
+            width: 100%;
+            text-align: center; 
+            font-weight: 500;
+        }
+        
+        .back-content .pinyin { color: #e67e22; font-weight: bold; font-size: 1.6rem; } /* Màu cam */
+        .back-content .hanviet { color: #8e44ad; } /* Màu tím */
+        .back-content .nghia { color: #1f506b; font-style: italic; } /* Màu xanh đậm (thay vì #27ae60) */
+        .back-content .vidu-han { color: #000000; font-family: 'Simsun', sans-serif; margin-top: 15px; font-size: 1.5rem; } /* Chữ Hán đen */
+        .back-content .dichnghia { color: #000000; font-style: italic; font-size: 1rem; } /* Chữ đen */
+
+
+        .navigation {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 5px;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+        
+        #counter {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #7f8c8d;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .jump-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #jump-input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        
+        .jump-button {
+            background-color: #e74c3c; 
+        }
+        
+        .jump-button:hover {
+            background-color: #c0392b;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Flashcard Tiếng Trung</h1>
+        <div class="scene">
+            <div id="flashcard-container"></div>
+        </div>
+        <div class="navigation">
+            <button class="nav-button" id="prev-btn">Trước</button>
+            <span id="counter"></span>
+            <button class="nav-button" id="next-btn">Sau</button>
+        </div>
+        
+        <div class="jump-control">
+            <input type="number" id="jump-input" min="1" max="30" placeholder="#">
+            <button class="nav-button jump-button" id="jump-btn">Nhảy đến thẻ số</button>
+        </div>
+    </div>
+
+    <script>
+        // 30 từ vựng Hán ngữ giản thể được lấy từ shengci.txt
+        const cardData = [
+  { hanzi: '第十九课', pinyin: 'Dì shíjiǔ kè', hanviet: 'Đệ thập cửu khóa', nghia: 'Bài 19', vidu: '我们学习第十九课。', dichnghia: 'Chúng ta học Bài 19.' },
+  { hanzi: '可以试试吗?', pinyin: 'Kěyǐ shìshì ma?', hanviet: 'Khả dĩ thí thí ma?', nghia: 'Có thể thử được không?', vidu: 'A: 我可以试试这件衣服吗? B: 当然可以!', dichnghia: 'A: Tôi có thể thử bộ quần áo này không? B: Đương nhiên là được!' },
+  { hanzi: '第一部分', pinyin: 'Dì yī bùfèn', hanviet: 'Đệ nhất bộ phận', nghia: 'Phần thứ nhất', vidu: '第一部分是生词。', dichnghia: 'Phần thứ nhất là từ mới.' },
+  { hanzi: '生词', pinyin: 'Shēngcí', hanviet: 'Sinh từ', nghia: 'Từ mới, từ vựng', vidu: '请大家读一遍生词。', dichnghia: 'Mời mọi người đọc một lần từ mới.' },
+  { hanzi: '羽绒服', pinyin: 'yǔróngfú', hanviet: 'Vũ nhung phục', nghia: 'Áo lông vũ, áo khoác lông', vidu: '这件羽绒服又好看又便宜。', dichnghia: 'Chiếc áo lông vũ này vừa đẹp vừa rẻ.' },
+  { hanzi: '深', pinyin: 'shēn', hanviet: 'Thâm', nghia: 'Thẫm (màu sắc), Sâu (chiều sâu)', vidu: '你要深颜色的还是要浅颜色的？', dichnghia: 'Bạn muốn cái màu đậm hay muốn cái màu nhạt?' },
+  { hanzi: '浅', pinyin: 'qiǎn', hanviet: 'Thiển', nghia: 'Nhạt (màu sắc), Cạn (chiều sâu)', vidu: '这件衣服的颜色太浅了。', dichnghia: 'Màu của bộ quần áo này nhạt quá.' },
+  { hanzi: '胖', pinyin: 'pàng', hanviet: 'Béo', nghia: 'Béo, mập', vidu: '我太胖了，要减肥。', dichnghia: 'Tôi béo quá rồi, phải giảm cân.' },
+  { hanzi: '瘦', pinyin: 'shòu', hanviet: 'Sấu', nghia: 'Gầy, ốm, Chật (quần áo)', vidu: '她很瘦，但是身体很好。', dichnghia: 'Cô ấy rất gầy, nhưng sức khỏe rất tốt.' },
+  { hanzi: '合适', pinyin: 'héshì', hanviet: 'Hợp thích', nghia: 'Thích hợp, vừa vặn', vidu: '这件衣服你穿很合适。', dichnghia: 'Bộ quần áo này bạn mặc rất vừa vặn.' },
+  { hanzi: '又……又', pinyin: 'yòu... yòu...', hanviet: 'Hựu... hựu...', nghia: 'Vừa... vừa... (biểu thị 2 trạng thái cùng lúc)', vidu: '我们的教室又安静又干净。', dichnghia: 'Phòng học của chúng ta vừa yên tĩnh vừa sạch sẽ.' },
+  { hanzi: '便宜', pinyin: 'piányi', hanviet: 'Tiện nghi', nghia: 'Rẻ, giá rẻ', vidu: '太贵了，便宜一点儿吧。', dichnghia: 'Đắt quá, rẻ chút đi.' },
+  { hanzi: '长', pinyin: 'cháng', hanviet: 'Trường', nghia: 'Dài', vidu: '这件有点儿长, 有短一点儿的吗？', dichnghia: 'Cái (áo) này hơi dài, có cái ngắn chút không?' },
+  { hanzi: '试', pinyin: 'shì', hanviet: 'Thí', nghia: 'Thử (quần áo, giày dép...)', vidu: '你再试试这件。', dichnghia: 'Bạn thử lại cái này xem.' },
+  { hanzi: '可以', pinyin: 'kěyǐ', hanviet: 'Khả dĩ', nghia: 'Có thể, được phép', vidu: '我可以用你的电脑吗？', dichnghia: 'Tôi có thể dùng máy tính của bạn không?' },
+  { hanzi: '当然', pinyin: 'dāngrán', hanviet: 'Đương nhiên', nghia: 'Tất nhiên, đương nhiên', vidu: '当然可以。', dichnghia: 'Tất nhiên có thể.' },
+  { hanzi: '肥', pinyin: 'féi', hanviet: 'Phì', nghia: 'Rộng (quần áo), Béo (người/vật)', vidu: '这件太肥/大了。', dichnghia: 'Cái (áo) này rộng quá rồi.' },
+  { hanzi: '好看', pinyin: 'hǎokàn', hanviet: 'Hảo khán', nghia: 'Đẹp, xinh, ưa nhìn', vidu: '这条裙子很合适，很 好看。', dichnghia: 'Chiếc váy này rất vừa vặn, rất đẹp.' },
+  { hanzi: '种', pinyin: 'zhǒng', hanviet: 'Chủng', nghia: 'Loại, chủng loại (lượng từ)', vidu: '这种羽绒服怎么卖？', dichnghia: 'Loại áo lông vũ này bán thế nào?' },
+  { hanzi: '一点儿', pinyin: 'yìdiǎnr', hanviet: 'Nhất điểm nhi', nghia: 'Một chút, hơi (đứng sau tính từ, so sánh, hoặc sau danh từ)', vidu: '便宜一点儿吧。', dichnghia: 'Rẻ chút đi.' },
+  { hanzi: '短', pinyin: 'duǎn', hanviet: 'Đoản', nghia: 'Ngắn', vidu: '有短一点儿的吗？', dichnghia: 'Có cái ngắn hơn một chút không?' },
+  { hanzi: '打折', pinyin: 'dǎ zhé', hanviet: 'Đả chiết', nghia: 'Giảm giá, chiết khấu', vidu: '打多少折？', dichnghia: 'Chiết khấu bao nhiêu?' },
+  { hanzi: '大衣', pinyin: 'dàyī', hanviet: 'Đại y', nghia: 'Áo khoác', vidu: '我要去商店买大衣。', dichnghia: 'Tôi phải đi cửa hàng mua áo khoác.' },
+  { hanzi: '上衣', pinyin: 'shàngyī', hanviet: 'Thượng y', nghia: 'Áo (áo mặc nửa trên)', vidu: '这件上衣的款式很新。', dichnghia: 'Kiểu dáng chiếc áo này rất mới.' },
+  { hanzi: '裤子', pinyin: 'kùzi', hanviet: 'Khố tử', nghia: 'Quần', vidu: '这条裤子的颜色不太好看。', dichnghia: 'Màu sắc của chiếc quần này không đẹp lắm.' },
+  { hanzi: '裙子', pinyin: 'qúnzi', hanviet: 'Quần tử', nghia: 'Váy', vidu: '今天她穿了一条非常漂亮的裙子。', dichnghia: 'Hôm nay cô ấy mặc 1 chiếc váy rất đẹp.' },
+  { hanzi: '条', pinyin: 'tiáo', hanviet: 'Điều', nghia: 'Chiếc, cái (lượng từ cho quần, váy, sông...)', vidu: '她穿了一条裙子。', dichnghia: 'Cô ấy mặc một chiếc váy.' },
+  { hanzi: '贵', pinyin: 'guì', hanviet: 'Quý', nghia: 'Đắt, mắc', vidu: '太贵了，便宜一点儿吧。', dichnghia: 'Đắt quá, rẻ chút đi.' },
+  { hanzi: '减肥', pinyin: 'jiǎnféi', hanviet: 'Giảm phì', nghia: 'Giảm cân', vidu: '我太胖了，要减肥。', dichnghia: 'Tôi béo quá rồi, phải giảm cân.' },
+  { hanzi: '考试', pinyin: 'kǎoshì', hanviet: 'Khảo thí', nghia: 'Thi, kiểm tra (danh từ/động từ)', vidu: '我要去参加考试。', dichnghia: 'Tôi phải đi tham gia kỳ thi.' },
+  { hanzi: '汉语水平考试', pinyin: 'Hànyǔ Shuǐpíng Kǎoshì', hanviet: 'Hán ngữ Thủy bình Khảo thí', nghia: 'Kỳ thi trình độ Hán ngữ (HSK)', vidu: '你参加过汉语水平考试吗？', dichnghia: 'Bạn đã từng tham gia kỳ thi HSK chưa?' },
+  { hanzi: '适合', pinyin: 'shìhé', hanviet: 'Thích hợp', nghia: 'Thích hợp (động từ, có thể mang tân ngữ)', vidu: '我觉得这件衣服适合你。', dichnghia: 'Tôi cảm thấy bộ quần áo này hợp với bạn.' },
+  { hanzi: '正合适', pinyin: 'zhèng héshì', hanviet: 'Chính hợp thích', nghia: 'Vừa vặn, vừa khít, hoàn toàn thích hợp', vidu: '这件不大不小，正合适。', dichnghia: 'Chiếc này không to không nhỏ, vừa vặn.' },
+  { hanzi: '怎么卖', pinyin: 'zěnme mài', hanviet: 'Chẩm ma mại', nghia: 'Bán thế nào, giá bao nhiêu', vidu: '这种羽绒服怎么卖？', dichnghia: 'Loại áo lông vũ này bán thế nào?' },
+  { hanzi: '好吃', pinyin: 'hǎochī', hanviet: 'Hảo cật', nghia: 'Ngon (đồ ăn)', vidu: '这个菜很好吃。', dichnghia: 'Món ăn này rất ngon.' },
+  { hanzi: '好喝', pinyin: 'hǎohē', hanviet: 'Hảo hát', nghia: 'Ngon (đồ uống)', vidu: '这杯咖啡很好喝。', dichnghia: 'Cốc cà phê này rất ngon.' },
+  { hanzi: '好听', pinyin: 'hǎotīng', hanviet: 'Hảo thính', nghia: 'Hay (âm thanh, giọng nói, nhạc)', vidu: '她的歌声很好听。', dichnghia: 'Giọng hát của cô ấy rất hay.' },
+  { hanzi: '打八折', pinyin: 'dǎ bā zhé', hanviet: 'Đả bát chiết', nghia: 'Giảm 20% (Chiết khấu 80%)', vidu: '这件衣服可以打八折。', dichnghia: 'Bộ quần áo này có thể giảm 20%.' },
+  { hanzi: '块', pinyin: 'kuài', hanviet: 'Khối', nghia: 'Đồng (tiền tệ, văn nói)', vidu: '一件四百块。', dichnghia: 'Một chiếc 400 đồng.' },
+  { hanzi: '毛', pinyin: 'máo', hanviet: 'Mao', nghia: 'Hào (tiền tệ, văn nói)', vidu: '两块五毛(钱)。', dichnghia: 'Hai đồng năm hào (tiền).' },
+  { hanzi: '元', pinyin: 'yuán', hanviet: 'Nguyên', nghia: 'Đồng (tiền tệ, văn viết)', vidu: '我有十元钱。', dichnghia: 'Tôi có mười đồng tiền.' },
+  { hanzi: '角', pinyin: 'jiǎo', hanviet: 'Giác', nghia: 'Hào (tiền tệ, văn viết)', vidu: '五角钱。', dichnghia: 'Năm hào tiền.' },
+  { hanzi: '分', pinyin: 'fēn', hanviet: 'Phân', nghia: 'Xu (tiền tệ, cả văn nói/viết)', vidu: '五分钱。', dichnghia: 'Năm xu tiền.' },
+  { hanzi: '钱', pinyin: 'qián', hanviet: 'Tiền', nghia: 'Tiền', vidu: '我没有钱。', dichnghia: 'Tôi không có tiền.' },
+  { hanzi: '有(一)点儿', pinyin: 'yǒu (yì)diǎnr', hanviet: 'Hữu (nhất) điểm nhi', nghia: 'Hơi, có chút (biểu thị sự không mong muốn)', vidu: '这件颜色有点儿深。', dichnghia: 'Màu của chiếc này hơi đậm.' },
+  { hanzi: '请给我一点儿酒。', pinyin: 'Qǐng gěi wǒ yìdiǎnr jiǔ.', hanviet: 'Thỉnh cấp ngã nhất điểm nhi tửu.', nghia: 'Xin hãy cho tôi một chút rượu.', vidu: '请给我一点儿酒。', dichnghia: 'Xin hãy cho tôi một chút rượu.' },
+  { hanzi: '试试', pinyin: 'shìshi', hanviet: 'Thí thí', nghia: 'Thử một chút (dạng lặp AA)', vidu: '我试试可以吗？', dichnghia: 'Tôi thử một chút được không?' },
+  { hanzi: '试一试', pinyin: 'shì yī shì', hanviet: 'Thí nhất thí', nghia: 'Thử một chút (dạng lặp A-一-A)', vidu: '你试一试这双鞋。', dichnghia: 'Bạn thử đôi giày này xem.' },
+  { hanzi: '预习预习', pinyin: 'yùxí yùxí', hanviet: 'Dự tập dự tập', nghia: 'Chuẩn bị bài trước một chút (dạng lặp ABAB)', vidu: '明天我们预习预习新课。', dichnghia: 'Ngày mai chúng ta chuẩn bị trước bài mới một chút.' },
+  { hanzi: '休息休息', pinyin: 'xiūxi xiūxi', hanviet: 'Hưu tức hưu tức', nghia: 'Nghỉ ngơi một chút (dạng lặp ABAB)', vidu: '你累了，休息休息吧。', dichnghia: 'Bạn mệt rồi, nghỉ ngơi một chút đi.' },
+  { hanzi: '介绍介绍', pinyin: 'jièshào jièshào', hanviet: 'Giới thiệu giới thiệu', nghia: 'Giới thiệu một chút (dạng lặp ABAB)', vidu: '请你介绍介绍你的家人。', dichnghia: 'Mời bạn giới thiệu một chút về gia đình bạn.' },
+  { hanzi: '太好了！', pinyin: 'Tài hǎo le!', hanviet: 'Thái hảo liễu!', nghia: 'Tốt quá rồi!', vidu: '这个消息太好了！', dichnghia: 'Tin tức này tốt quá rồi!' },
+  { hanzi: '售货员', pinyin: 'Shòuhuòyuán', hanviet: 'Thụ hóa viên', nghia: 'Nhân viên bán hàng', vidu: '售货员给我介绍了一件羽绒服。', dichnghia: 'Nhân viên bán hàng đã giới thiệu cho tôi một chiếc áo lông vũ.' },
+  { hanzi: '听说', pinyin: 'Tīngshuō', hanviet: 'Thính thuyết', nghia: 'Nghe nói', vidu: '听说你明天要去北京。', dichnghia: 'Nghe nói ngày mai bạn đi Bắc Kinh.' },
+  { hanzi: '商店', pinyin: 'shāngdiàn', hanviet: 'Thương điếm', nghia: 'Cửa hàng, tiệm', vidu: '我们一起去商店买衣服。', dichnghia: 'Chúng ta cùng đi cửa hàng mua quần áo.' },
+  { hanzi: '对不起', pinyin: 'duìbuqǐ', hanviet: 'Đối bất khởi', nghia: 'Xin lỗi', vidu: '对不起，我来晚了。', dichnghia: 'Xin lỗi, tôi đến muộn rồi.' },
+  { hanzi: '朋友', pinyin: 'péngyou', hanviet: 'Bằng hữu', nghia: 'Bạn bè', vidu: '我有一个中国朋友。', dichnghia: 'Tôi có một người bạn Trung Quốc.' },
+  { hanzi: '旅行', pinyin: 'lǚxíng', hanviet: 'Lữ hành', nghia: 'Du lịch', vidu: '我喜欢去不同的国家旅行。', dichnghia: 'Tôi thích đi du lịch ở các quốc gia khác nhau.' },
+  { hanzi: '机场', pinyin: 'jīchǎng', hanviet: 'Cơ trường', nghia: 'Sân bay', vidu: '我要去机场接他。', dichnghia: 'Tôi phải ra sân bay đón anh ấy.' },
+  { hanzi: '没关系', pinyin: 'méi guānxi', hanviet: 'Một quan hệ', nghia: 'Không sao', vidu: '没关系，我等你。', dichnghia: 'Không sao, tôi đợi bạn.' },
+  { hanzi: '一个人', pinyin: 'yī gè rén', hanviet: 'nhất cá nhân', nghia: 'Một mình, một người', vidu: '我喜欢一个人去看电影。', dichnghia: 'Tôi thích đi xem phim một mình.' },
+  { hanzi: '一起去', pinyin: 'yìqǐ qù', hanviet: 'nhất khởi khứ', nghia: 'Cùng nhau đi', vidu: '我们一起去商店买衣服，好吗？', dichnghia: 'Chúng ta cùng nhau đi cửa hàng mua quần áo, được không?' },
+  { hanzi: '几点出发', pinyin: 'jǐ diǎn chūfā', hanviet: 'kỉ điểm xuất phát', nghia: 'Mấy giờ xuất phát', vidu: '我们几点出发去学校？', dichnghia: 'Chúng ta mấy giờ xuất phát đi học?' },
+  { hanzi: '星期天', pinyin: 'xīngqītiān', hanviet: 'Tinh kỳ thiên', nghia: 'Chủ nhật', vidu: '明天是星期天。', dichnghia: 'Ngày mai là Chủ nhật.' },
+  { hanzi: '坐车', pinyin: 'zuò chē', hanviet: 'tọa xa', nghia: 'Đi xe, ngồi xe', vidu: '坐车的人一定很多。', dichnghia: 'Người đi xe chắc chắn rất nhiều.' },
+  { hanzi: '骑车', pinyin: 'qí chē', hanviet: 'kị xa', nghia: 'Đạp xe', vidu: '我们可以骑车去。', dichnghia: 'Chúng ta có thể đạp xe đi.' },
+  { hanzi: '展览', pinyin: 'zhǎnlǎn', hanviet: 'Triển lãm', nghia: 'Triển lãm', vidu: '我很想去看一个展览。', dichnghia: 'Tôi rất muốn đi xem một triển lãm.' }
+];
+
+        const flashcardContainer = document.getElementById('flashcard-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const jumpBtn = document.getElementById('jump-btn');
+        const jumpInput = document.getElementById('jump-input');
+        const counter = document.getElementById('counter');
+
+        let currentIndex = 0;
+        let isTransitioning = false; 
+        const totalCards = cardData.length;
+        
+        // Biến xử lý Vuốt (Swipe)
+        let touchstartX = 0;
+        let touchendX = 0;
+        const SWIPE_THRESHOLD = 50; 
+        
+        jumpInput.max = totalCards;
+        
+        function renderCard(index) {
+            const currentCard = cardData[index];
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            cardElement.id = 'flashcard-' + index;
+
+            // Mặt trước: Chữ Hán, Simsun, Đen
+            cardElement.innerHTML = `
+                <div class="card__face card__face--front">${currentCard.hanzi}</div>
+                <div class="card__face card__face--back">
+                    <div class="back-content">
+                        <p class="pinyin">${currentCard.pinyin}</p>
+                        <p class="hanviet">${currentCard.hanviet}</p>
+                        <p class="nghia">${currentCard.nghia}</p>
+                        <p class="vidu-han">${currentCard.vidu}</p>
+                        <p class="dichnghia">${currentCard.dichnghia}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Xử lý sự kiện lật thẻ
+            cardElement.addEventListener('click', () => {
+                if (!isTransitioning) {
+                    cardElement.classList.toggle('is-flipped');
+                }
+            });
+
+            // --- Logic Swipe ---
+            cardElement.addEventListener('touchstart', e => {
+                touchstartX = e.changedTouches[0].screenX;
+            }, false);
+
+            cardElement.addEventListener('touchend', e => {
+                touchendX = e.changedTouches[0].screenX;
+                handleGesture();
+            }, false);
+            
+            return cardElement;
+        }
+        
+        function updateDisplay() {
+            counter.textContent = `${currentIndex + 1} / ${totalCards}`;
+        }
+
+        function changeCard(newIndex, direction) {
+            if (isTransitioning || newIndex === currentIndex) {
+                return;
+            }
+
+            if (newIndex < 0) {
+                newIndex = totalCards - 1;
+            } else if (newIndex >= totalCards) {
+                newIndex = 0;
+            }
+
+            isTransitioning = true;
+            const oldCard = document.getElementById('flashcard-' + currentIndex);
+            const newCard = renderCard(newIndex);
+            
+            let slideDirection = direction;
+            if (!slideDirection) {
+                slideDirection = (newIndex > currentIndex || (currentIndex === totalCards - 1 && newIndex === 0)) ? 'next' : 'prev';
+            }
+            
+            newCard.style.left = slideDirection === 'next' ? '100%' : '-100%';
+            flashcardContainer.appendChild(newCard);
+            
+            if (oldCard) {
+                oldCard.classList.add(slideDirection === 'next' ? 'slide-next-out' : 'slide-prev-out');
+            }
+
+            setTimeout(() => {
+                newCard.style.left = '0';
+            }, 50); 
+
+            setTimeout(() => {
+                if (oldCard) {
+                    oldCard.remove();
+                }
+                currentIndex = newIndex;
+                updateDisplay();
+                isTransitioning = false;
+            }, 400); 
+        }
+        
+        function goToNextCard() {
+            const newIndex = (currentIndex + 1) % totalCards;
+            changeCard(newIndex, 'next');
+        }
+
+        function goToPrevCard() {
+            const newIndex = (currentIndex - 1 + totalCards) % totalCards;
+            changeCard(newIndex, 'prev');
+        }
+        
+        function jumpToCard() {
+            const inputValue = parseInt(jumpInput.value);
+            
+            if (isNaN(inputValue) || inputValue < 1 || inputValue > totalCards) {
+                alert(`Lỗi: Vui lòng nhập số thẻ hợp lệ từ 1 đến ${totalCards}.`);
+                jumpInput.value = "";
+                return;
+            }
+            
+            const newIndex = inputValue - 1;
+
+            const direction = (newIndex > currentIndex) ? 'next' : 'prev';
+            
+            changeCard(newIndex, direction);
+
+            jumpInput.value = "";
+        }
+
+        function handleGesture() {
+            if (isTransitioning) return;
+            const deltaX = touchendX - touchstartX;
+            
+            if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+                if (deltaX < 0) {
+                    goToNextCard();
+                } else {
+                    goToPrevCard();
+                }
+            }
+        }
+
+        prevBtn.addEventListener('click', goToPrevCard);
+        nextBtn.addEventListener('click', goToNextCard);
+        jumpBtn.addEventListener('click', jumpToCard);
+        
+        jumpInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                jumpToCard();
+            }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            flashcardContainer.appendChild(renderCard(currentIndex));
+            updateDisplay();
+        });
+
+    </script>
+</body>
+</html>
