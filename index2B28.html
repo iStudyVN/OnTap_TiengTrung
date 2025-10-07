@@ -202,28 +202,28 @@
     <script>
         // 30 từ vựng Hán ngữ giản thể được lấy từ shengci.txt
         const cardData = [
-  { hanzi: '病人', pinyin: 'bìngrén', hanviet: 'Bệnh Nhân', nghia: 'Bệnh nhân', vidu: '这位**病人**需要休息。', dichnghia: '**Bệnh nhân** này cần nghỉ ngơi.' },
-  { hanzi: '肚子', pinyin: 'dùzi', hanviet: 'Đỗ Tử', nghia: 'Bụng', vidu: '我**肚子**有点儿疼。', dichnghia '**Bụng** tôi hơi đau.' },
-  { hanzi: '厉害', pinyin: 'lìhai', hanviet: 'Lợi Hại', nghia: 'Ghê gớm, dữ dội, nghiêm trọng', vidu: '她头疼得很**厉害**。', dichnghia: 'Cô ấy đau đầu rất **dữ dội**.' },
-  { hanzi: '片', pinyin: 'piàn', hanviet: 'Phiến', nghia: 'Viên (lượng từ cho thuốc); Miếng, lát', vidu: '请给我一片止疼**片**。', dichnghia: 'Xin hãy cho tôi một **viên** thuốc giảm đau.' },
-  { hanzi: '拉肚子', pinyin: 'lā dùzi', hanviet: 'Lạp Đỗ Tử', nghia: 'Tiêu chảy', vidu: '他昨天吃了不干净的东西，**拉肚子**了。', dichnghia: 'Hôm qua anh ấy ăn phải đồ không sạch nên bị **tiêu chảy** rồi.' },
-  { hanzi: '化验', pinyin: 'huàyàn', hanviet: 'Hóa Nghiệm', nghia: 'Xét nghiệm', vidu: '医生让我去**化验**一下血。', dichnghia: 'Bác sĩ bảo tôi đi **xét nghiệm** máu một chút.' },
-  { hanzi: '大便', pinyin: 'dàbiàn', hanviet: 'Đại Tiện', nghia: 'Đại tiện, phân', vidu: '需要**大便**化验吗？', dichnghia: 'Có cần xét nghiệm **phân** không?' },
-  { hanzi: '小便', pinyin: 'xiǎobiàn', hanviet: 'Tiểu Tiện', nghia: 'Tiểu tiện, nước tiểu', vidu: '请留一点**小便**样本。', dichnghia: 'Xin hãy lấy một chút mẫu **nước tiểu**.' },
-  { hanzi: '检查', pinyin: 'jiǎnchá', hanviet: 'Kiểm Tra', nghia: 'Kiểm tra', vidu: '医生给我做了全身**检查**。', dichnghia: 'Bác sĩ đã **kiểm tra** toàn thân cho tôi.' },
-  { hanzi: '结果', pinyin: 'jiéguǒ', hanviet: 'Kết Quả', nghia: 'Kết quả', vidu: '**结果**什么时候能出来？', dichnghia: '**Kết quả** khi nào có thể có?' },
-  { hanzi: '出来', pinyin: 'chūlái', hanviet: 'Xuất Lai', nghia: 'Ra (xu hướng); Hoàn thành (kết quả)', vidu: '化验结果很快就能**出来**。', dichnghia: 'Kết quả xét nghiệm sẽ sớm **có** thôi.' },
-  { hanzi: '肠炎', pinyin: 'chángyán', hanviet: 'Tràng Viêm', nghia: 'Viêm ruột', vidu: '他得了急性**肠炎**。', dichnghia: 'Anh ấy bị **viêm ruột** cấp tính.' },
-  { hanzi: '消化', pinyin: 'xiāohuà', hanviet: 'Tiêu Hóa', nghia: 'Tiêu hóa', vidu: '我的**消化**不太好。', dichnghia: '**Tiêu hóa** của tôi không được tốt lắm.' },
-  { hanzi: '开', pinyin: 'kāi', hanviet: 'Khai', nghia: 'Kê (thuốc); Mở', vidu: '医生给病人**开**了些药。', dichnghia: 'Bác sĩ đã **kê** cho bệnh nhân một ít thuốc.' },
-  { hanzi: '打针', pinyin: 'dǎ zhēn', hanviet: 'Đả Châm', nghia: 'Tiêm thuốc, chích', vidu: '孩子害怕**打针**。', dichnghia: 'Trẻ con sợ **tiêm thuốc**.' },
-  { hanzi: '哭', pinyin: 'kū', hanviet: 'Khốc', nghia: 'Khóc', vidu: '她伤心地**哭**了起来。', dichnghia: 'Cô ấy **khóc** vì quá đau lòng.' },
-  { hanzi: '寂寞', pinyin: 'jìmò', hanviet: 'Tịch Mịch', nghia: 'Cô đơn, buồn bã', vidu: '他一个人住，感到很**寂寞**。', dichnghia: 'Anh ấy sống một mình, cảm thấy rất **cô đơn**.' },
-  { hanzi: '所以', pinyin: 'suǒyǐ', hanviet: 'Sở Dĩ', nghia: 'Cho nên, vì vậy', vidu: '因为下雨，**所以**我们没去。', dichnghia: 'Bởi vì trời mưa, **cho nên** chúng tôi không đi.' },
-  { hanzi: '难过', pinyin: 'nánguò', hanviet: 'Nan Quá', nghia: 'Buồn bã, khó chịu', vidu: '听到这个消息，我很难**难过**。', dichnghia: 'Nghe tin này, tôi rất **buồn bã**.' },
-  { hanzi: '礼堂', pinyin: 'lǐtáng', hanviet: 'Lễ Đường', nghia: 'Hội trường', vidu: '他们将在**礼堂**举行会议。', dichnghia: 'Họ sẽ tổ chức hội nghị ở **hội trường**.' },
-  { hanzi: '舞会', pinyin: 'wǔhuì', hanviet: 'Vũ Hội', nghia: 'Vũ hội, tiệc khiêu vũ', vidu: '今晚有一个盛大的**舞会**。', dichnghia: 'Tối nay có một **vũ hội** lớn.' },
-  { hanzi: '跳舞', pinyin: 'tiào wǔ', hanviet: 'Khiêu Vũ', nghia: 'Nhảy múa, khiêu vũ', vidu: '她很喜欢**跳舞**。', dichnghia: 'Cô ấy rất thích **nhảy múa**.' }
+  { hanzi: '病人', pinyin: 'bìngrén', hanviet: 'Bệnh Nhân', nghia: 'Bệnh nhân', vidu: '这位病人需要休息。', dichnghia: 'Bệnh nhân này cần nghỉ ngơi.' },
+  { hanzi: '肚子', pinyin: 'dùzi', hanviet: 'Đỗ Tử', nghia: 'Bụng', vidu: '我肚子有点儿疼。', dichnghia: 'Bụng tôi hơi đau.' },
+  { hanzi: '厉害', pinyin: 'lìhai', hanviet: 'Lợi Hại', nghia: 'Ghê gớm, dữ dội, nghiêm trọng', vidu: '她头疼得很厉害。', dichnghia: 'Cô ấy đau đầu rất dữ dội.' },
+  { hanzi: '片', pinyin: 'piàn', hanviet: 'Phiến', nghia: 'Viên (lượng từ cho thuốc); Miếng, lát', vidu: '请给我一片止疼片。', dichnghia: 'Xin hãy cho tôi một viên thuốc giảm đau.' },
+  { hanzi: '拉肚子', pinyin: 'lā dùzi', hanviet: 'Lạp Đỗ Tử', nghia: 'Tiêu chảy', vidu: '他昨天吃了不干净的东西，拉肚子了。', dichnghia: 'Hôm qua anh ấy ăn phải đồ không sạch nên bị tiêu chảy rồi.' },
+  { hanzi: '化验', pinyin: 'huàyàn', hanviet: 'Hóa Nghiệm', nghia: 'Xét nghiệm', vidu: '医生让我去化验一下血。', dichnghia: 'Bác sĩ bảo tôi đi xét nghiệm máu một chút.' },
+  { hanzi: '大便', pinyin: 'dàbiàn', hanviet: 'Đại Tiện', nghia: 'Đại tiện, phân', vidu: '需要大便化验吗？', dichnghia: 'Có cần xét nghiệm phân không?' },
+  { hanzi: '小便', pinyin: 'xiǎobiàn', hanviet: 'Tiểu Tiện', nghia: 'Tiểu tiện, nước tiểu', vidu: '请留一点小便样本。', dichnghia: 'Xin hãy lấy một chút mẫu nước tiểu.' },
+  { hanzi: '检查', pinyin: 'jiǎnchá', hanviet: 'Kiểm Tra', nghia: 'Kiểm tra', vidu: '医生给我做了全身检查。', dichnghia: 'Bác sĩ đã kiểm tra toàn thân cho tôi.' },
+  { hanzi: '结果', pinyin: 'jiéguǒ', hanviet: 'Kết Quả', nghia: 'Kết quả', vidu: '结果什么时候能出来？', dichnghia: 'Kết quả khi nào có thể có?' },
+  { hanzi: '出来', pinyin: 'chūlái', hanviet: 'Xuất Lai', nghia: 'Ra (xu hướng); Hoàn thành (kết quả)', vidu: '化验结果很快就能出来。', dichnghia: 'Kết quả xét nghiệm sẽ sớm có thôi.' },
+  { hanzi: '肠炎', pinyin: 'chángyán', hanviet: 'Tràng Viêm', nghia: 'Viêm ruột', vidu: '他得了急性肠炎。', dichnghia: 'Anh ấy bị viêm ruột cấp tính.' },
+  { hanzi: '消化', pinyin: 'xiāohuà', hanviet: 'Tiêu Hóa', nghia: 'Tiêu hóa', vidu: '我的 tiêu hóa không tốt lắm.', dichnghia: 'Tiêu hóa của tôi không được tốt lắm.' },
+  { hanzi: '开', pinyin: 'kāi', hanviet: 'Khai', nghia: 'Kê (thuốc); Mở', vidu: '医生给病人开了些药。', dichnghia: 'Bác sĩ đã kê cho bệnh nhân một ít thuốc.' },
+  { hanzi: '打针', pinyin: 'dǎ zhēn', hanviet: 'Đả Châm', nghia: 'Tiêm thuốc, chích', vidu: '孩子害怕打针。', dichnghia: 'Trẻ con sợ tiêm thuốc.' },
+  { hanzi: '哭', pinyin: 'kū', hanviet: 'Khốc', nghia: 'Khóc', vidu: 'She cried sadly.', dichnghia: 'Cô ấy khóc vì quá đau lòng.' },
+  { hanzi: '寂寞', pinyin: 'jìmò', hanviet: 'Tịch Mịch', nghia: 'Cô đơn, buồn bã', vidu: '他一个人住，感到很 cô đơn。', dichnghia: 'Anh ấy sống một mình, cảm thấy rất cô đơn.' },
+  { hanzi: '所以', pinyin: 'suǒyǐ', hanviet: 'Sở Dĩ', nghia: 'Cho nên, vì vậy', vidu: '因为下雨，所以 chúng tôi không đi.', dichnghia: 'Bởi vì trời mưa, cho nên chúng tôi không đi.' },
+  { hanzi: '难过', pinyin: 'nánguò', hanviet: 'Nan Quá', nghia: 'Buồn bã, khó chịu', vidu: '听到 cái này, tôi rất buồn.', dichnghia: 'Nghe tin này, tôi rất buồn bã.' },
+  { hanzi: '礼堂', pinyin: 'lǐtáng', hanviet: 'Lễ Đường', nghia: 'Hội trường', vidu: 'Họ sẽ tổ chức hội nghị ở lễ đường.', dichnghia: 'Họ sẽ tổ chức hội nghị ở hội trường.' },
+  { hanzi: '舞会', pinyin: 'wǔhuì', hanviet: 'Vũ Hội', nghia: 'Vũ hội, tiệc khiêu vũ', vidu: 'Tối nay có một vũ hội lớn.', dichnghia: 'Tối nay có một vũ hội lớn.' },
+  { hanzi: '跳舞', pinyin: 'tiào wǔ', hanviet: 'Khiêu Vũ', nghia: 'Nhảy múa, khiêu vũ', vidu: 'Cô ấy rất thích nhảy múa.', dichnghia: 'Cô ấy rất thích nhảy múa.' }
 ];
 
         const flashcardContainer = document.getElementById('flashcard-container');
@@ -390,3 +390,4 @@
 </body>
 
 </html>
+
