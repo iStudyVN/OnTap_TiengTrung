@@ -201,36 +201,37 @@
 
     <script>
         // 30 từ vựng Hán ngữ giản thể được lấy từ shengci.txt
-       const cardData = [
-  { hanzi: '喂', pinyin: 'wèi', hanviet: 'Uy', nghia: 'A lô (khi nghe điện thoại); Này!', vidu: '**喂**，你是哪位？', dichnghia: '**A lô**, bạn là ai đấy?' },
-  { hanzi: '阿姨', pinyin: 'āyí', hanviet: 'A Di', nghia: 'Dì, cô (gọi phụ nữ trung niên)', vidu: '**阿姨**好，您去哪儿？', dichnghia: '**Chào cô**, cô đi đâu đấy ạ?' },
-  { hanzi: '中学', pinyin: 'zhōngxué', hanviet: 'Trung Học', nghia: 'Trường trung học', vidu: '我弟弟在**中学**学习。', dichnghia: 'Em trai tôi học ở **trường trung học**.' },
-  { hanzi: '出国', pinyin: 'chū guó', hanviet: 'Xuất Quốc', nghia: 'Ra nước ngoài', vidu: '她明年打算**出国**留学。', dichnghia: 'Cô ấy dự định **ra nước ngoài** du học vào năm sau.' },
-  { hanzi: '关机', pinyin: 'guān jī', hanviet: 'Quan Cơ', nghia: 'Tắt máy (điện thoại, thiết bị)', vidu: '请把手机**关机**。', dichnghia: 'Xin hãy **tắt máy** điện thoại.' },
-  { hanzi: '忘', pinyin: 'wàng', hanviet: 'Vong', nghia: 'Quên', vidu: '我**忘**带钥匙了。', dichnghia: 'Tôi **quên** mang theo chìa khóa rồi.' },
-  { hanzi: '开机', pinyin: 'kāi jī', hanviet: 'Khai Cơ', nghia: 'Mở máy, khởi động (điện thoại, thiết bị)', vidu: '你为什么不**开机**？', dichnghia: 'Tại sao bạn không **mở máy**?' },
-  { hanzi: '又', pinyin: 'yòu', hanviet: 'Hựu', nghia: 'Lại, nữa (hành động lặp lại)', vidu: '他今天**又**迟到了。', dichnghia: 'Hôm nay anh ấy **lại** đến muộn rồi.' },
-  { hanzi: '响', pinyin: 'xiǎng', hanviet: 'Hưởng', nghia: 'Kêu, reo (chuông)', vidu: '你的手机在**响**。', dichnghia: 'Điện thoại của bạn đang **reo**.' },
-  { hanzi: '接', pinyin: 'jiē', hanviet: 'Tiếp', nghia: 'Nhận, nghe (điện thoại); đón', vidu: '请**接**电话！', dichnghia: 'Xin **nghe** điện thoại!' },
-  { hanzi: '踢', pinyin: 'tī', hanviet: 'Thích', nghia: 'Đá (bóng)', vidu: '他们正在**踢**足球。', dichnghia: 'Họ đang **đá** bóng đá.' },
-  { hanzi: '比赛', pinyin: 'bǐsài', hanviet: 'Bỉ Tái', nghia: 'Thi đấu, trận đấu', vidu: '昨天的**比赛**很精彩。', dichnghia: '**Trận đấu** hôm qua rất hấp dẫn.' },
-  { hanzi: '队', pinyin: 'duì', hanviet: 'Đội', nghia: 'Đội, hàng', vidu: '我们**队**赢了。', dichnghia '**Đội** chúng tôi thắng rồi.' },
-  { hanzi: '输', pinyin: 'shū', hanviet: 'Thâu', nghia: 'Thua', vidu: '他们**输**了一场比赛。', dichnghia: 'Họ đã **thua** một trận đấu.' },
-  { hanzi: '赢', pinyin: 'yíng', hanviet: 'Doanh', nghia: 'Thắng', vidu: '我们终于**赢**了！', dichnghia: 'Cuối cùng chúng tôi cũng **thắng** rồi!' },
-  { hanzi: '比', pinyin: 'bǐ', hanviet: 'Bỉ', nghia: 'So sánh, tỉ số (trong thi đấu)', vidu: '最后**比**分是二**比**一。', dichnghia: 'Tỉ số cuối cùng là 2 **so với** 1 (2-1).' },
-  { hanzi: '祝贺', pinyin: 'zhùhè', hanviet: 'Chúc Hạ', nghia: 'Chúc mừng', vidu: '我**祝贺**你成功！', dichnghia: 'Tôi **chúc mừng** bạn thành công!' },
-  { hanzi: '托福', pinyin: 'Tuōfú', hanviet: 'Thác Phúc', nghia: 'TOEFL (tên kỳ thi tiếng Anh)', vidu: '她正在准备**托福**考试。', dichnghia: 'Cô ấy đang chuẩn bị cho kỳ thi **TOEFL**.' },
-  { hanzi: '已经', pinyin: 'yǐjīng', hanviet: 'Dĩ Kinh', nghia: 'Đã, rồi', vidu: '他**已经**走了。', dichnghia: 'Anh ấy **đã** đi rồi.' },
-  { hanzi: '考', pinyin: 'kǎo', hanviet: 'Khảo', nghia: 'Thi, kiểm tra', vidu: '你**考**得怎么样？', dichnghia: 'Bạn **thi** thế nào?' },
-  { hanzi: '陪', pinyin: 'péi', hanviet: 'Bồi', nghia: 'Cùng, ở bên, đi cùng', vidu: '我**陪**你去医院。', dichnghia: 'Tôi **đi cùng** bạn đến bệnh viện.' },
-  { hanzi: '满分', pinyin: 'mǎnfēn', hanviet: 'Mãn Phân', nghia: 'Điểm tuyệt đối, điểm tối đa', vidu: '她这次考试得了**满分**。', dichnghia: 'Cô ấy đạt **điểm tuyệt đối** trong kỳ thi lần này.' },
-  { hanzi: '奖学金', pinyin: 'jiǎngxuéjīn', hanviet: 'Tưởng Học Kim', nghia: 'Học bổng', vidu: '他获得了全额**奖学金**。', dichnghia: 'Anh ấy đã nhận được **học bổng** toàn phần.' },
-  { hanzi: '送行', pinyin: 'sòngxíng', hanviet: 'Tống Hành', nghia: 'Tiễn (người đi xa)', vidu: '朋友们来机场给我**送行**。', dichnghia: 'Bạn bè đến sân bay **tiễn** tôi.' },
-  { hanzi: '见面', pinyin: 'jiàn miàn', hanviet: 'Kiến Diện', nghia: 'Gặp mặt', vidu: '我们约好明天**见面**。', dichnghia: 'Chúng tôi hẹn **gặp mặt** vào ngày mai.' },
-  { hanzi: '预祝', pinyin: 'yùzhù', hanviet: 'Dự Chúc', nghia: 'Chúc trước, chúc sớm', vidu: '**预祝**你比赛成功！', dichnghia: '**Chúc** bạn **trước** trận đấu thành công!' },
-  { hanzi: '成功', pinyin: 'chénggōng', hanviet: 'Thành Công', nghia: 'Thành công', vidu: '她终于**成功**了。', dichnghia: 'Cuối cùng cô ấy cũng **thành công** rồi.' },
-  { hanzi: '哭', pinyin: 'kū', hanviet: 'Khốc', nghia: 'Khóc', vidu: '别**哭**了，一切都会好的。', dichnghia: 'Đừng **khóc** nữa, mọi chuyện sẽ ổn thôi.' }
+        const cardData = [
+  { hanzi: '喂', pinyin: 'wèi', hanviet: 'Uy', nghia: 'A lô (khi nghe điện thoại); Này!', vidu: '喂，你是哪位？', dichnghia: 'A lô, bạn là ai đấy?' },
+  { hanzi: '阿姨', pinyin: 'āyí', hanviet: 'A Di', nghia: 'Dì, cô (gọi phụ nữ trung niên)', vidu: '阿姨好，您去哪儿？', dichnghia: 'Chào cô, cô đi đâu đấy ạ?' },
+  { hanzi: '中学', pinyin: 'zhōngxué', hanviet: 'Trung Học', nghia: 'Trường trung học', vidu: '我弟弟在中学学习。', dichnghia: 'Em trai tôi học ở trường trung học.' },
+  { hanzi: '出国', pinyin: 'chū guó', hanviet: 'Xuất Quốc', nghia: 'Ra nước ngoài', vidu: '她明年打算出国留学。', dichnghia: 'Cô ấy dự định ra nước ngoài du học vào năm sau.' },
+  { hanzi: '关机', pinyin: 'guān jī', hanviet: 'Quan Cơ', nghia: 'Tắt máy (điện thoại, thiết bị)', vidu: '请把手机关机。', dichnghia: 'Xin hãy tắt máy điện thoại.' },
+  { hanzi: '忘', pinyin: 'wàng', hanviet: 'Vong', nghia: 'Quên', vidu: '我忘带钥匙了。', dichnghia: 'Tôi quên mang theo chìa khóa rồi.' },
+  { hanzi: '开机', pinyin: 'kāi jī', hanviet: 'Khai Cơ', nghia: 'Mở máy, khởi động (điện thoại, thiết bị)', vidu: '你为什么不开机？', dichnghia: 'Tại sao bạn không mở máy?' },
+  { hanzi: '又', pinyin: 'yòu', hanviet: 'Hựu', nghia: 'Lại, nữa (hành động lặp lại)', vidu: '他今天又迟到了。', dichnghia: 'Hôm nay anh ấy lại đến muộn rồi.' },
+  { hanzi: '响', pinyin: 'xiǎng', hanviet: 'Hưởng', nghia: 'Kêu, reo (chuông)', vidu: '你的手机在响。', dichnghia: 'Điện thoại của bạn đang reo.' },
+  { hanzi: '接', pinyin: 'jiē', hanviet: 'Tiếp', nghia: 'Nhận, nghe (điện thoại); đón', vidu: '请接电话！', dichnghia: 'Xin nghe điện thoại!' },
+  { hanzi: '踢', pinyin: 'tī', hanviet: 'Thích', nghia: 'Đá (bóng)', vidu: '他们正在踢足球。', dichnghia: 'Họ đang đá bóng đá.' },
+  { hanzi: '比赛', pinyin: 'bǐsài', hanviet: 'Bỉ Tái', nghia: 'Thi đấu, trận đấu', vidu: '昨天的比赛很精彩。', dichnghia: 'Trận đấu hôm qua rất hấp dẫn.' },
+  { hanzi: '队', pinyin: 'duì', hanviet: 'Đội', nghia: 'Đội, hàng', vidu: '我们队赢了。', dichnghia: 'Đội chúng tôi thắng rồi.' },
+  { hanzi: '输', pinyin: 'shū', hanviet: 'Thâu', nghia: 'Thua', vidu: '他们输了一场比赛。', dichnghia: 'Họ đã thua một trận đấu.' },
+  { hanzi: '赢', pinyin: 'yíng', hanviet: 'Doanh', nghia: 'Thắng', vidu: '我们终于赢了！', dichnghia: 'Cuối cùng chúng tôi cũng thắng rồi!' },
+  { hanzi: '比', pinyin: 'bǐ', hanviet: 'Bỉ', nghia: 'So sánh, tỉ số (trong thi đấu)', vidu: '最后比分是二比一。', dichnghia: 'Tỉ số cuối cùng là 2 so với 1 (2-1).' },
+  { hanzi: '祝贺', pinyin: 'zhùhè', hanviet: 'Chúc Hạ', nghia: 'Chúc mừng', vidu: '我祝贺你成功！', dichnghia: 'Tôi chúc mừng bạn thành công!' },
+  { hanzi: '托福', pinyin: 'Tuōfú', hanviet: 'Thác Phúc', nghia: 'TOEFL (tên kỳ thi tiếng Anh)', vidu: 'Cô ấy đang chuẩn bị cho kỳ thi TOEFL.', dichnghia: 'Cô ấy đang chuẩn bị cho kỳ thi TOEFL.' },
+  { hanzi: 'đã', pinyin: 'yǐjīng', hanviet: 'Dĩ Kinh', nghia: 'Đã, rồi', vidu: '他已经走了。', dichnghia: 'Anh ấy đã đi rồi.' },
+  { hanzi: '考', pinyin: 'kǎo', hanviet: 'Khảo', nghia: 'Thi, kiểm tra', vidu: '你考得怎么样？', dichnghia: 'Bạn thi thế nào?' },
+  { hanzi: '陪', pinyin: 'péi', hanviet: 'Bồi', nghia: 'Cùng, ở bên, đi cùng', vidu: '我陪你去医院。', dichnghia: 'Tôi đi cùng bạn đến bệnh viện.' },
+  { hanzi: '满分', pinyin: 'mǎnfēn', hanviet: 'Mãn Phân', nghia: 'Điểm tuyệt đối, điểm tối đa', vidu: 'Cô ấy đạt điểm tuyệt đối trong kỳ thi lần này.', dichnghia: 'Cô ấy đạt điểm tuyệt đối trong kỳ thi lần này.' },
+  { hanzi: '奖学金', pinyin: 'jiǎngxuéjīn', hanviet: 'Tưởng Học Kim', nghia: 'Học bổng', vidu: 'Anh ấy đã nhận được học bổng toàn phần.', dichnghia: 'Anh ấy đã nhận được học bổng toàn phần.' },
+  { hanzi: '送行', pinyin: 'sòngxíng', hanviet: 'Tống Hành', nghia: 'Tiễn (người đi xa)', vidu: 'Bạn bè đến sân bay tiễn tôi.', dichnghia: 'Bạn bè đến sân bay tiễn tôi.' },
+  { hanzi: '见面', pinyin: 'jiàn miàn', hanviet: 'Kiến Diện', nghia: 'Gặp mặt', vidu: 'Chúng tôi hẹn gặp mặt vào ngày mai.', dichnghia: 'Chúng tôi hẹn gặp mặt vào ngày mai.' },
+  { hanzi: 'pre-chúc', pinyin: 'yùzhù', hanviet: 'Dự Chúc', nghia: 'Chúc trước, chúc sớm', vidu: 'Chúc bạn trước trận đấu thành công!', dichnghia: 'Chúc bạn trước trận đấu thành công!' },
+  { hanzi: 'thành công', pinyin: 'chénggōng', hanviet: 'Thành Công', nghia: 'Thành công', vidu: 'Cuối cùng cô ấy cũng thành công rồi.', dichnghia: 'Cuối cùng cô ấy cũng thành công rồi.' },
+  { hanzi: 'khóc', pinyin: 'kū', hanviet: 'Khốc', nghia: 'Khóc', vidu: 'Đừng khóc nữa, mọi chuyện sẽ ổn thôi。', dichnghia: 'Đừng khóc nữa, mọi chuyện sẽ ổn thôi.' }
 ];
+
 
         const flashcardContainer = document.getElementById('flashcard-container');
         const prevBtn = document.getElementById('prev-btn');
@@ -388,6 +389,7 @@
 
         // Initial load
         document.addEventListener('DOMContentLoaded', () => {
+            // Dòng code đã được thêm/sửa để hiển thị thẻ đầu tiên
             flashcardContainer.appendChild(renderCard(currentIndex));
             updateDisplay();
         });
