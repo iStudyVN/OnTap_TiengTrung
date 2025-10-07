@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Tiếng Trung</title>
+    <style>
+        /* CSS để nhúng font Simsun */
+        @font-face {
+            font-family: 'Simsun';
+            src: url(https://fonts.gstatic.com/s/simsun/v18/K9-BZD0b9T8xcP0Q.woff2) format('woff2');
+            unicode-range: U+4E00-9FFF; /* Phạm vi cho ký tự Hán */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .scene {
+            width: 100%;
+            height: 300px;
+            perspective: 600px;
+            position: relative;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            transition: 
+                transform 0.6s, 
+                opacity 0.3s, 
+                left 0.4s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* --- HIỆU ỨNG TRƯỢT --- */
+        .card.slide-next-out {
+            transform: translateX(-100%) rotateY(0deg); 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card.slide-prev-out {
+            transform: translateX(100%) rotateY(0deg); 
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card__face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; 
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            background: #ffffff;
+        }
+
+        /* YÊU CẦU: Mặt trước chữ Hán, font Simsun, màu đen, ở giữa */
+        .card__face--front {
+            font-family: 'Simsun', sans-serif; 
+            font-size: 80px;
+            color: #000000; /* Chữ màu đen */
+        }
+
+        .card__face--back {
+            transform: rotateY(180deg);
+            padding: 20px;
+            box-sizing: border-box;
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center;
+            text-align: center; 
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+        }
+        
+        .back-content p {
+            font-size: 1.3rem;
+            margin: 8px 0;
+            width: 100%;
+            text-align: center; 
+            font-weight: 500;
+        }
+        
+        .back-content .pinyin { color: #e67e22; font-weight: bold; font-size: 1.6rem; } /* Màu cam */
+        .back-content .hanviet { color: #8e44ad; } /* Màu tím */
+        .back-content .nghia { color: #1f506b; font-style: italic; } /* Màu xanh đậm (thay vì #27ae60) */
+        .back-content .vidu-han { color: #000000; font-family: 'Simsun', sans-serif; margin-top: 15px; font-size: 1.5rem; } /* Chữ Hán đen */
+        .back-content .dichnghia { color: #000000; font-style: italic; font-size: 1rem; } /* Chữ đen */
+
+
+        .navigation {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 5px;
+        }
+
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+        
+        #counter {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #7f8c8d;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .jump-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #jump-input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        
+        .jump-button {
+            background-color: #e74c3c; 
+        }
+        
+        .jump-button:hover {
+            background-color: #c0392b;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Flashcard Tiếng Trung</h1>
+        <div class="scene">
+            <div id="flashcard-container"></div>
+        </div>
+        <div class="navigation">
+            <button class="nav-button" id="prev-btn">Trước</button>
+            <span id="counter"></span>
+            <button class="nav-button" id="next-btn">Sau</button>
+        </div>
+        
+        <div class="jump-control">
+            <input type="number" id="jump-input" min="1" max="30" placeholder="#">
+            <button class="nav-button jump-button" id="jump-btn">Nhảy đến thẻ số</button>
+        </div>
+    </div>
+
+    <script>
+        // 30 từ vựng Hán ngữ giản thể được lấy từ shengci.txt
+        const cardData = [
+  { hanzi: '课', pinyin: 'kè', hanviet: 'khóa', nghia: 'Bài học', vidu: '这是今天的课文。', dichnghia: 'Đây là bài khóa của hôm nay.' },
+  { hanzi: '祝', pinyin: 'zhù', hanviet: 'chúc', nghia: 'Chúc', vidu: '祝你生日快乐!', dichnghia: 'Chúc bạn sinh nhật vui vẻ!' },
+  { hanzi: '你', pinyin: 'nǐ', hanviet: 'nhĩ', nghia: 'Bạn, anh, em, ông, bà (ngôi 2)', vidu: '你叫什么名字？', dichnghia: 'Bạn tên là gì?' },
+  { hanzi: '生', pinyin: 'shēng', hanviet: 'sinh', nghia: 'Sinh (sống, đẻ)', vidu: '他生于1990年。', dichnghia: 'Anh ấy sinh năm 1990.' },
+  { hanzi: '日', pinyin: 'rì', hanviet: 'nhật', nghia: 'Ngày, mặt trời', vidu: '日期是哪一天?', dichnghia: 'Ngày tháng là ngày nào?' },
+  { hanzi: '快', pinyin: 'kuài', hanviet: 'khoái', nghia: 'Nhanh, vui vẻ', vidu: '他跑得真快。', dichnghia: 'Anh ấy chạy thật nhanh.' },
+  { hanzi: '乐', pinyin: 'lè', hanviet: 'lạc', nghia: 'Vui vẻ, vui mừng', vidu: '这部电影很有乐趣。', dichnghia: 'Bộ phim này rất thú vị.' },
+  { hanzi: '生日快乐', pinyin: 'shēngrì kuàilè', hanviet: 'sinh nhật khoái lạc', nghia: 'Chúc mừng sinh nhật', vidu: '祝你生日快乐!', dichnghia: 'Chúc bạn sinh nhật vui vẻ!' },
+  { hanzi: '生词', pinyin: 'shēngcí', hanviet: 'sinh từ', nghia: 'Từ mới', vidu: '请大家学习这些生词。', dichnghia: 'Mời mọi người học những từ mới này.' },
+  { hanzi: '年', pinyin: 'nián', hanviet: 'niên', nghia: 'Năm', vidu: '年底我们去旅行。', dichnghia: 'Cuối năm chúng tôi đi du lịch.' },
+  { hanzi: '今年', pinyin: 'jīnnián', hanviet: 'kim niên', nghia: 'Năm nay', vidu: '今年是哪一年？', dichnghia: 'Năm nay là năm nào?' },
+  { hanzi: '狗', pinyin: 'gǒu', hanviet: 'cẩu', nghia: 'Chó, tuổi Tuất', vidu: '我家有一只狗。', dichnghia: 'Nhà tôi có một con chó.' },
+  { hanzi: '月', pinyin: 'yuè', hanviet: 'nguyệt', nghia: 'Tháng, mặt trăng', vidu: '这个月有三十天。', dichnghia: 'Tháng này có 30 ngày.' },
+  { hanzi: '参加', pinyin: 'cānjiā', hanviet: 'tham gia', nghia: 'Tham gia, gia nhập', vidu: '你要参加派对吗？', dichnghia: 'Bạn có muốn tham gia buổi tiệc không?' },
+  { hanzi: '时间', pinyin: 'shíjiān', hanviet: 'thời gian', nghia: 'Thời gian', vidu: '你有时间吗？', dichnghia: 'Bạn có thời gian không?' },
+  { hanzi: '点', pinyin: 'diǎn', hanviet: 'điểm', nghia: 'Giờ, điểm', vidu: '现在是八点钟。', dichnghia: 'Bây giờ là 8 giờ.' },
+  { hanzi: '点钟', pinyin: 'diǎnzhōng', hanviet: 'điểm chung', nghia: 'Giờ (đồng hồ)', vidu: '我们九点钟见面。', dichnghia: 'Chúng ta gặp nhau lúc 9 giờ.' },
+  { hanzi: '明年', pinyin: 'míngnián', hanviet: 'minh niên', nghia: 'Sang năm', vidu: '明年我要去中国。', dichnghia: 'Sang năm tôi muốn đi Trung Quốc.' },
+  { hanzi: '号', pinyin: 'hào', hanviet: 'hiệu', nghia: 'Ngày (trong tháng), số', vidu: '今天是五号。', dichnghia: 'Hôm nay là mùng 5.' },
+  { hanzi: '就', pinyin: 'jiù', hanviet: 'tựu', nghia: 'Liền, ngay, thì, chính là, đã', vidu: '我就在附近等你。', dichnghia: 'Tôi chờ bạn ngay gần đây.' },
+  { hanzi: '后年', pinyin: 'hòunián', hanviet: 'hậu niên', nghia: 'Sang năm nữa', vidu: '后年他会毕业。', dichnghia: 'Sang năm nữa anh ấy sẽ tốt nghiệp.' },
+  { hanzi: '去年', pinyin: 'qùnián', hanviet: 'khứ niên', nghia: 'Năm ngoái', vidu: '去年我认识了他。', dichnghia: 'Năm ngoái tôi đã quen anh ấy.' },
+  { hanzi: '毕业', pinyin: 'bìyè', hanviet: 'tất nghiệp', nghia: 'Tốt nghiệp', vidu: '你什么时候毕业？', dichnghia: 'Khi nào bạn tốt nghiệp?' },
+  { hanzi: '多', pinyin: 'duō', hanviet: 'đa', nghia: 'Nhiều, bao nhiêu', vidu: '你有多上钱？', dichnghia: 'Bạn có bao nhiêu tiền?' },
+  { hanzi: '多大', pinyin: 'duōdà', hanviet: 'đa đại', nghia: 'Bao nhiêu tuổi?', vidu: '你今年多大了？', dichnghia: 'Năm nay bạn bao nhiêu tuổi rồi?' },
+  { hanzi: '岁', pinyin: 'suì', hanviet: 'tuế', nghia: 'Tuổi', vidu: '我二十岁。', dichnghia: 'Tôi 20 tuổi.' },
+  { hanzi: '生日', pinyin: 'shēngrì', hanviet: 'sinh nhật', nghia: 'Sinh nhật', vidu: '今天是我的生日。', dichnghia: 'Hôm nay là sinh nhật của tôi.' },
+  { hanzi: '正好', pinyin: 'zhènghǎo', hanviet: 'chính hảo', nghia: 'Vừa hay, đúng lúc, vừa vặn', vidu: '你来得正好。', dichnghia: 'Cậu đến thật đúng lúc.' },
+  { hanzi: '一定', pinyin: 'yídìng', hanviet: 'nhất định', nghia: 'Nhất định, chắc chắn', vidu: '我一定会帮你。', dichnghia: 'Tôi nhất định sẽ giúp bạn.' },
+  { hanzi: '打算', pinyin: 'dǎsuan', hanviet: 'đả toán', nghia: 'Dự định, tính toán', vidu: '你打算做什么？', dichnghia: 'Bạn dự định làm gì?' },
+  { hanzi: '过', pinyin: 'guò', hanviet: 'quá', nghia: 'Qua, đón (lễ, tết), từng', vidu: '我们一起过春节吧。', dichnghia: 'Chúng ta cùng nhau đón Tết đi.' },
+  { hanzi: '准备', pinyin: 'zhǔnbèi', hanviet: 'chuẩn bị', nghia: 'Chuẩn bị', vidu: '你准备好了吗？', dichnghia: 'Bạn đã chuẩn bị xong chưa?' },
+  { hanzi: '举行', pinyin: 'jǔxíng', hanviet: 'cử hành', nghia: 'Tổ chức, cử hành', vidu: '他们举行了婚礼。', dichnghia: 'Họ đã tổ chức đám cưới.' },
+  { hanzi: '晚会', pinyin: 'wǎnhuì', hanviet: 'vãn hội', nghia: 'Dạ hội, bữa tiệc tối', vidu: '我们去看晚会。', dichnghia: 'Chúng tôi đi xem dạ hội.' },
+  { hanzi: '属', pinyin: 'shǔ', hanviet: 'thuộc', nghia: 'Thuộc, cầm tinh (con giáp), tuổi', vidu: '你属什么？', dichnghia: 'Bạn cầm tinh con gì/Tuổi gì?' },
+  { hanzi: '前年', pinyin: 'qiánnián', hanviet: 'tiền niên', nghia: 'Năm kia', vidu: '前年我还在读高中。', dichnghia: 'Năm kia tôi vẫn còn học cấp 3.' },
+  { hanzi: '回答', pinyin: 'huídá', hanviet: 'hồi đáp', nghia: 'Trả lời, hồi đáp', vidu: '请回答这个问题。', dichnghia: 'Xin hãy trả lời câu hỏi này.' },
+  { hanzi: '问题', pinyin: 'wèntí', hanviet: 'vấn đề', nghia: 'Vấn đề, câu hỏi', vidu: '这个问题很简单。', dichnghia: 'Câu hỏi này rất đơn giản.' },
+  { hanzi: '前', pinyin: 'qián', hanviet: 'tiền', nghia: 'Trước', vidu: '五年前我住在这里。', dichnghia: '5 năm trước tôi sống ở đây.' },
+  { hanzi: '后', pinyin: 'hòu', hanviet: 'hậu', nghia: 'Sau', vidu: '十点后我回家。', dichnghia: 'Sau 10 giờ tôi về nhà.' },
+  { hanzi: '四年', pinyin: 'sì nián', hanviet: 'tứ niên', nghia: 'Bốn năm', vidu: '我学汉语四年了。', dichnghia: 'Tôi học tiếng Hán 4 năm rồi.' },
+  { hanzi: '两', pinyin: 'liǎng', hanviet: 'lưỡng', nghia: 'Hai (dùng trước danh từ)', vidu: '我有两本书。', dichnghia: 'Tôi có hai cuốn sách.' },
+  { hanzi: '专业', pinyin: 'zhuānyè', hanviet: 'chuyên nghiệp', nghia: 'Chuyên ngành, chuyên môn', vidu: '你的专业是什么？', dichnghia: 'Chuyên ngành của bạn là gì?' },
+  { hanzi: '大学', pinyin: 'dàxué', hanviet: 'đại học', nghia: 'Đại học', vidu: '他考上了大学。', dichnghia: 'Anh ấy đã thi đỗ đại học.' },
+  { hanzi: '多高', pinyin: 'duōgāo', hanviet: 'đa cao', nghia: 'Cao bao nhiêu?', vidu: '你有多高？', dichnghia: 'Bạn cao bao nhiêu?' },
+  { hanzi: '多重', pinyin: 'duōzhòng', hanviet: 'đa trọng', nghia: 'Nặng bao nhiêu?', vidu: '你的行李多重？', dichnghia: 'Hành lý của bạn nặng bao nhiêu?' },
+  { hanzi: '米', pinyin: 'mǐ', hanviet: 'mễ', nghia: 'Mét', vidu: '这栋楼高十米。', dichnghia: 'Tòa nhà này cao 10 mét.' },
+  { hanzi: '斤', pinyin: 'jīn', hanviet: 'cân', nghia: 'Cân (khoảng 0.5kg)', vidu: '我买了一斤苹果。', dichnghia: 'Tôi đã mua một cân táo.' },
+  { hanzi: '公斤', pinyin: 'gōngjīn', hanviet: 'công cân', nghia: 'Kilogram', vidu: '我体重五十公斤。', dichnghia: 'Tôi nặng 50 kilogram.' },
+  { hanzi: '公里', pinyin: 'gōnglǐ', hanviet: 'công lí', nghia: 'Kilomet', vidu: '这里离学校三公里。', dichnghia: 'Ở đây cách trường 3 kilomet.' },
+  { hanzi: '多远', pinyin: 'duōyuǎn', hanviet: 'đa viễn', nghia: 'Bao xa?', vidu: '你家离公司多远？', dichnghia: 'Nhà bạn cách công ty bao xa?' },
+  { hanzi: '多久', pinyin: 'duōjiǔ', hanviet: 'đa cửu', nghia: 'Bao lâu?', vidu: '你等了多久？', dichnghia: 'Bạn đã đợi bao lâu rồi?' },
+  { hanzi: '离', pinyin: 'lí', hanviet: 'li', nghia: 'Cách, rời xa', vidu: '学校离我家很近。', dichnghia: 'Trường học cách nhà tôi rất gần.' },
+  { hanzi: '机场', pinyin: 'jīchǎng', hanviet: 'cơ trường', nghia: 'Sân bay', vidu: '我要去机场接人。', dichnghia: 'Tôi phải ra sân bay đón người.' },
+  { hanzi: '生肖', pinyin: 'shēngxiào', hanviet: 'sinh tiêu', nghia: 'Con giáp', vidu: '中国有十二生肖。', dichnghia: 'Trung Quốc có 12 con giáp.' },
+  { hanzi: '龙', pinyin: 'lóng', hanviet: 'long', nghia: 'Rồng, tuổi Thìn', vidu: '他属龙。', dichnghia: 'Anh ấy tuổi Rồng/Thìn.' },
+  { hanzi: '猴', pinyin: 'hóu', hanviet: 'hầu', nghia: 'Khỉ, tuổi Thân', vidu: '猴子喜欢吃香蕉。', dichnghia: 'Khỉ thích ăn chuối.' },
+  { hanzi: '鼠', pinyin: 'shǔ', hanviet: 'thử', nghia: 'Chuột, tuổi Tí', vidu: '鼠是十二生肖之首。', dichnghia: 'Chuột là đứng đầu 12 con giáp.' },
+  { hanzi: '牛', pinyin: 'niú', hanviet: 'ngưu', nghia: 'Bò, trâu, tuổi Sửu', vidu: '他是属牛的。', dichnghia: 'Anh ấy tuổi Trâu/Bò/Sửu.' },
+  { hanzi: '虎', pinyin: 'hǔ', hanviet: 'hổ', nghia: 'Hổ, cọp, tuổi Dần', vidu: '我属虎。', dichnghia: 'Tôi tuổi Hổ/Dần.' },
+  { hanzi: '兔', pinyin: 'tù', hanviet: 'thố', nghia: 'Thỏ, tuổi Mão', vidu: '兔子跑得很快。', dichnghia: 'Thỏ chạy rất nhanh.' },
+  { hanzi: '蛇', pinyin: 'shé', hanviet: 'xà', nghia: 'Rắn, tuổi Tỵ', vidu: '蛇是冷血动物。', dichnghia: 'Rắn là động vật máu lạnh.' },
+  { hanzi: '鸡', pinyin: 'jī', hanviet: 'kê', nghia: 'Gà, tuổi Dậu', vidu: '她属鸡。', dichnghia: 'Cô ấy tuổi Gà/Dậu.' },
+  { hanzi: '马', pinyin: 'mǎ', hanviet: 'mã', nghia: 'Ngựa, tuổi Ngọ', vidu: '我会骑马。', dichnghia: 'Tôi biết cưỡi ngựa.' },
+  { hanzi: '羊', pinyin: 'yáng', hanviet: 'dương', nghia: 'Dê, cừu, tuổi Mùi', vidu: '羊肉很好吃。', dichnghia: 'Thịt dê rất ngon.' },
+  { hanzi: '猪', pinyin: 'zhū', hanviet: 'trư', nghia: 'Heo, lợn, tuổi Hợi', vidu: '猪很可爱。', dichnghia: 'Lợn rất đáng yêu.' },
+  { hanzi: '节日', pinyin: 'jiérì', hanviet: 'tiết nhật', nghia: 'Ngày lễ, ngày hội', vidu: '中国有很多传统节日。', dichnghia: 'Trung Quốc có rất nhiều ngày lễ truyền thống.' },
+  { hanzi: '新年', pinyin: 'xīnnián', hanviet: 'tân niên', nghia: 'Năm mới (Dương lịch)', vidu: '新年快乐！', dichnghia: 'Chúc mừng năm mới!' },
+  { hanzi: '春节', pinyin: 'chūnjié', hanviet: 'xuân tiết', nghia: 'Tết Nguyên Đán (Âm lịch)', vidu: '春节是中国最重要的节日。', dichnghia: 'Tết Nguyên Đán là ngày lễ quan trọng nhất của Trung Quốc.' },
+  { hanzi: '越南', pinyin: 'Yuènán', hanviet: 'Việt Nam', nghia: 'Việt Nam', vidu: '我是越南人。', dichnghia: 'Tôi là người Việt Nam.' },
+  { hanzi: '最大', pinyin: 'zuìdà', hanviet: 'tối đại', nghia: 'Lớn nhất', vidu: '这是我最大的梦想。', dichnghia: 'Đây là ước mơ lớn nhất của tôi.' },
+  { hanzi: '五一劳动节', pinyin: 'Wǔyī Láodòngjié', hanviet: 'ngũ nhất lao động tiết', nghia: 'Ngày Quốc tế Lao động 1/5', vidu: '五一劳动节放假三天。', dichnghia: 'Ngày Quốc tế Lao động được nghỉ 3 ngày.' },
+  { hanzi: '放假', pinyin: 'fàngjià', hanviet: 'phóng giả', nghia: 'Nghỉ lễ, nghỉ phép', vidu: '学校放假了。', dichnghia: 'Trường học nghỉ rồi.' },
+  { hanzi: '圣诞节', pinyin: 'Shèngdàn Jié', hanviet: 'thánh đản tiết', nghia: 'Lễ Giáng sinh (Noel)', vidu: '圣诞节你收到礼物了吗？', dichnghia: 'Giáng sinh bạn nhận được quà chưa?' },
+  { hanzi: '国庆节', pinyin: 'Guóqìng Jié', hanviet: 'quốc khánh tiết', nghia: 'Lễ Quốc khánh', vidu: '国庆节我们去旅游。', dichnghia: 'Quốc khánh chúng tôi đi du lịch.' },
+  { hanzi: '中秋节', pinyin: 'Zhōngqiū Jié', hanviet: 'trung thu tiết', nghia: 'Tết Trung thu', vidu: '中秋节要吃月饼。', dichnghia: 'Trung thu phải ăn bánh trung thu.' },
+  { hanzi: '教师节', pinyin: 'Jiàoshī Jié', hanviet: 'giáo sư tiết', nghia: 'Ngày Nhà giáo', vidu: '教师节我们送老师鲜花。', dichnghia: 'Ngày Nhà giáo chúng tôi tặng hoa cho thầy cô.' },
+  { hanzi: '劳动节', pinyin: 'Láodòng Jié', hanviet: 'lao động tiết', nghia: 'Ngày Lao động', vidu: '劳动节是五月一日。', dichnghia: 'Ngày Lao động là mùng 1 tháng 5.' },
+  { hanzi: '妇女节', pinyin: 'Fùnǚ Jié', hanviet: 'phụ nữ tiết', nghia: 'Ngày Phụ nữ', vidu: '妇女节是三月八日。', dichnghia: 'Ngày Phụ nữ là mùng 8 tháng 3.' },
+  { hanzi: '去过', pinyin: 'qùguò', hanviet: 'khứ quá', nghia: 'Từng đi, đã đi', vidu: '我去过北京。', dichnghia: 'Tôi từng đi Bắc Kinh.' },
+  { hanzi: '中国', pinyin: 'Zhōngguó', hanviet: 'Trung Quốc', nghia: 'Trung Quốc', vidu: '我在中国学习汉语。', dichnghia: 'Tôi đang học tiếng Hán ở Trung Quốc.' },
+  { hanzi: '来过', pinyin: 'láiguò', hanviet: 'lai quá', nghia: 'Từng đến, đã đến', vidu: '我以前来过这里。', dichnghia: 'Trước đây tôi từng đến đây.' },
+  { hanzi: '这里', pinyin: 'zhèlǐ', hanviet: 'giá lí', nghia: 'Chỗ này, ở đây', vidu: '请坐这里。', dichnghia: 'Mời ngồi ở đây.' },
+  { hanzi: '过生日', pinyin: 'guò shēngrì', hanviet: 'quá sinh nhật', nghia: 'Đón sinh nhật', vidu: '你怎么过生日？', dichnghia: 'Bạn đón sinh nhật như thế nào?' },
+  { hanzi: '过春节', pinyin: 'guò chūnjié', hanviet: 'quá xuân tiết', nghia: 'Đón Tết Nguyên Đán', vidu: '我们一家人一起过春节。', dichnghia: 'Cả nhà chúng tôi cùng nhau đón Tết.' },
+  { hanzi: '过新年', pinyin: 'guò xīnnián', hanviet: 'quá tân niên', nghia: 'Đón năm mới (Dương lịch)', vidu: '我们一起过新年。', dichnghia: 'Chúng ta cùng nhau đón năm mới.' },
+  { hanzi: '过圣诞节', pinyin: 'guò shèngdàn jié', hanviet: 'quá thánh đản tiết', nghia: 'Đón Noel', vidu: '你喜欢过圣诞节吗？', dichnghia: 'Bạn có thích đón Noel không?' },
+  { hanzi: '过路', pinyin: 'guò lù', hanviet: 'quá lộ', nghia: 'Qua đường', vidu: '请小心过路。', dichnghia: 'Xin hãy cẩn thận qua đường.' },
+  { hanzi: '过来', pinyin: 'guòlai', hanviet: 'quá lai', nghia: 'Qua đây', vidu: '你快点过来！', dichnghia: 'Bạn mau qua đây đi!' },
+  { hanzi: '过去', pinyin: 'guòqù', hanviet: 'quá khứ', nghia: 'Qua kia, trước đây, quá khứ', vidu: '过去的事情不要再想了。', dichnghia: 'Chuyện quá khứ đừng nghĩ nữa.' },
+  { hanzi: '双', pinyin: 'shuāng', hanviet: 'song', nghia: 'Đôi, cặp', vidu: '我买了一双鞋子。', dichnghia: 'Tôi đã mua một đôi giày.' },
+  { hanzi: '鞋子', pinyin: 'xiézi', hanviet: 'hài tử', nghia: 'Giày', vidu: '这双鞋子很舒服。', dichnghia: 'Đôi giày này rất thoải mái.' },
+  { hanzi: '不大不小', pinyin: 'bú dà bù xiǎo', hanviet: 'bất đại bất tiểu', nghia: 'Không to không nhỏ', vidu: '这件衣服不大不小，刚刚好。', dichnghia: 'Bộ quần áo này không to không nhỏ, vừa vặn.' },
+  { hanzi: '合适', pinyin: 'héshì', hanviet: 'hợp thích', nghia: 'Vừa vặn, thích hợp', vidu: '这个工作很合适他。', dichnghia: 'Công việc này rất thích hợp với anh ấy.' },
+  { hanzi: '块钱', pinyin: 'kuài qián', hanviet: 'khối tiền', nghia: 'Đồng (tiền tệ), tệ', vidu: '这本书五十块钱。', dichnghia: 'Cuốn sách này 50 tệ.' },
+  { hanzi: '举行晚会', pinyin: 'jǔxíng wǎnhuì', hanviet: 'cử hành vãn hội', nghia: 'Tổ chức dạ hội/bữa tiệc', vidu: '公司要举行晚会。', dichnghia: 'Công ty sắp tổ chức dạ hội.' },
+  { hanzi: '生日晚会', pinyin: 'shēngrì wǎnhuì', hanviet: 'sinh nhật vãn hội', nghia: 'Tiệc sinh nhật', vidu: '我准备了一个生日晚会。', dichnghia: 'Tôi đã chuẩn bị một bữa tiệc sinh nhật.' },
+  { hanzi: '拍', pinyin: 'pāi', hanviet: 'phách', nghia: 'Chụp (ảnh), vỗ', vidu: '我们一起拍照片吧。', dichnghia: 'Chúng ta cùng nhau chụp ảnh đi.' },
+  { hanzi: '照片', pinyin: 'zhàopiàn', hanviet: 'chiếu phiến', nghia: 'Ảnh, bức ảnh', vidu: '这张照片很美。', dichnghia: 'Tấm ảnh này rất đẹp.' },
+  { hanzi: '多长时间', pinyin: 'duō cháng shíjiān', hanviet: 'đa trường thời gian', nghia: 'Bao lâu?', vidu: '你等了多长时间？', dichnghia: 'Bạn đã đợi bao lâu rồi?' },
+  { hanzi: '学汉语', pinyin: 'xué Hànyǔ', hanviet: 'học Hán ngữ', nghia: 'Học tiếng Hán', vidu: '我学汉语两年了。', dichnghia: 'Tôi học tiếng Hán được 2 năm rồi.' },
+  { hanzi: '很长时间', pinyin: 'hěn cháng shíjiān', hanviet: 'ngận trường thời gian', nghia: 'Rất lâu', vidu: '我们很长时间没见了。', dichnghia: 'Chúng ta rất lâu rồi không gặp.' },
+  { hanzi: '不一定', pinyin: 'bù yídìng', hanviet: 'bất nhất định', nghia: 'Không chắc', vidu: '明天不一定下雨。', dichnghia: 'Ngày mai không chắc sẽ mưa.' },
+  { hanzi: '下雨', pinyin: 'xiàyǔ', hanviet: 'hạ vũ', nghia: 'Mưa', vidu: '外面正在下雨。', dichnghia: 'Bên ngoài đang mưa.' },
+  { hanzi: '今晚', pinyin: 'jīnwǎn', hanviet: 'kim vãn', nghia: 'Tối nay', vidu: '今晚我们去看电影。', dichnghia: 'Tối nay chúng ta đi xem phim.' },
+  { hanzi: '玩具', pinyin: 'wánjù', hanviet: 'ngoạn cụ', nghia: 'Đồ chơi', vidu: '这是一个新的玩具。', dichnghia: 'Đây là một món đồ chơi mới.' },
+  { hanzi: '朋友', pinyin: 'péngyou', hanviet: 'bằng hữu', nghia: 'Bạn bè', vidu: '我有很多中国朋友。', dichnghia: 'Tôi có rất nhiều bạn bè Trung Quốc.' },
+  { hanzi: '送', pinyin: 'sòng', hanviet: 'tống', nghia: 'Tặng, đưa, tiễn', vidu: '她送我一本书。', dichnghia: 'Cô ấy tặng tôi một cuốn sách.' },
+  { hanzi: '一只', pinyin: 'yī zhī', hanviet: 'nhất chi', nghia: 'Một con (lượng từ)', vidu: '我买一只小狗。', dichnghia: 'Tôi mua một con chó con.' },
+  { hanzi: '小狗', pinyin: 'xiǎogǒu', hanviet: 'tiểu cẩu', nghia: 'Chó con', vidu: '那只小狗很可爱。', dichnghia: 'Con chó con kia rất đáng yêu.' },
+  { hanzi: '蛋糕', pinyin: 'dàngāo', hanviet: 'đản cao', nghia: 'Bánh kem, bánh ga-tô', vidu: '我喜欢吃蛋糕。', dichnghia: 'Tôi thích ăn bánh kem.' },
+  { hanzi: '一块', pinyin: 'yí kuài', hanviet: 'nhất khối', nghia: 'Một miếng, một khối', vidu: '请给我一块蛋糕。', dichnghia: 'Làm ơn cho tôi một miếng bánh kem.' },
+  { hanzi: '爸爸', pinyin: 'bàba', hanviet: 'ba ba', nghia: 'Bố, ba', vidu: '爸爸今天不回家。', dichnghia: 'Bố hôm nay không về nhà.' },
+  { hanzi: '做', pinyin: 'zuò', hanviet: 'tố', nghia: 'Làm, chế tạo', vidu: '我会做饭。', dichnghia: 'Tôi biết nấu ăn.' },
+  { hanzi: '语法', pinyin: 'yǔfǎ', hanviet: 'ngữ pháp', nghia: 'Ngữ pháp', vidu: '这本书讲语法。', dichnghia: 'Cuốn sách này nói về ngữ pháp.' },
+  { hanzi: '房间', pinyin: 'fángjiān', hanviet: 'phòng gian', nghia: 'Căn phòng', vidu: '我的房间很小。', dichnghia: 'Phòng của tôi rất nhỏ.' },
+  { hanzi: '爱', pinyin: 'ài', hanviet: 'ái', nghia: 'Yêu, thích', vidu: '我爱你。', dichnghia: 'Anh yêu em/Tôi yêu bạn.' },
+  { hanzi: '人', pinyin: 'rén', hanviet: 'nhân', nghia: 'Người', vidu: '他是一个好人。', dichnghia: 'Anh ấy là một người tốt.' },
+  { hanzi: '睡觉', pinyin: 'shuìjiào', hanviet: 'thụy giác', nghia: 'Ngủ', vidu: '我累了，想睡觉。', dichnghia: 'Tôi mệt rồi, muốn ngủ.' },
+  { hanzi: '火车', pinyin: 'huǒchē', hanviet: 'hỏa xa', nghia: 'Xe lửa, tàu hỏa', vidu: '火车马上就要到了。', dichnghia: 'Tàu hỏa sắp đến nơi rồi.' },
+  { hanzi: '马上', pinyin: 'mǎshàng', hanviet: 'mã thượng', nghia: 'Ngay lập tức, sắp sửa', vidu: '请你马上过来。', dichnghia: 'Mời bạn qua đây ngay lậpủa.' },
+  { hanzi: '到', pinyin: 'dào', hanviet: 'đáo', nghia: 'Đến, tới', vidu: '我已经到学校了。', dichnghia: 'Tôi đã đến trường rồi.' },
+  { hanzi: '一下课', pinyin: 'yí xiàkè', hanviet: 'nhất hạ khóa', nghia: 'Vừa tan học', vidu: '一下课我就去吃饭。', dichnghia: 'Vừa tan học tôi liền đi ăn cơm.' },
+  { hanzi: '回家', pinyin: 'huí jiā', hanviet: 'hồi gia', nghia: 'Về nhà', vidu: '我要回家了。', dichnghia: 'Tôi phải về nhà rồi.' },
+  { hanzi: '坐车', pinyin: 'zuòchē', hanviet: 'tọa xa', nghia: 'Ngồi xe, đi xe', vidu: '我坐车去上班。', dichnghia: 'Tôi đi xe đi làm.' },
+  { hanzi: '分钟', pinyin: 'fēnzhōng', hanviet: 'phân chung', nghia: 'Phút', vidu: '请等我五分钟。', dichnghia: 'Xin hãy đợi tôi 5 phút.' },
+  { hanzi: '前边', pinyin: 'qiánbian', hanviet: 'tiền biên', nghia: 'Phía trước', vidu: '前边有一家商店。', dichnghia: 'Phía trước có một cửa hàng.' },
+  { hanzi: '我家', pinyin: 'wǒ jiā', hanviet: 'ngã gia', nghia: 'Nhà tôi', vidu: '我家在北京。', dichnghia: 'Nhà tôi ở Bắc Kinh.' },
+  { hanzi: '钱包', pinyin: 'qiánbāo', hanviet: 'tiền bao', nghia: 'Ví tiền', vidu: '我的钱包丢了。', dichnghia: 'Ví tiền của tôi bị mất rồi.' },
+  { hanzi: '早就', pinyin: 'zǎo jiù', hanviet: 'tảo tựu', nghia: 'Đã sớm', vidu: '我早就知道了。', dichnghia: 'Tôi đã sớm biết rồi.' },
+  { hanzi: '部门', pinyin: 'bùmén', hanviet: 'bộ môn', nghia: 'Bộ phận', vidu: '我在销售部门工作。', dichnghia: 'Tôi làm việc ở bộ phận bán hàng.' },
+  { hanzi: '助理', pinyin: 'zhùlǐ', hanviet: 'trợ lí', nghia: 'Trợ lý', vidu: '她是老板的助理。', dichnghia: 'Cô ấy là trợ lý của ông chủ.' },
+  { hanzi: '学习', pinyin: 'xuéxí', hanviet: 'học tập', nghia: 'Học tập', vidu: '我喜欢学习汉语。', dichnghia: 'Tôi thích học tiếng Hán.' },
+  { hanzi: '觉得', pinyin: 'juéde', hanviet: 'giác đắc', nghia: 'Cảm thấy', vidu: '我觉得很热。', dichnghia: 'Tôi cảm thấy rất nóng.' },
+  { hanzi: '困', pinyin: 'kùn', hanviet: 'khốn', nghia: 'Buồn ngủ, khó khăn', vidu: '我很困，想睡觉。', dichnghia: 'Tôi rất buồn ngủ, muốn đi ngủ.' },
+  { hanzi: '吃了晚饭', pinyin: 'chīle wǎnfàn', hanviet: 'cật liễu vãn phạn', nghia: 'Ăn tối xong rồi', vidu: '吃了晚饭我们去散步。', dichnghia: 'Ăn tối xong rồi chúng ta đi dạo.' },
+  { hanzi: '看电视', pinyin: 'kàn diànshì', hanviet: 'khán điện thị', nghia: 'Xem TV', vidu: '晚上我喜欢看电视。', dichnghia: 'Buổi tối tôi thích xem TV.' },
+  { hanzi: '那种', pinyin: 'nà zhǒng', hanviet: 'na chủng', nghia: 'Loại đó', vidu: '那种衣服很流行。', dichnghia: 'Loại quần áo đó rất thịnh hành.' },
+  { hanzi: '洗衣机', pinyin: 'xǐyījī', hanviet: 'tẩy y cơ', nghia: 'Máy giặt', vidu: '我想买一台洗衣机。', dichnghia: 'Tôi muốn mua một chiếc máy giặt.' },
+  { hanzi: '便宜', pinyin: 'piányi', hanviet: 'tiện nghi', nghia: 'Rẻ', vidu: '这件衣服很便宜。', dichnghia: 'Bộ quần áo này rất rẻ.' },
+  { hanzi: '一千', pinyin: 'yī qiān', hanviet: 'nhất thiên', nghia: 'Một nghìn', vidu: '这本书卖一千块。', dichnghia: 'Cuốn sách này bán 1000 tệ.' },
+  { hanzi: '就能', pinyin: 'jiù néng', hanviet: 'tựu năng', nghia: 'Thì có thể', vidu: '努力学习就能成功。', dichnghia: 'Cố gắng học tập thì có thể thành công.' },
+  { hanzi: '一台', pinyin: 'yī tái', hanviet: 'nhất đài', nghia: 'Một chiếc (lượng từ cho máy móc)', vidu: '家里有一台电脑。', dichnghia: 'Trong nhà có một chiếc máy tính.' },
+  { hanzi: '只要', pinyin: 'zhǐyào', hanviet: 'chỉ yếu', nghia: 'Chỉ cần', vidu: '只要努力，没有什么是不能的。', dichnghia: 'Chỉ cần cố gắng, không có gì là không thể.' },
+  { hanzi: '努力', pinyin: 'nǔlì', hanviet: 'nỗ lực', nghia: 'Cố gắng, nỗ lực', vidu: '我们要努力学习。', dichnghia: 'Chúng ta phải cố gắng học tập.' },
+  { hanzi: '学好', pinyin: 'xuéhǎo', hanviet: 'học hảo', nghia: 'Học tốt', vidu: '我希望学好中文。', dichnghia: 'Tôi hy vọng học tốt tiếng Trung.' },
+  { hanzi: '汉语', pinyin: 'Hànyǔ', hanviet: 'Hán ngữ', nghia: 'Tiếng Hán', vidu: '汉语很有意思。', dichnghia: 'Tiếng Hán rất thú vị.' },
+  { hanzi: '一月', pinyin: 'yī yuè', hanviet: 'nhất nguyệt', nghia: 'Tháng Một', vidu: '一月是新年。', dichnghia: 'Tháng Một là năm mới.' },
+  { hanzi: '二月', pinyin: 'èr yuè', hanviet: 'nhị nguyệt', nghia: 'Tháng Hai', vidu: '二月有二十八天。', dichnghia: 'Tháng Hai có 28 ngày.' },
+  { hanzi: '五月', pinyin: 'wǔ yuè', hanviet: 'ngũ nguyệt', nghia: 'Tháng Năm', vidu: '五月是劳动节。', dichnghia: 'Tháng Năm là ngày Lao động.' },
+  { hanzi: '九月', pinyin: 'jiǔ yuè', hanviet: 'cửu nguyệt', nghia: 'Tháng Chín', vidu: '九月开学。', dichnghia: 'Tháng Chín khai giảng.' },
+  { hanzi: '一个月', pinyin: 'yī gè yuè', hanviet: 'nhất cá nguyệt', nghia: 'Một tháng', vidu: '我在中国住一个月。', dichnghia: 'Tôi sống ở Trung Quốc một tháng.' },
+  { hanzi: '两个月', pinyin: 'liǎng gè yuè', hanviet: 'lưỡng cá nguyệt', nghia: 'Hai tháng', vidu: '我休息了两个月。', dichnghia: 'Tôi đã nghỉ ngơi hai tháng.' },
+  { hanzi: '五个月', pinyin: 'wǔ gè yuè', hanviet: 'ngũ cá nguyệt', nghia: 'Năm tháng', vidu: '她怀孕五个月了。', dichnghia: 'Cô ấy đã mang thai 5 tháng rồi.' },
+  { hanzi: '九个月', pinyin: 'jiǔ gè yuè', hanviet: 'cửu cá nguyệt', nghia: 'Chín tháng', vidu: '宝宝九个月大了。', dichnghia: 'Em bé đã 9 tháng tuổi rồi.' },
+  { hanzi: '一日', pinyin: 'yī rì', hanviet: 'nhất nhật', nghia: 'Ngày mùng Một', vidu: '今天是一日。', dichnghia: 'Hôm nay là mùng Một.' },
+  { hanzi: '二日', pinyin: 'èr rì', hanviet: 'nhị nhật', nghia: 'Ngày mùng Hai', vidu: '二日是周末。', dichnghia: 'Ngày mùng Hai là cuối tuần.' },
+  { hanzi: '十五日', pinyin: 'shíwǔ rì', hanviet: 'thập ngũ nhật', nghia: 'Ngày 15', vidu: '十五日是中秋节。', dichnghia: 'Ngày 15 là Tết Trung thu.' },
+  { hanzi: '一天', pinyin: 'yī tiān', hanviet: 'nhất thiên', nghia: 'Một ngày', vidu: '我等了一天。', dichnghia: 'Tôi đã đợi một ngày.' },
+  { hanzi: '两天', pinyin: 'liǎng tiān', hanviet: 'lưỡng thiên', nghia: 'Hai ngày', vidu: '我们只有两天假期。', dichnghia: 'Chúng tôi chỉ có hai ngày nghỉ.' },
+  { hanzi: '九天', pinyin: 'jiǔ tiān', hanviet: 'cửu thiên', nghia: 'Chín ngày', vidu: '他出差九天。', dichnghia: 'Anh ấy đi công tác 9 ngày.' },
+  { hanzi: '语调', pinyin: 'yǔdiào', hanviet: 'ngữ điệu', nghia: 'Ngữ điệu', vidu: '你的语调很奇怪。', dichnghia: 'Ngữ điệu của bạn rất lạ.' },
+  { hanzi: '疑问', pinyin: 'yíwèn', hanviet: 'nghi vấn', nghia: 'Nghi vấn', vidu: '我对这个问题有疑问。', dichnghia: 'Tôi có nghi vấn về vấn đề này.' },
+  { hanzi: '星期六', pinyin: 'xīngqīliù', hanviet: 'tinh kỳ lục', nghia: 'Thứ Bảy', vidu: '星期六我不用上班。', dichnghia: 'Thứ Bảy tôi không phải đi làm.' },
+  { hanzi: '晚上', pinyin: 'wǎnshang', hanviet: 'vãn thượng', nghia: 'Buổi tối', vidu: '晚上好！', dichnghia: 'Chào buổi tối!' },
+  { hanzi: '谢谢', pinyin: 'xièxie', hanviet: 'tạ tạ', nghia: 'Cảm ơn', vidu: '谢谢你的帮助。', dichnghia: 'Cảm ơn sự giúp đỡ của bạn.' },
+  { hanzi: '身体', pinyin: 'shēntǐ', hanviet: 'thân thể', nghia: 'Sức khỏe, cơ thể', vidu: '你身体好吗？', dichnghia: 'Sức khỏe của bạn có tốt không?' },
+  { hanzi: '礼物', pinyin: 'lǐwù', hanviet: 'lễ vật', nghia: 'Quà, quà tặng', vidu: '我收到一个礼物。', dichnghia: 'Tôi nhận được một món quà.' },
+  { hanzi: '好看', pinyin: 'hǎokàn', hanviet: 'hảo khán', nghia: 'Đẹp, ưa nhìn', vidu: '这件衣服很好看。', dichnghia: 'Bộ quần áo này rất đẹp.' },
+  { hanzi: '宿舍', pinyin: 'sùshè', hanviet: 'túc xá', nghia: 'Ký túc xá', vidu: '我住在学校宿舍。', dichnghia: 'Tôi sống ở ký túc xá trường học.' },
+  { hanzi: '同学', pinyin: 'tóngxué', hanviet: 'đồng học', nghia: 'Bạn học', vidu: '我们是同学。', dichnghia: 'Chúng tôi là bạn học.' },
+  { hanzi: '唱歌', pinyin: 'chànggē', hanviet: 'xướng ca', nghia: 'Hát', vidu: '我喜欢唱歌。', dichnghia: 'Tôi thích hát.' },
+  { hanzi: '吃蛋糕', pinyin: 'chī dàngāo', hanviet: 'cật đản cao', nghia: 'Ăn bánh kem', vidu: '小朋友们喜欢吃蛋糕。', dichnghia: 'Các em nhỏ thích ăn bánh kem.' },
+  { hanzi: '玩', pinyin: 'wán', hanviet: 'ngoạn', nghia: 'Chơi, đùa', vidu: '你们在玩什么？', dichnghia: 'Các bạn đang chơi gì vậy?' },
+  { hanzi: '高兴', pinyin: 'gāoxìng', hanviet: 'cao hứng', nghia: 'Vui vẻ, vui mừng', vidu: '我今天很高兴。', dichnghia: 'Hôm nay tôi rất vui.' },
+  { hanzi: '能', pinyin: 'néng', hanviet: 'năng', nghia: 'Có thể', vidu: '我能帮你。', dichnghia: 'Tôi có thể giúp bạn.' },
+  { hanzi: '写信', pinyin: 'xiě xìn', hanviet: 'tả tín', nghia: 'Viết thư', vidu: '我经常给妈妈写信。', dichnghia: 'Tôi thường xuyên viết thư cho mẹ.' },
+  { hanzi: '永远', pinyin: 'yǒngyuǎn', hanviet: 'vĩnh viễn', nghia: 'Mãi mãi, vĩnh viễn', vidu: '我永远爱你。', dichnghia: 'Em/Anh mãi mãi yêu anh/em.' },
+  { hanzi: '亲爱', pinyin: 'qīn\'ài', hanviet: 'thân ái', nghia: 'Thân yêu', vidu: '亲爱的妈妈。', dichnghia: 'Mẹ thân yêu.' },
+  { hanzi: '妈妈', pinyin: 'māma', hanviet: 'ma ma', nghia: 'Mẹ', vidu: '妈妈为我做饭。', dichnghia: 'Mẹ nấu cơm cho tôi.' },
+  { hanzi: '心情', pinyin: 'xīnqíng', hanviet: 'tâm tình', nghia: 'Tâm trạng, tâm tình', vidu: '她心情很好。', dichnghia: 'Tâm trạng cô ấy rất tốt.' },
+  { hanzi: '舒畅', pinyin: 'shūchàng', hanviet: 'thư sướng', nghia: 'Thoải mái, dễ chịu', vidu: '祝你心情舒畅。', dichnghia: 'Chúc bạn tâm trạng thoải mái.' },
+  { hanzi: '健康', pinyin: 'jiànkāng', hanviet: 'kiện khang', nghia: 'Khỏe mạnh, sức khỏe', vidu: '祝你身体健康。', dichnghia: 'Chúc bạn thân thể khỏe mạnh.' },
+  { hanzi: '长寿', pinyin: 'chángshòu', hanviet: 'trường thọ', nghia: 'Sống lâu, trường thọ', vidu: '祝爷爷长寿。', dichnghia: 'Chúc ông sống lâu.' },
+  { hanzi: '帅气', pinyin: 'shuàiqì', hanviet: 'suất khí', nghia: 'Đẹp trai, phong độ', vidu: '你的男朋友很帅气。', dichnghia: 'Bạn trai của bạn rất đẹp trai.' },
+  { hanzi: '生意', pinyin: 'shēngyì', hanviet: 'sinh ý', nghia: 'Việc làm ăn, kinh doanh', vidu: '他的生意越做越大。', dichnghia: 'Việc làm ăn của anh ấy càng ngày càng lớn.' },
+  { hanzi: '宝贝', pinyin: 'bǎobèi', hanviet: 'bảo bối', nghia: 'Cưng, bảo bối', vidu: '宝贝, 生日快乐!', dichnghia: 'Cưng à, chúc mừng sinh nhật!' },
+  { hanzi: '漂亮', pinyin: 'piàoliang', hanviet: 'phiêu lượng', nghia: 'Xinh đẹp', vidu: '她长得很漂亮。', dichnghia: 'Cô ấy rất xinh đẹp.' },
+  { hanzi: '特别', pinyin: 'tèbié', hanviet: 'đặc biệt', nghia: 'Đặc biệt', vidu: '今天是很特别的一天。', dichnghia: 'Hôm nay là một ngày rất đặc biệt.' },
+  { hanzi: '幸福', pinyin: 'xìngfú', hanviet: 'hạnh phúc', nghia: 'Hạnh phúc', vidu: '祝你幸福。', dichnghia: 'Chúc bạn hạnh phúc.' },
+  { hanzi: '平安', pinyin: 'píng\'ān', hanviet: 'bình an', nghia: 'Bình an', vidu: '祝你平安。', dichnghia: 'Chúc bạn bình an.' },
+  { hanzi: '美丽', pinyin: 'měilì', hanviet: 'mỹ lệ', nghia: 'Đẹp đẽ', vidu: '世界很美丽。', dichnghia: 'Thế giới rất đẹp.' },
+  { hanzi: '爱情', pinyin: 'àiqíng', hanviet: 'ái tình', nghia: 'Tình yêu', vidu: '祝你爱情甜蜜。', dichnghia: 'Chúc bạn tình yêu ngọt ngào.' },
+  { hanzi: '甜蜜', pinyin: 'tiánmì', hanviet: 'điềm mật', nghia: 'Ngọt ngào', vidu: '他们的生活很甜蜜。', dichnghia: 'Cuộc sống của họ rất ngọt ngào.' },
+  { hanzi: '如意', pinyin: 'rúyì', hanviet: 'như ý', nghia: 'Như ý', vidu: '祝你事事如意。', dichnghia: 'Chúc bạn mọi sự như ý.' },
+  { hanzi: '一切', pinyin: 'yīqiè', hanviet: 'nhất thiết', nghia: 'Tất cả, mọi thứ', vidu: '一切都好。', dichnghia: 'Mọi thứ đều tốt.' },
+  { hanzi: '顺利', pinyin: 'shùnlì', hanviet: 'thuận lợi', nghia: 'Thuận lợi', vidu: '祝你工作顺利。', dichnghia: 'Chúc bạn công việc thuận lợi.' },
+  { hanzi: '谢谢观看', pinyin: 'xièxie guānkàn', hanviet: 'tạ tạ quan khán', nghia: 'Cảm ơn đã xem', vidu: '谢谢观看。', dichnghia: 'Cảm ơn đã xem.' },
+  { hanzi: '哪年', pinyin: 'nǎ nián', hanviet: 'na niên', nghia: 'Năm nào', vidu: '你是哪年出生的？', dichnghia: 'Bạn sinh năm nào?' },
+  { hanzi: '一起', pinyin: 'yìqǐ', hanviet: 'nhất khởi', nghia: 'Cùng nhau', vidu: '我们一起吃饭吧。', dichnghia: 'Chúng ta cùng nhau ăn cơm đi.' },
+  { hanzi: '周末', pinyin: 'zhōumò', hanviet: 'chu mạt', nghia: 'Cuối tuần', vidu: '这个周末你有空吗？', dichnghia: 'Cuối tuần này bạn có rảnh không?' },
+  { hanzi: '看电影', pinyin: 'kàn diànyǐng', hanviet: 'khán điện ảnh', nghia: 'Xem phim', vidu: '我喜欢看电影。', dichnghia: 'Tôi thích xem phim.' }
+];
+
+        const flashcardContainer = document.getElementById('flashcard-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const jumpBtn = document.getElementById('jump-btn');
+        const jumpInput = document.getElementById('jump-input');
+        const counter = document.getElementById('counter');
+
+        let currentIndex = 0;
+        let isTransitioning = false; 
+        const totalCards = cardData.length;
+        
+        // Biến xử lý Vuốt (Swipe)
+        let touchstartX = 0;
+        let touchendX = 0;
+        const SWIPE_THRESHOLD = 50; 
+        
+        jumpInput.max = totalCards;
+        
+        function renderCard(index) {
+            const currentCard = cardData[index];
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            cardElement.id = 'flashcard-' + index;
+
+            // Mặt trước: Chữ Hán, Simsun, Đen
+            cardElement.innerHTML = `
+                <div class="card__face card__face--front">${currentCard.hanzi}</div>
+                <div class="card__face card__face--back">
+                    <div class="back-content">
+                        <p class="pinyin">${currentCard.pinyin}</p>
+                        <p class="hanviet">${currentCard.hanviet}</p>
+                        <p class="nghia">${currentCard.nghia}</p>
+                        <p class="vidu-han">${currentCard.vidu}</p>
+                        <p class="dichnghia">${currentCard.dichnghia}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Xử lý sự kiện lật thẻ
+            cardElement.addEventListener('click', () => {
+                if (!isTransitioning) {
+                    cardElement.classList.toggle('is-flipped');
+                }
+            });
+
+            // --- Logic Swipe ---
+            cardElement.addEventListener('touchstart', e => {
+                touchstartX = e.changedTouches[0].screenX;
+            }, false);
+
+            cardElement.addEventListener('touchend', e => {
+                touchendX = e.changedTouches[0].screenX;
+                handleGesture();
+            }, false);
+            
+            return cardElement;
+        }
+        
+        function updateDisplay() {
+            counter.textContent = `${currentIndex + 1} / ${totalCards}`;
+        }
+
+        function changeCard(newIndex, direction) {
+            if (isTransitioning || newIndex === currentIndex) {
+                return;
+            }
+
+            if (newIndex < 0) {
+                newIndex = totalCards - 1;
+            } else if (newIndex >= totalCards) {
+                newIndex = 0;
+            }
+
+            isTransitioning = true;
+            const oldCard = document.getElementById('flashcard-' + currentIndex);
+            const newCard = renderCard(newIndex);
+            
+            let slideDirection = direction;
+            if (!slideDirection) {
+                slideDirection = (newIndex > currentIndex || (currentIndex === totalCards - 1 && newIndex === 0)) ? 'next' : 'prev';
+            }
+            
+            newCard.style.left = slideDirection === 'next' ? '100%' : '-100%';
+            flashcardContainer.appendChild(newCard);
+            
+            if (oldCard) {
+                oldCard.classList.add(slideDirection === 'next' ? 'slide-next-out' : 'slide-prev-out');
+            }
+
+            setTimeout(() => {
+                newCard.style.left = '0';
+            }, 50); 
+
+            setTimeout(() => {
+                if (oldCard) {
+                    oldCard.remove();
+                }
+                currentIndex = newIndex;
+                updateDisplay();
+                isTransitioning = false;
+            }, 400); 
+        }
+        
+        function goToNextCard() {
+            const newIndex = (currentIndex + 1) % totalCards;
+            changeCard(newIndex, 'next');
+        }
+
+        function goToPrevCard() {
+            const newIndex = (currentIndex - 1 + totalCards) % totalCards;
+            changeCard(newIndex, 'prev');
+        }
+        
+        function jumpToCard() {
+            const inputValue = parseInt(jumpInput.value);
+            
+            if (isNaN(inputValue) || inputValue < 1 || inputValue > totalCards) {
+                alert(`Lỗi: Vui lòng nhập số thẻ hợp lệ từ 1 đến ${totalCards}.`);
+                jumpInput.value = "";
+                return;
+            }
+            
+            const newIndex = inputValue - 1;
+
+            const direction = (newIndex > currentIndex) ? 'next' : 'prev';
+            
+            changeCard(newIndex, direction);
+
+            jumpInput.value = "";
+        }
+
+        function handleGesture() {
+            if (isTransitioning) return;
+            const deltaX = touchendX - touchstartX;
+            
+            if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+                if (deltaX < 0) {
+                    goToNextCard();
+                } else {
+                    goToPrevCard();
+                }
+            }
+        }
+
+        prevBtn.addEventListener('click', goToPrevCard);
+        nextBtn.addEventListener('click', goToNextCard);
+        jumpBtn.addEventListener('click', jumpToCard);
+        
+        jumpInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                jumpToCard();
+            }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            flashcardContainer.appendChild(renderCard(currentIndex));
+            updateDisplay();
+        });
+
+    </script>
+</body>
+</html>
