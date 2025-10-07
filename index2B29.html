@@ -202,29 +202,29 @@
     <script>
         // 30 từ vựng Hán ngữ giản thể được lấy từ shengci.txt
         const cardData = [
-  { hanzi: '考试', pinyin: 'kǎoshì', hanviet: 'Khảo Thí', nghia: 'Thi cử, kỳ thi', vidu: '我下周要参加汉语**考试**。', dichnghia: 'Tôi phải tham gia **kỳ thi** tiếng Hán vào tuần sau.' },
-  { hanzi: '题', pinyin: 'tí', hanviet: 'Đề', nghia: 'Đề, câu hỏi (trong bài thi)', vidu: '这道**题**太难了。', dichnghia: '**Câu hỏi** này khó quá.' },
-  { hanzi: '完', pinyin: 'wán', hanviet: 'Hoàn', nghia: 'Hoàn thành, xong', vidu: '你做**完**作业了吗？', dichnghia: 'Bạn đã làm **xong** bài tập chưa?' },
-  { hanzi: '道', pinyin: 'dào', hanviet: 'Đạo', nghia: 'Câu, bài (lượng từ cho câu hỏi, mệnh lệnh)', vidu: '我只做对了一**道**题。', dichnghia: 'Tôi chỉ làm đúng một **câu** hỏi.' },
-  { hanzi: '成绩', pinyin: 'chéngjì', hanviet: 'Thành Tích', nghia: 'Thành tích, kết quả học tập/thi cử', vidu: '你的**成绩**怎么样？', dichnghia: '**Thành tích** của bạn thế nào?' },
-  { hanzi: '句子', pinyin: 'jùzi', hanviet: 'Cú Tử', nghia: 'Câu (ngôn ngữ)', vidu: '请把这个**句子**翻译成中文。', dichnghia: 'Xin hãy dịch **câu** này sang tiếng Trung.' },
-  { hanzi: '看见', pinyin: 'kànjiàn', hanviet: 'Khán Kiến', nghia: 'Nhìn thấy', vidu: '我没**看见**他进来。', dichnghia: 'Tôi không **nhìn thấy** anh ấy đi vào.' },
-  { hanzi: '词', pinyin: 'cí', hanviet: 'Từ', nghia: 'Từ, từ ngữ', vidu: '这个**词**是什么意思？', dichnghia: '**Từ** này có nghĩa là gì?' },
-  { hanzi: '糟糕', pinyin: 'zāogāo', hanviet: 'Tao Cao', nghia: 'Hỏng bét, tồi tệ', vidu: '**糟糕**！我把钥匙忘了。', dichnghia: '**Hỏng bét**! Tôi quên mất chìa khóa rồi.' },
-  { hanzi: '成', pinyin: 'chéng', hanviet: 'Thành', nghia: 'Thành (đạt), trở thành', vidu: '他**成**了一名医生。', dichnghia: 'Anh ấy **trở thành** một bác sĩ.' },
-  { hanzi: '回信', pinyin: 'huí xìn', hanviet: 'Hồi Tín', nghia: 'Hồi âm, thư trả lời', vidu: '请尽快给我**回信**。', dichnghia: 'Xin hãy sớm **hồi âm** cho tôi.' },
-  { hanzi: '故事', pinyin: 'gùshi', hanviet: 'Cố Sự', nghia: 'Câu chuyện', vidu: '这个**故事**很有趣。', dichnghia '**Câu chuyện** này rất thú vị.' },
-  { hanzi: '有意思', pinyin: 'yǒu yìsi', hanviet: 'Hữu Ý Tứ', nghia: 'Thú vị, có ý nghĩa', vidu: '这本小说很**有意思**。', dichnghia: 'Cuốn tiểu thuyết này rất **thú vị**.' },
-  { hanzi: '页', pinyin: 'yè', hanviet: 'Hiệt', nghia: 'Trang, tờ (sách)', vidu: '请打开第十**页**。', dichnghia: 'Xin hãy mở **trang** thứ mười.' },
-  { hanzi: '笑', pinyin: 'xiào', hanviet: 'Tiếu', nghia: 'Cười', vidu: '他高兴地**笑**了。', dichnghia: 'Anh ấy **cười** vui vẻ.' },
-  { hanzi: '会话', pinyin: 'huìhuà', hanviet: 'Hội Thoại', nghia: 'Hội thoại, đàm thoại', vidu: '我们练习中文**会话**。', dichnghia: 'Chúng tôi luyện tập **hội thoại** tiếng Trung.' },
-  { hanzi: '念', pinyin: 'niàn', hanviet: 'Niệm', nghia: 'Đọc (to), học', vidu: '请大声**念**出这个词。', dichnghia: 'Xin hãy **đọc to** từ này.' },
-  { hanzi: '答', pinyin: 'dá', hanviet: 'Đáp', nghia: 'Trả lời', vidu: '请**答**对所有问题。', dichnghia: 'Xin hãy **trả lời** đúng tất cả câu hỏi.' },
-  { hanzi: '合上', pinyin: 'hé shàng', hanviet: 'Hợp Thượng', nghia: 'Khép lại, đóng lại', vidu: '请**合上**书本。', dichnghia: 'Xin hãy **khép lại** sách vở.' },
-  { hanzi: '听见', pinyin: 'tīngjiàn', hanviet: 'Thính Kiến', nghia: 'Nghe thấy', vidu: '你**听见**我说的话了吗？', dichnghia: 'Bạn có **nghe thấy** lời tôi nói không?' },
-  { hanzi: '打开', pinyin: 'dǎkāi', hanviet: 'Đả Khai', nghia: 'Mở ra', vidu: '请**打开**窗户。', dichnghia: 'Xin hãy **mở** cửa sổ ra.' },
-  { hanzi: '作业', pinyin: 'zuòyè', hanviet: 'Tác Nghiệp', nghia: 'Bài tập (về nhà)', vidu: '我晚上要做**作业**。', dichnghia: 'Tôi phải làm **bài tập** vào buổi tối.' },
-  { hanzi: '熟', pinyin: 'shú', hanviet: 'Thục', nghia: 'Quen thuộc; Thành thạo; Chín', vidu: '我对这儿很**熟**。', dichnghia: 'Tôi rất **quen thuộc** với nơi này.' }
+  { hanzi: '考试', pinyin: 'kǎoshì', hanviet: 'Khảo Thí', nghia: 'Thi cử, kỳ thi', vidu: '我下周要参加汉语考试。', dichnghia: 'Tôi phải tham gia kỳ thi tiếng Hán vào tuần sau.' },
+  { hanzi: '题', pinyin: 'tí', hanviet: 'Đề', nghia: 'Đề, câu hỏi (trong bài thi)', vidu: '这道题太难了。', dichnghia: 'Câu hỏi này khó quá.' },
+  { hanzi: '完', pinyin: 'wán', hanviet: 'Hoàn', nghia: 'Hoàn thành, xong', vidu: '你做完作业了吗？', dichnghia: 'Bạn đã làm xong bài tập chưa?' },
+  { hanzi: '道', pinyin: 'dào', hanviet: 'Đạo', nghia: 'Câu, bài (lượng từ cho câu hỏi, mệnh lệnh)', vidu: '我只做对了一道题。', dichnghia: 'Tôi chỉ làm đúng một câu hỏi.' },
+  { hanzi: '成绩', pinyin: 'chéngjì', hanviet: 'Thành Tích', nghia: 'Thành tích, kết quả học tập/thi cử', vidu: '你的成绩怎么样？', dichnghia: 'Thành tích của bạn thế nào?' },
+  { hanzi: '句子', pinyin: 'jùzi', hanviet: 'Cú Tử', nghia: 'Câu (ngôn ngữ)', vidu: '请把这个句子翻译成中文。', dichnghia: 'Xin hãy dịch câu này sang tiếng Trung.' },
+  { hanzi: '看见', pinyin: 'kànjiàn', hanviet: 'Khán Kiến', nghia: 'Nhìn thấy', vidu: '我没看见他进来。', dichnghia: 'Tôi không nhìn thấy anh ấy đi vào.' },
+  { hanzi: '词', pinyin: 'cí', hanviet: 'Từ', nghia: 'Từ, từ ngữ', vidu: '这个词是什么意思？', dichnghia: 'Từ này có nghĩa là gì?' },
+  { hanzi: '糟糕', pinyin: 'zāogāo', hanviet: 'Tao Cao', nghia: 'Hỏng bét, tồi tệ', vidu: 'Hỏng bét！我把钥匙忘了。', dichnghia: 'Hỏng bét! Tôi quên mất chìa khóa rồi.' },
+  { hanzi: '成', pinyin: 'chéng', hanviet: 'Thành', nghia: 'Thành (đạt), trở thành', vidu: '他成了一名医生。', dichnghia: 'Anh ấy trở thành một bác sĩ.' },
+  { hanzi: '回信', pinyin: 'huí xìn', hanviet: 'Hồi Tín', nghia: 'Hồi âm, thư trả lời', vidu: '请尽快给我回信。', dichnghia: 'Xin hãy sớm hồi âm cho tôi.' },
+  { hanzi: '故事', pinyin: 'gùshi', hanviet: 'Cố Sự', nghia: 'Câu chuyện', vidu: '这个故事很有趣。', dichnghia: 'Câu chuyện này rất thú vị.' },
+  { hanzi: '有意思', pinyin: 'yǒu yìsi', hanviet: 'Hữu Ý Tứ', nghia: 'Thú vị, có ý nghĩa', vidu: '这本小说很有意思。', dichnghia: 'Cuốn tiểu thuyết này rất thú vị.' },
+  { hanzi: '页', pinyin: 'yè', hanviet: 'Hiệt', nghia: 'Trang, tờ (sách)', vidu: '请打开第十页。', dichnghia: 'Xin hãy mở trang thứ mười.' },
+  { hanzi: '笑', pinyin: 'xiào', hanviet: 'Tiếu', nghia: 'Cười', vidu: '他高兴地笑了。', dichnghia: 'Anh ấy cười vui vẻ.' },
+  { hanzi: '会话', pinyin: 'huìhuà', hanviet: 'Hội Thoại', nghia: 'Hội thoại, đàm thoại', vidu: 'Chúng tôi luyện tập hội thoại tiếng Trung.', dichnghia: 'Chúng tôi luyện tập hội thoại tiếng Trung.' },
+  { hanzi: '念', pinyin: 'niàn', hanviet: 'Niệm', nghia: 'Đọc (to), học', vidu: '请大声念出这个词。', dichnghia: 'Xin hãy đọc to từ này.' },
+  { hanzi: '答', pinyin: 'dá', hanviet: 'Đáp', nghia: 'Trả lời', vidu: 'Xin hãy trả lời đúng tất cả câu hỏi.', dichnghia: 'Xin hãy trả lời đúng tất cả câu hỏi.' },
+  { hanzi: '合上', pinyin: 'hé shàng', hanviet: 'Hợp Thượng', nghia: 'Khép lại, đóng lại', vidu: 'Xin hãy khép lại sách vở.', dichnghia: 'Xin hãy khép lại sách vở.' },
+  { hanzi: '听见', pinyin: 'tīngjiàn', hanviet: 'Thính Kiến', nghia: 'Nghe thấy', vidu: 'Bạn có nghe thấy lời tôi nói không?', dichnghia: 'Bạn có nghe thấy lời tôi nói không?' },
+  { hanzi: '打开', pinyin: 'dǎkāi', hanviet: 'Đả Khai', nghia: 'Mở ra', vidu: 'Xin hãy mở cửa sổ ra.', dichnghia: 'Xin hãy mở cửa sổ ra.' },
+  { hanzi: '作业', pinyin: 'zuòyè', hanviet: 'Tác Nghiệp', nghia: 'Bài tập (về nhà)', vidu: 'Tôi phải làm bài tập vào buổi tối.', dichnghia: 'Tôi phải làm bài tập vào buổi tối.' },
+  { hanzi: '熟', pinyin: 'shú', hanviet: 'Thục', nghia: 'Quen thuộc; Thành thạo; Chín', vidu: 'Tôi rất quen thuộc với nơi này.', dichnghia: 'Tôi rất quen thuộc với nơi này.' }
 ];
 
         const flashcardContainer = document.getElementById('flashcard-container');
@@ -391,3 +391,4 @@
 </body>
 
 </html>
+
